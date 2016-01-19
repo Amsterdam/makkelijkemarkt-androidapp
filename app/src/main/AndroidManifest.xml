@@ -9,6 +9,7 @@
         android:theme="@style/AppTheme"
         >
 
+        <!-- MainActivity HomeScreen and Login -->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
