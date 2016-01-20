@@ -1,55 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.amsterdam.marktbureau.makkelijkemarkt.MainActivity"
     android:background="@drawable/nieuwmarkt"
-    android:backgroundTint="#818181"
-    android:backgroundTintMode="multiply">
+    >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="De makkelijke markt"
-        android:gravity="center_horizontal"
-        android:textSize="32dp"
-        android:textColor="#ffffff"
-        android:padding="4dp"
-        android:id="@+id/textView2"
-        android:layout_marginTop="33dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="De app om dagelijks de invulling van de Amsterdamse markten in kaart te brengen."
-        android:id="@+id/textView"
-        android:gravity="center_horizontal"
-        android:textColor="#ffffff"
-        android:textSize="16dp"
-        android:layout_marginTop="33dp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
+    <!-- To support scrolling on small devices or landscape view -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Inloggen"
-        android:id="@+id/button"
-        android:gravity="center_vertical|center_horizontal"
-        android:background="#feb42b"
-        android:textColor="#151515"
-        android:textSize="18dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="#92363636"
+        >
 
-</RelativeLayout>
+        <!-- Placeholder container for switching fragments -->
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            />
+
+    </ScrollView>
+</FrameLayout>

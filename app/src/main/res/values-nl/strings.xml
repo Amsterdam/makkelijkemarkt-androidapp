@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_sub_title">De app om dagelijks de invulling van de Amsterdamse markten in kaart te brengen.</string>
+
+    <string name="app_login_title">Welkom bij de Makkelijke Markt</string>
+    <string name="app_login_description">Selecteer een account om verder te gaan</string>
+
+    <string name="login">Inloggen</string>
+
+</resources>

@@ -1,5 +1,18 @@
 <resources>
 
-    <string name="app_name">Makkelijke Markt</string>
+    <string name="app_title" translatable="false">Makkelijke Markt</string>
+    <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
+    <string name="app_sub_title">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
+
+    <string name="app_login_title">Welcome to the Makkelijke Markt</string>
+    <string name="app_login_description">Select an account to continue</string>
+
+    <string name="login">Login</string>
+
+
+
+
+    <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
+    <string name="log_tag_separator" translatable="false">=============================></string>
 
 </resources>
