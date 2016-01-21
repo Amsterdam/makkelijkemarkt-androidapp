@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="login">Inloggen</string>
+    <string name="logout">Uitloggen</string>
+    <string name="about">About</string>
+
+    <string name="app_background_description">Markt foto</string>
+
     <string name="app_sub_title">De app om dagelijks de invulling van de Amsterdamse markten in kaart te brengen.</string>
 
     <string name="app_login_title">Welkom bij de Makkelijke Markt</string>
     <string name="app_login_description">Selecteer een account om verder te gaan</string>
 
-    <string name="login">Inloggen</string>
+    <string name="about_text">De app om dagelijks de invulling van de Amsterdamse markten in kaart te brengen.</string>
 
 </resources>

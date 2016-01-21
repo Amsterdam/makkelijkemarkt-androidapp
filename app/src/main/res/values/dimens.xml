@@ -1,5 +1,11 @@
 <resources>
 
+    <dimen name="toolbar_height">56dp</dimen>
+
+    <dimen name="small_margin">4dp</dimen>
+    <dimen name="margin">24dp</dimen>
+    <dimen name="large_margin">36dp</dimen>
+
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
@@ -12,8 +18,5 @@
     <dimen name="textsize_content_large">24sp</dimen>
 
     <dimen name="main_activity_elements_vertical_margin">40dp</dimen>
-
-
-
 
 </resources>

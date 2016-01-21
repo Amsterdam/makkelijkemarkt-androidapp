@@ -27,6 +27,7 @@
         android:text="@string/app_login_description"
         />
 
+    <!-- Account -->
     <!--Spinner
         android:id="@+id/account"
         android:layout_width="match_parent"
@@ -52,6 +53,7 @@
         android:ems="10"
         />
 
+    <!-- Password -->
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"

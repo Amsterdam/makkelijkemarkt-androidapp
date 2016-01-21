@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.amsterdam.marktbureau.makkelijkemarkt">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.amsterdam.marktbureau.makkelijkemarkt"
+    >
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/mm_orange"
         android:label="@string/app_title"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
 
-        <!-- MainActivity HomeScreen and Login -->
+        <!-- Main Activity Home and Login -->
         <activity
             android:name=".MainActivity"
+            android:label="@string/app_title"
             android:theme="@style/HomeTheme"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- About Activity -->
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about"
+            android:theme="@style/AboutTheme"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
 
     </application>
