@@ -31,4 +31,7 @@ dependencies {
 
     // ButterKnife for view dependency injection
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    // SimpleProvider for easy ContentProvider implementation using annotations
+    compile 'com.github.triplet.simpleprovider:simpleprovider:1.1.0'
 }
