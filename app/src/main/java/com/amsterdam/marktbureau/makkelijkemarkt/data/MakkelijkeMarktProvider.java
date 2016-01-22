@@ -13,8 +13,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     // use classname when logging
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    // set package name as provider authority
-    private static final String mAuthority = MakkelijkeMarktProvider.class.getPackage().toString();
+    // get package name
+    public static final String mPackageName = MakkelijkeMarktProvider.class.getPackage().getName();
 
     // table names
     private static final String mTableAccount = "account";
@@ -24,11 +24,11 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     private static final String mTableNotitie = "notitie";
 
     // uris for the tables
-    public static Uri mUriAccount = Uri.parse("content://" + mAuthority + "/"+ mTableAccount);
-    public static Uri mUriMarkt = Uri.parse("content://" + mAuthority + "/"+ mTableMarkt);
-    public static Uri mUriDagvergunning = Uri.parse("content://" + mAuthority + "/"+ mTableDagvergunning);
-    public static Uri mUriKoopman = Uri.parse("content://" + mAuthority + "/"+ mTableKoopman);
-    public static Uri mUriNotitie = Uri.parse("content://" + mAuthority + "/"+ mTableNotitie);
+    public static Uri mUriAccount = Uri.parse("content://" + mPackageName + "/"+ mTableAccount);
+    public static Uri mUriMarkt = Uri.parse("content://" + mPackageName + "/"+ mTableMarkt);
+    public static Uri mUriDagvergunning = Uri.parse("content://" + mPackageName + "/"+ mTableDagvergunning);
+    public static Uri mUriKoopman = Uri.parse("content://" + mPackageName + "/"+ mTableKoopman);
+    public static Uri mUriNotitie = Uri.parse("content://" + mPackageName + "/"+ mTableNotitie);
 
     /**
      * Get the content provider authority name
@@ -36,7 +36,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      */
     @Override
     protected String getAuthority() {
-        return mAuthority;
+        return MakkelijkeMarktProvider.class.getPackage().toString();
     }
 
     /**
@@ -55,10 +55,10 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public class Account {
 
         @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-        public static final String COL_ID = "_id";
+        public static final String _ID = "_id";
 
         @Column(value = Column.FieldType.INTEGER, unique = true)
-        public static final String COL_ACCOUNT_ID = "id";
+        public static final String COL_ID = "id";
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_NAAM = "naam";

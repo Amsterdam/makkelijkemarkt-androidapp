@@ -28,7 +28,7 @@
         />
 
     <!-- Account -->
-    <!--Spinner
+    <Spinner
         android:id="@+id/account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,9 +37,9 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="#80FFFFFF"
-        /-->
+        />
 
-    <EditText
+    <!--EditText
         android:id="@+id/account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:inputType="text"
         android:textSize="@dimen/textsize_content_medium"
         android:ems="10"
-        />
+        /-->
 
     <!-- Password -->
     <EditText

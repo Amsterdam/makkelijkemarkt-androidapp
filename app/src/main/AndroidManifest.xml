@@ -3,6 +3,10 @@
     package="com.amsterdam.marktbureau.makkelijkemarkt"
     >
 
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/mm_orange"
@@ -33,6 +37,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <!-- MakkelijkeMarkt Provider -->
+        <provider
+            android:authorities="com.amsterdam.marktbureau.makkelijkemarkt.data"
+            android:name=".data.MakkelijkeMarktProvider"
+            android:exported="false"
+            />
 
     </application>
 </manifest>
