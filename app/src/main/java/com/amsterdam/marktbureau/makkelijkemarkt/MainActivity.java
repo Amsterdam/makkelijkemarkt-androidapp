@@ -1,6 +1,8 @@
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,26 +17,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.amsterdam.marktbureau.makkelijkemarkt.api.Account;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApi;
-import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
-
-import java.util.List;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * MainActivity of the application that presents the home and loginscreen
+ * @author marcolangebeeke
  */
-public class MainActivity extends AppCompatActivity implements
-        MainFragment.Callback,
-        Callback<List<Account>> {
+public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
 
     // use classname when logging
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -81,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
 
             // update the local accounts by reloading them from the api
-            getAccounts();
+            new ApiGetAccounts(this).execute();
 
             // add the mainfragment to the framelayout container
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -188,76 +180,5 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         super.onBackPressed();
-    }
-
-
-
-
-
-
-
-
-    // @todo add this functionality that does not require callback to the activity but just updates the database into a separate class (service?)
-
-    private void getAccounts() {
-
-        // create the retrofit builder with a gson converter
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.makkelijkemarkt_api_base_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        // apply the makkelijkemarkt api interface
-        MakkelijkeMarktApi api = retrofit.create(MakkelijkeMarktApi.class);
-
-        // set the api function to call for loading the accounts
-        Call<List<Account>> call = api.loadAccounts();
-
-        // call the api asynchronously
-        call.enqueue(this);
-    }
-
-    /**
-     * Response from the loadAccounts method arrives here for updating the database
-     * @param response response we received from the api
-     */
-    @Override
-    public void onResponse(Response<List<Account>> response) {
-
-        // check the response and update the database
-        if (response != null && response.body() != null && response.body().size() > 0) {
-            ContentValues[] ContentValuesArray = new ContentValues[response.body().size()];
-
-            for (int i = 0; i < response.body().size(); i++) {
-                Account account = response.body().get(i);
-
-                // copy the values and add the to a contentvalues array that can be used in the
-                // contentprovider bulkinsert method
-                ContentValues accountValues = new ContentValues();
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_ID, account.getId());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_NAAM, account.getNaam());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_EMAIL, account.getEmail());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_USERNAME, account.getUsername());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_ROLE, account.getRolesAsString());
-                ContentValuesArray[i] = accountValues;
-            }
-
-            // delete existing accounts from db
-            int deleted = getContentResolver().delete(MakkelijkeMarktProvider.mUriAccount, null, null);
-            Utility.log(this, LOG_TAG, "Accounts deleted: " + deleted);
-
-            // insert downloaded accounts into db
-            int inserted = getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriAccount, ContentValuesArray);
-            Utility.log(this, LOG_TAG, "Accounts inserted: " + inserted);
-        }
-    }
-
-    /**
-     * On failure of the loadAccounts method log the error message
-     * @param t the thrown exception
-     */
-    @Override
-    public void onFailure(Throwable t) {
-        Utility.log(this, LOG_TAG, t.getMessage());
     }
 }

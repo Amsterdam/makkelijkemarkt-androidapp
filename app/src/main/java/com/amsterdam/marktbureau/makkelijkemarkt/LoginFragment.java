@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.database.Cursor;
@@ -21,6 +24,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ *
+ * @author marcolangebeeke
+ */
 public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // use classname when logging
@@ -58,11 +65,9 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
 
 
 
-
-
         mAccountsAdapter = new SimpleCursorAdapter(
                 getContext(),
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_list_item_activated_1,
                 null,
                 new String[] { MakkelijkeMarktProvider.Account.COL_NAAM },
                 new int[] { android.R.id.text1 },
@@ -120,3 +125,4 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         mAccountsAdapter.swapCursor(null);
     }
 }
+

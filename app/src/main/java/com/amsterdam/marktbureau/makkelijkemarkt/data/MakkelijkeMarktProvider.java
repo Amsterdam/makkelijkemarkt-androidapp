@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
 package com.amsterdam.marktbureau.makkelijkemarkt.data;
 
 import android.net.Uri;
@@ -8,6 +11,10 @@ import de.triplet.simpleprovider.AbstractProvider;
 import de.triplet.simpleprovider.Column;
 import de.triplet.simpleprovider.Table;
 
+/**
+ *
+ * @author marcolangebeeke
+ */
 public class MakkelijkeMarktProvider extends AbstractProvider {
 
     // use classname when logging
@@ -71,5 +78,26 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_ROLE = "role";
+    }
+
+
+    /**
+     * /markt - Markt table columns definition
+     */
+    @Table(mTableMarkt)
+    public class Markt {
+
+        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
+        public static final String _ID = "_id";
+
+        @Column(value = Column.FieldType.INTEGER, unique = true)
+        public static final String COL_ID = "id";
+
+
+        // @todo implement the rest of the fields
+
+
+
+
     }
 }

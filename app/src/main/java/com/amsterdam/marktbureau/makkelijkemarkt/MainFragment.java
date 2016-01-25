@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.os.Bundle;
@@ -11,6 +14,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ *
+ * @author marcolangebeeke
+ */
 public class MainFragment extends Fragment {
 
     // use classname when logging

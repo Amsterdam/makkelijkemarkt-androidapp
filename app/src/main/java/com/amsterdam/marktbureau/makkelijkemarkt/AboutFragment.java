@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.os.Bundle;
@@ -6,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ *
+ * @author marcolangebeeke
+ */
 public class AboutFragment extends Fragment {
 
     /**

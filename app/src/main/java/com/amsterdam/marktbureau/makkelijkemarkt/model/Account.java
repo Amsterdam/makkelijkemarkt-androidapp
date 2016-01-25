@@ -1,8 +1,15 @@
-package com.amsterdam.marktbureau.makkelijkemarkt.api;
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
+package com.amsterdam.marktbureau.makkelijkemarkt.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author marcolangebeeke
+ */
 public class Account {
 
     private int id;

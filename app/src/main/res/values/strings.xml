@@ -17,8 +17,14 @@
 
 
 
+
+
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://makkelijkemarkt-api.datalabamsterdam.nl</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://test-makkelijkemarkt-api.datalabamsterdam.nl</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl</string>-->
+    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net</string>
+
     <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
     <string name="log_tag_separator" translatable="false">=============================></string>
-    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl</string>
 
 </resources>

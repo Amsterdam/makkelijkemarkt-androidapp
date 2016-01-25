@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
+ */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.os.Bundle;
@@ -9,6 +12,10 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ *
+ * @author marcolangebeeke
+ */
 public class AboutActivity extends AppCompatActivity {
 
     // bind layout elements
