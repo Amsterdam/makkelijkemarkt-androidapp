@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author marcolangebeeke
  */
-public class Markt {
+public class ApiMarkt {
 
     private int id;
     private String afkorting;
@@ -26,7 +26,7 @@ public class Markt {
     /**
      * No args constructor for use in serialization
      */
-    public Markt() {
+    public ApiMarkt() {
     }
 
     /**
@@ -42,7 +42,7 @@ public class Markt {
      * @param naam
      * @param soort
      */
-    public Markt(int id, String afkorting, String naam, Object geoArea, String soort, List<String> marktDagen, int standaardKraamAfmeting, boolean extraMetersMogelijk, List<String> aanwezigeOpties, int perfectViewNummer) {
+    public ApiMarkt(int id, String afkorting, String naam, Object geoArea, String soort, List<String> marktDagen, int standaardKraamAfmeting, boolean extraMetersMogelijk, List<String> aanwezigeOpties, int perfectViewNummer) {
         this.id = id;
         this.afkorting = afkorting;
         this.naam = naam;

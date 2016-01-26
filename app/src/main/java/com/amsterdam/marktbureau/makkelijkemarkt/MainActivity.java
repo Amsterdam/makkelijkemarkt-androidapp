@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetMarkten;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -72,8 +73,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         // load accounts and add mainfragment, not on rotate
         if (savedInstanceState == null) {
 
+
+
+
+
             // update the local accounts by reloading them from the api
-            new ApiGetAccounts(this).execute();
+            ApiGetAccounts getAccounts = new ApiGetAccounts(this);
+            getAccounts.execute();
+
+            // update the local markten by reloading them from the api
+            ApiGetMarkten getMarkten = new ApiGetMarkten(this);
+            getMarkten.execute();
+
+
+
+
 
             // add the mainfragment to the framelayout container
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

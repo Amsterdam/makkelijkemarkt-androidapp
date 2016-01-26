@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author marcolangebeeke
  */
-public class Account {
+public class ApiAccount {
 
     private int id;
     private String email;
@@ -21,7 +21,7 @@ public class Account {
     /**
      * No args constructor for use in serialization
      */
-    public Account() {
+    public ApiAccount() {
     }
 
     /**
@@ -32,7 +32,7 @@ public class Account {
      * @param roles
      * @param naam
      */
-    public Account(int id, String email, String naam, String username, List<String> roles) {
+    public ApiAccount(int id, String email, String naam, String username, List<String> roles) {
         this.id = id;
         this.email = email;
         this.naam = naam;

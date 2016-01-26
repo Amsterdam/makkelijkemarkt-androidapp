@@ -8,7 +8,7 @@ import android.content.Context;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
-import com.amsterdam.marktbureau.makkelijkemarkt.model.Account;
+import com.amsterdam.marktbureau.makkelijkemarkt.model.ApiAccount;
 
 import java.util.List;
 
@@ -20,7 +20,10 @@ import retrofit2.Response;
  *
  * @author marcolangebeeke
  */
-public class ApiGetAccounts extends Api implements Callback<List<Account>> {
+public class ApiGetAccounts extends ApiAbstractMethod implements Callback<List<ApiAccount>> {
+
+    // use classname when logging
+    private static final String LOG_TAG = ApiGetAccounts.class.getSimpleName();
 
     /**
      *
@@ -36,7 +39,7 @@ public class ApiGetAccounts extends Api implements Callback<List<Account>> {
     public void execute() {
 
         // set the api function to call for loading the accounts
-        Call<List<Account>> call = mMakkelijkeMarktApi.loadAccounts();
+        Call<List<ApiAccount>> call = mMakkelijkeMarktApi.loadAccounts();
 
         // call the api asynchronously
         call.enqueue(this);
@@ -47,14 +50,14 @@ public class ApiGetAccounts extends Api implements Callback<List<Account>> {
      * @param response response we received from the api
      */
     @Override
-    public void onResponse(Response<List<Account>> response) {
-
-        // check the response and update the database
+    public void onResponse(Response<List<ApiAccount>> response) {
         if (response != null && response.body() != null && response.body().size() > 0) {
+
+            // create array for the bulkinsert
             ContentValues[] ContentValuesArray = new ContentValues[response.body().size()];
 
             for (int i = 0; i < response.body().size(); i++) {
-                Account account = response.body().get(i);
+                ApiAccount account = response.body().get(i);
 
                 // copy the values and add the to a contentvalues array that can be used in the
                 // contentprovider bulkinsert method

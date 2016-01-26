@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:padding="@dimen/activity_horizontal_margin"
-            android:background="#BB000000"
+            android:background="#AA000000"
             >
 
             <!-- Placeholder container for switching fragments -->
