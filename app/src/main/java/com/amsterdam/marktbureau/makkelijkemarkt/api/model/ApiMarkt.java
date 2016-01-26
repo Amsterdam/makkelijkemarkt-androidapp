@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
  */
-package com.amsterdam.marktbureau.makkelijkemarkt.model;
+package com.amsterdam.marktbureau.makkelijkemarkt.api.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The id
      */
     public int getId() {
         return id;
@@ -67,7 +66,6 @@ public class ApiMarkt {
     /**
      *
      * @param id
-     * The id
      */
     public void setId(int id) {
         this.id = id;
@@ -76,7 +74,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The afkorting
      */
     public String getAfkorting() {
         return afkorting;
@@ -85,7 +82,6 @@ public class ApiMarkt {
     /**
      *
      * @param afkorting
-     * The afkorting
      */
     public void setAfkorting(String afkorting) {
         this.afkorting = afkorting;
@@ -94,7 +90,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The naam
      */
     public String getNaam() {
         return naam;
@@ -103,7 +98,6 @@ public class ApiMarkt {
     /**
      *
      * @param naam
-     * The naam
      */
     public void setNaam(String naam) {
         this.naam = naam;
@@ -112,7 +106,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The geoArea
      */
     public Object getGeoArea() {
         return geoArea;
@@ -121,7 +114,6 @@ public class ApiMarkt {
     /**
      *
      * @param geoArea
-     * The geoArea
      */
     public void setGeoArea(Object geoArea) {
         this.geoArea = geoArea;
@@ -130,7 +122,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The soort
      */
     public String getSoort() {
         return soort;
@@ -139,7 +130,6 @@ public class ApiMarkt {
     /**
      *
      * @param soort
-     * The soort
      */
     public void setSoort(String soort) {
         this.soort = soort;
@@ -148,7 +138,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The marktDagen
      */
     public List<String> getMarktDagen() {
         return marktDagen;
@@ -157,7 +146,6 @@ public class ApiMarkt {
     /**
      *
      * @param marktDagen
-     * The marktDagen
      */
     public void setMarktDagen(List<String> marktDagen) {
         this.marktDagen = marktDagen;
@@ -166,7 +154,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The standaardKraamAfmeting
      */
     public int getStandaardKraamAfmeting() {
         return standaardKraamAfmeting;
@@ -175,7 +162,6 @@ public class ApiMarkt {
     /**
      *
      * @param standaardKraamAfmeting
-     * The standaardKraamAfmeting
      */
     public void setStandaardKraamAfmeting(int standaardKraamAfmeting) {
         this.standaardKraamAfmeting = standaardKraamAfmeting;
@@ -184,7 +170,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The extraMetersMogelijk
      */
     public boolean isExtraMetersMogelijk() {
         return extraMetersMogelijk;
@@ -193,7 +178,6 @@ public class ApiMarkt {
     /**
      *
      * @param extraMetersMogelijk
-     * The extraMetersMogelijk
      */
     public void setExtraMetersMogelijk(boolean extraMetersMogelijk) {
         this.extraMetersMogelijk = extraMetersMogelijk;
@@ -202,7 +186,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The aanwezigeOpties
      */
     public List<String> getAanwezigeOpties() {
         return aanwezigeOpties;
@@ -211,7 +194,6 @@ public class ApiMarkt {
     /**
      *
      * @param aanwezigeOpties
-     * The aanwezigeOpties
      */
     public void setAanwezigeOpties(List<String> aanwezigeOpties) {
         this.aanwezigeOpties = aanwezigeOpties;
@@ -220,7 +202,6 @@ public class ApiMarkt {
     /**
      *
      * @return
-     * The perfectViewNummer
      */
     public int getPerfectViewNummer() {
         return perfectViewNummer;
@@ -229,10 +210,8 @@ public class ApiMarkt {
     /**
      *
      * @param perfectViewNummer
-     * The perfectViewNummer
      */
     public void setPerfectViewNummer(int perfectViewNummer) {
         this.perfectViewNummer = perfectViewNummer;
     }
-
 }

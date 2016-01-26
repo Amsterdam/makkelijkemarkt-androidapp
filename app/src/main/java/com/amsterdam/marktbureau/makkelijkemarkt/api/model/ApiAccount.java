@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
  */
-package com.amsterdam.marktbureau.makkelijkemarkt.model;
+package com.amsterdam.marktbureau.makkelijkemarkt.api.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +106,13 @@ public class ApiAccount {
     }
 
     /**
+     * @param roles
+     */
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    /**
      * @return the roles as a comma-separated String
      */
     public String getRolesAsString() {
@@ -117,12 +124,5 @@ public class ApiAccount {
             builder.append(role);
         }
         return builder.toString();
-    }
-
-    /**
-     * @param roles
-     */
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
     }
 }

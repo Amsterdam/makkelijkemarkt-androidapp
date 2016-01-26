@@ -80,7 +80,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_ROLE = "role";
     }
 
-
     /**
      * /markt - Markt table columns definition
      */
@@ -93,11 +92,28 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(value = Column.FieldType.INTEGER, unique = true)
         public static final String COL_ID = "id";
 
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_NAAM = "naam";
 
-        // @todo implement the rest of the fields
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_GEO_AREA = "geo_area";
 
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_AFKORTING = "afkorting";
 
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_SOORT = "soort";
 
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_MARKT_DAGEN = "markt_dagen";
 
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_STANDAARD_KRAAM_AFMETING = "standaard_kraam_afmeting";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_EXTRA_METERS_MOGELIJK = "extra_meters_mogelijk";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_AANWEZIGE_OPTIES = "aanwezige_opties";
     }
 }

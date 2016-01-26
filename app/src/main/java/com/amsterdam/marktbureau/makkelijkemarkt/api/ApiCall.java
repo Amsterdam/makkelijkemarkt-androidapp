@@ -11,10 +11,10 @@ import retrofit2.Retrofit;
  *
  * @author marcolangebeeke
  */
-public class ApiAbstractMethod {
+public class ApiCall {
 
     // use classname when logging
-    protected static final String LOG_TAG = ApiAbstractMethod.class.getSimpleName();
+    protected static final String LOG_TAG = ApiCall.class.getSimpleName();
 
     // context
     protected Context mContext;
@@ -26,7 +26,7 @@ public class ApiAbstractMethod {
      *
      * @param context
      */
-    public ApiAbstractMethod(Context context) {
+    public ApiCall(Context context) {
 
         // get the context
         mContext = context;

@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author marcolangebeeke
@@ -98,6 +101,24 @@ public class Utility {
      * @param message the message we want to log
      */
     public static void log(Context context, String logTag, String message) {
-        Log.d(context.getString(R.string.log_tag_package), logTag +" "+ context.getString(R.string.log_tag_separator) +" "+ message);
+        Log.d(context.getString(R.string.log_tag_package), logTag + " " + context.getString(R.string.log_tag_separator) + " " + message);
+    }
+
+    /**
+     *
+     * @param list
+     * @return
+     */
+    public static String listToCsv(List<String> list, String separator) {
+        List<String> rolesCopy = new ArrayList<String>(list);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(rolesCopy.remove(0));
+        for (String role : rolesCopy) {
+            builder.append(separator);
+            builder.append(role);
+        }
+
+        return builder.toString();
     }
 }
