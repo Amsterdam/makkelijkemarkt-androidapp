@@ -6,7 +6,6 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 import android.content.ContentValues;
 import android.content.Context;
 
-import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
@@ -25,103 +24,31 @@ import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
- *
+ * Load markten from the makkelijkemarkt api and store them in the database
  * @author marcolangebeeke
  */
-//public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
-public class ApiGetMarkten implements Callback<List<ApiMarkt>> {
+public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
 
     // use classname when logging
     private static final String LOG_TAG = ApiGetMarkten.class.getSimpleName();
 
-    // context
-    protected Context mContext;
-
-    // api interface
-    protected MakkelijkeMarktApi mMakkelijkeMarktApi;
-
     /**
-     *
-     * @param context
+     * Call the superclass constructor to set the context
+     * @param context the context
      */
     public ApiGetMarkten(Context context) {
-//        super(context);
-
-        // get the context
-        mContext = context;
-
-
-
-        // @todo refactor to use ApiCall as base class and pass in the httpclient/interceptor optionally in the constructor
-
-
-
-        Interceptor convertAanwezigeOpties = new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                okhttp3.Response response = chain.proceed(chain.request());
-
-                if (response.isSuccessful()) {
-                    String aanwezigeOptiesObjectName = "aanwezigeOpties";
-                    try {
-                        MediaType contentType = response.body().contentType();
-                        JSONArray markten = new JSONArray(response.body().string());
-
-                        for(int i = 0; i < markten.length(); i++) {
-                            JSONObject markt = markten.getJSONObject(i);
-                            Object object = markt.get(aanwezigeOptiesObjectName);
-                            if (object instanceof JSONObject) {
-                                JSONObject aanwezigeOpties = (JSONObject) object;
-                                Iterator<String> iterator = aanwezigeOpties.keys();
-                                JSONArray opties = new JSONArray();
-                                while (iterator.hasNext()) {
-                                    opties.put(iterator.next());
-                                }
-                                markt.remove(aanwezigeOptiesObjectName);
-                                markt.put(aanwezigeOptiesObjectName, opties);
-                            }
-                        }
-
-                        ResponseBody body = ResponseBody.create(contentType, markten.toString());
-                        response = response.newBuilder().body(body).build();
-
-                    } catch (JSONException e) {
-                        Utility.log(mContext, LOG_TAG, "Exception creating JSONObject: " + e.getMessage());
-                    }
-                }
-
-                return response;
-            }
-        };
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(convertAanwezigeOpties)
-                .build();
-
-
-
-        // create the retrofit builder with a gson converter
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(mContext.getString(R.string.makkelijkemarkt_api_base_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-
-
-        // apply the makkelijkemarkt api interface
-        mMakkelijkeMarktApi = retrofit.create(MakkelijkeMarktApi.class);
+        super(context);
     }
 
     /**
-     *
+     * Enqueue an async call to load the markten
      */
-    public void execute() {
+    @Override
+    public void enqueue() {
+        super.enqueue();
 
         // set the api function to call for loading the markten
         Call<List<ApiMarkt>> call = mMakkelijkeMarktApi.loadMarkten();
@@ -132,46 +59,97 @@ public class ApiGetMarkten implements Callback<List<ApiMarkt>> {
 
     /**
      *
-     * @param response
+     * @return
+     */
+    public OkHttpClient buildClientWithInterceptor() {
+        Interceptor convertAanwezigeOpties = new Interceptor() {
+
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Response response = chain.proceed(chain.request());
+
+                // if we have a successful response modifiy it
+                if (response.isSuccessful()) {
+                    final String aanwezigeOptiesObjectName = "aanwezigeOpties";
+                    try {
+
+                        // get the contenttype so we can re-create it later the same
+                        MediaType contentType = response.body().contentType();
+                        JSONArray markten = new JSONArray(response.body().string());
+
+                        // loop through markten array objects
+                        for(int i = 0; i < markten.length(); i++) {
+                            JSONObject markt = markten.getJSONObject(i);
+
+                            // get the value of the aanwezigeopties object and check if it is of type
+                            // jsonobject (instead of array as is sometimes the case)
+                            Object object = markt.get(aanwezigeOptiesObjectName);
+                            if (object instanceof JSONObject) {
+                                JSONObject aanwezigeOpties = (JSONObject) object;
+
+                                // get objects in aanwezige opties and add their string names to an array
+                                Iterator<String> iterator = aanwezigeOpties.keys();
+                                JSONArray opties = new JSONArray();
+                                while (iterator.hasNext()) {
+                                    opties.put(iterator.next());
+                                }
+
+                                // replace the existing object with the new jsonarray
+                                markt.remove(aanwezigeOptiesObjectName);
+                                markt.put(aanwezigeOptiesObjectName, opties);
+                            }
+                        }
+
+                        // re-create the response
+                        ResponseBody body = ResponseBody.create(contentType, markten.toString());
+                        response = response.newBuilder().body(body).build();
+
+                    } catch (JSONException e) {
+                        Utility.log(mContext, LOG_TAG, "Exception creating JSONObject: " + e.getMessage());
+                    }
+                }
+
+                // return the modified response object
+                return response;
+            }
+        };
+
+        // build client with created interceptor
+        return new OkHttpClient.Builder()
+                .addInterceptor(convertAanwezigeOpties)
+                .build();
+    }
+
+    /**
+     * Response from the loadMarkten method arrives here for updating the database
+     * @param response response we received from the api
      */
     @Override
     public void onResponse(Response<List<ApiMarkt>> response) {
         if (response.body() != null && response.body().size() > 0) {
 
-            // create array for the bulkinsert
-            ContentValues[] ContentValuesArray = new ContentValues[response.body().size()];
-
+            // copy the values to a contentvalues array that can be used in the
+            // contentprovider bulkinsert method
+            ContentValues[] contentValues = new ContentValues[response.body().size()];
             for (int i = 0; i < response.body().size(); i++) {
-                ApiMarkt markt = response.body().get(i);
-
-                // copy the values and add the to a contentvalues array that can be used in the
-                // contentprovider bulkinsert method
-                ContentValues marktValues = new ContentValues();
-                marktValues.put(MakkelijkeMarktProvider.Markt.COL_ID, markt.getId());
-                marktValues.put(MakkelijkeMarktProvider.Markt.COL_NAAM, markt.getNaam());
-
-
-
-                // @todo rest van de velden toevoegen
-
-
-
-                ContentValuesArray[i] = marktValues;
+                contentValues[i] = response.body().get(i).toContentValues();
             }
 
-            // delete existing markten from db
-            int deleted = mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
-            Utility.log(mContext, LOG_TAG, "Markten deleted: " + deleted);
+            // delete existing markten and insert downloaded marken into db
+            if (contentValues.length > 0) {
 
-            // insert downloaded markten into db
-            int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, ContentValuesArray);
-            Utility.log(mContext, LOG_TAG, "Markten inserted: " + inserted);
+                int deleted = mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
+                Utility.log(mContext, LOG_TAG, "Markten deleted: " + deleted);
+
+                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, contentValues);
+                Utility.log(mContext, LOG_TAG, "Markten inserted: " + inserted);
+            }
         }
     }
 
     /**
-     *
-     * @param t
+     * On failure of the loadMarkten method log the error message
+     * @param t the thrown exception
      */
     @Override
     public void onFailure(Throwable t) {

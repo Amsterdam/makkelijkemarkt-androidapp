@@ -3,11 +3,16 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt.api.model;
 
+import android.content.ContentValues;
+
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
+import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Account object for communicating with the Api using retrofit
  * @author marcolangebeeke
  */
 public class ApiAccount {
@@ -69,9 +74,7 @@ public class ApiAccount {
     }
 
     /**
-     *
      * @return
-     * The naam
      */
     public String getNaam() {
         return naam;
@@ -113,16 +116,25 @@ public class ApiAccount {
     }
 
     /**
-     * @return the roles as a comma-separated String
+     * @return the roles list as a comma-separated String
      */
-    public String getRolesAsString() {
-        List<String> rolesCopy = new ArrayList<String>(roles);
-        StringBuilder builder = new StringBuilder();
-        builder.append(rolesCopy.remove(0));
-        for (String role : rolesCopy) {
-            builder.append(",");
-            builder.append(role);
-        }
-        return builder.toString();
+    public String getRolesAsCsv() {
+        return Utility.listToCsv(roles, ",");
+    }
+
+    /**
+     * Convert object to type contentvalues
+     * @return contentvalues object containing the objects name value pairs
+     */
+    public ContentValues toContentValues() {
+        ContentValues accountValues = new ContentValues();
+
+        accountValues.put(MakkelijkeMarktProvider.Account.COL_ID, getId());
+        accountValues.put(MakkelijkeMarktProvider.Account.COL_NAAM, getNaam());
+        accountValues.put(MakkelijkeMarktProvider.Account.COL_EMAIL, getEmail());
+        accountValues.put(MakkelijkeMarktProvider.Account.COL_USERNAME, getUsername());
+        accountValues.put(MakkelijkeMarktProvider.Account.COL_ROLE, getRolesAsCsv());
+
+        return accountValues;
     }
 }

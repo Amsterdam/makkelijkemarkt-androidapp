@@ -12,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 /**
- *
+ * Makkelijke Markt Api interface defining the retrofit api calls
  * @author marcolangebeeke
  */
 public interface MakkelijkeMarktApi {
@@ -22,9 +22,4 @@ public interface MakkelijkeMarktApi {
 
     @GET("markt")
     Call<List<ApiMarkt>> loadMarkten();
-
-
-
-
-
 }

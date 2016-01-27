@@ -17,7 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *
+ * Load accounts from the makkelijkemarkt api and store them in the database
  * @author marcolangebeeke
  */
 public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>> {
@@ -26,17 +26,19 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
     private static final String LOG_TAG = ApiGetAccounts.class.getSimpleName();
 
     /**
-     *
-     * @param context
+     * Call the superclass constructor to set the context
+     * @param context the context
      */
     public ApiGetAccounts(Context context) {
         super(context);
     }
 
     /**
-     *
+     * Enqueue an async call to load the accounts
      */
-    public void execute() {
+    @Override
+    public void enqueue() {
+        super.enqueue();
 
         // set the api function to call for loading the accounts
         Call<List<ApiAccount>> call = mMakkelijkeMarktApi.loadAccounts();
@@ -53,30 +55,22 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
     public void onResponse(Response<List<ApiAccount>> response) {
         if (response.body() != null && response.body().size() > 0) {
 
-            // create array for the bulkinsert
-            ContentValues[] ContentValuesArray = new ContentValues[response.body().size()];
-
+            // copy the values to a contentvalues array that can be used in the
+            // contentprovider bulkinsert method
+            ContentValues[] contentValues = new ContentValues[response.body().size()];
             for (int i = 0; i < response.body().size(); i++) {
-                ApiAccount account = response.body().get(i);
-
-                // copy the values and add the to a contentvalues array that can be used in the
-                // contentprovider bulkinsert method
-                ContentValues accountValues = new ContentValues();
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_ID, account.getId());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_NAAM, account.getNaam());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_EMAIL, account.getEmail());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_USERNAME, account.getUsername());
-                accountValues.put(MakkelijkeMarktProvider.Account.COL_ROLE, account.getRolesAsString());
-                ContentValuesArray[i] = accountValues;
+                contentValues[i] = response.body().get(i).toContentValues();
             }
 
-            // delete existing accounts from db
-            int deleted = mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriAccount, null, null);
-            Utility.log(mContext, LOG_TAG, "Accounts deleted: " + deleted);
+            // delete existing accounts and insert downloaded accounts into db
+            if (contentValues.length > 0) {
 
-            // insert downloaded accounts into db
-            int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriAccount, ContentValuesArray);
-            Utility.log(mContext, LOG_TAG, "Accounts inserted: " + inserted);
+                int deleted = mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriAccount, null, null);
+                Utility.log(mContext, LOG_TAG, "Accounts deleted: " + deleted);
+
+                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriAccount, contentValues);
+                Utility.log(mContext, LOG_TAG, "Accounts inserted: " + inserted);
+            }
         }
     }
 

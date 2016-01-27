@@ -12,7 +12,7 @@ import de.triplet.simpleprovider.Column;
 import de.triplet.simpleprovider.Table;
 
 /**
- *
+ * Database provider for caching the content from the makkelijke markt api locally in an sqlite db
  * @author marcolangebeeke
  */
 public class MakkelijkeMarktProvider extends AbstractProvider {

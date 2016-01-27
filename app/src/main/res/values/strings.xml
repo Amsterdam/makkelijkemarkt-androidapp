@@ -19,9 +19,9 @@
 
 
 
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://makkelijkemarkt-api.datalabamsterdam.nl</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://test-makkelijkemarkt-api.datalabamsterdam.nl</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
     <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
 
     <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>

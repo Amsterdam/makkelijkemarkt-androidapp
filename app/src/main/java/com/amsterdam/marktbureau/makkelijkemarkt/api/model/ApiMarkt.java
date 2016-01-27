@@ -3,11 +3,16 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt.api.model;
 
+import android.content.ContentValues;
+
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
+import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Markt object for communicating with the Api using retrofit
  * @author marcolangebeeke
  */
 public class ApiMarkt {
@@ -15,7 +20,7 @@ public class ApiMarkt {
     private int id;
     private String afkorting;
     private String naam;
-    private Object geoArea;
+    private String geoArea;
     private String soort;
     private List<String> marktDagen = new ArrayList<String>();
     private int standaardKraamAfmeting;
@@ -24,39 +29,6 @@ public class ApiMarkt {
     private int perfectViewNummer;
 
     /**
-     * No args constructor for use in serialization
-     */
-    public ApiMarkt() {
-    }
-
-    /**
-     *
-     * @param marktDagen
-     * @param id
-     * @param afkorting
-     * @param geoArea
-     * @param standaardKraamAfmeting
-     * @param aanwezigeOpties
-     * @param extraMetersMogelijk
-     * @param perfectViewNummer
-     * @param naam
-     * @param soort
-     */
-    public ApiMarkt(int id, String afkorting, String naam, Object geoArea, String soort, List<String> marktDagen, int standaardKraamAfmeting, boolean extraMetersMogelijk, List<String> aanwezigeOpties, int perfectViewNummer) {
-        this.id = id;
-        this.afkorting = afkorting;
-        this.naam = naam;
-        this.geoArea = geoArea;
-        this.soort = soort;
-        this.marktDagen = marktDagen;
-        this.standaardKraamAfmeting = standaardKraamAfmeting;
-        this.extraMetersMogelijk = extraMetersMogelijk;
-        this.aanwezigeOpties = aanwezigeOpties;
-        this.perfectViewNummer = perfectViewNummer;
-    }
-
-    /**
-     *
      * @return
      */
     public int getId() {
@@ -64,7 +36,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param id
      */
     public void setId(int id) {
@@ -72,7 +43,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public String getAfkorting() {
@@ -80,7 +50,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param afkorting
      */
     public void setAfkorting(String afkorting) {
@@ -88,7 +57,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public String getNaam() {
@@ -96,7 +64,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param naam
      */
     public void setNaam(String naam) {
@@ -104,23 +71,20 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
-    public Object getGeoArea() {
+    public String getGeoArea() {
         return geoArea;
     }
 
     /**
-     *
      * @param geoArea
      */
-    public void setGeoArea(Object geoArea) {
+    public void setGeoArea(String geoArea) {
         this.geoArea = geoArea;
     }
 
     /**
-     *
      * @return
      */
     public String getSoort() {
@@ -128,7 +92,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param soort
      */
     public void setSoort(String soort) {
@@ -136,7 +99,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public List<String> getMarktDagen() {
@@ -144,7 +106,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param marktDagen
      */
     public void setMarktDagen(List<String> marktDagen) {
@@ -152,7 +113,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public int getStandaardKraamAfmeting() {
@@ -160,7 +120,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param standaardKraamAfmeting
      */
     public void setStandaardKraamAfmeting(int standaardKraamAfmeting) {
@@ -168,7 +127,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public boolean isExtraMetersMogelijk() {
@@ -176,7 +134,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param extraMetersMogelijk
      */
     public void setExtraMetersMogelijk(boolean extraMetersMogelijk) {
@@ -184,7 +141,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public List<String> getAanwezigeOpties() {
@@ -192,7 +148,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param aanwezigeOpties
      */
     public void setAanwezigeOpties(List<String> aanwezigeOpties) {
@@ -200,7 +155,6 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @return
      */
     public int getPerfectViewNummer() {
@@ -208,10 +162,43 @@ public class ApiMarkt {
     }
 
     /**
-     *
      * @param perfectViewNummer
      */
     public void setPerfectViewNummer(int perfectViewNummer) {
         this.perfectViewNummer = perfectViewNummer;
+    }
+
+    /**
+     * @return the marktdagen list as a comma-separated String
+     */
+    public String getMarktDagenAsCsv() {
+        return Utility.listToCsv(marktDagen, ",");
+    }
+
+    /**
+     * @return the aanwezigeopties list as a comma-separated String
+     */
+    public String getAanwezigeOptiesAsCsv() {
+        return Utility.listToCsv(aanwezigeOpties, ",");
+    }
+
+    /**
+     * Convert object to type contentvalues
+     * @return contentvalues object containing the objects name value pairs
+     */
+    public ContentValues toContentValues() {
+        ContentValues marktValues = new ContentValues();
+
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_ID, getId());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_NAAM, getNaam());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_GEO_AREA, getGeoArea());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_AFKORTING, getAfkorting());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_SOORT, getSoort());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_MARKT_DAGEN, getMarktDagenAsCsv());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_STANDAARD_KRAAM_AFMETING, getStandaardKraamAfmeting());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_EXTRA_METERS_MOGELIJK, isExtraMetersMogelijk());
+        marktValues.put(MakkelijkeMarktProvider.Markt.COL_AANWEZIGE_OPTIES, getAanwezigeOptiesAsCsv());
+
+        return marktValues;
     }
 }

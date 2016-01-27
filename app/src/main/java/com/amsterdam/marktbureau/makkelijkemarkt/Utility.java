@@ -105,18 +105,22 @@ public class Utility {
     }
 
     /**
-     *
-     * @param list
-     * @return
+     * Helper to join a list of string items separating them using given separator
+     * @param list list containing the strings
+     * @param separator the string to separate the listitems
+     * @return string containing <separator> separated items
      */
     public static String listToCsv(List<String> list, String separator) {
         List<String> rolesCopy = new ArrayList<String>(list);
 
         StringBuilder builder = new StringBuilder();
-        builder.append(rolesCopy.remove(0));
-        for (String role : rolesCopy) {
-            builder.append(separator);
-            builder.append(role);
+
+        if (rolesCopy.size() > 0) {
+            builder.append(rolesCopy.remove(0));
+            for (String role : rolesCopy) {
+                builder.append(separator);
+                builder.append(role);
+            }
         }
 
         return builder.toString();

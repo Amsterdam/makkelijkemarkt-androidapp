@@ -64,7 +64,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         ButterKnife.bind(this, mainView);
 
 
-
+        //
         mAccountsAdapter = new SimpleCursorAdapter(
                 getContext(),
                 android.R.layout.simple_list_item_activated_1,
