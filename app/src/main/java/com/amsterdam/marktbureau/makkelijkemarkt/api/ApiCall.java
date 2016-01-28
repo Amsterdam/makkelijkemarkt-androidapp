@@ -7,8 +7,10 @@ import android.content.Context;
 import android.support.annotation.CallSuper;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
+import com.google.gson.JsonObject;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
@@ -19,19 +21,22 @@ import retrofit2.Retrofit;
 public class ApiCall {
 
     // use classname when logging
-    protected static final String LOG_TAG = ApiCall.class.getSimpleName();
+    private static final String LOG_TAG = ApiCall.class.getSimpleName();
 
     // context
     protected Context mContext;
 
     // the api base url
-    private String mBaseUrl;
-
-    // the optional client to be used by retrofit
-    protected OkHttpClient mClient;
+    protected String mBaseUrl;
 
     // retrofit api interface
     protected MakkelijkeMarktApi mMakkelijkeMarktApi;
+
+    // an optional different client to be used by retrofit
+    protected OkHttpClient mClient;
+
+    // an optional gson payload to send with the request
+    protected JsonObject mPayload;
 
     /**
      * Constructor setting the given context and a default api base url
@@ -69,6 +74,14 @@ public class ApiCall {
     }
 
     /**
+     * Set a json payload that can be sent with the request
+     * @param payload the gson
+     */
+    public void setPayload(JsonObject payload) {
+        mPayload = payload;
+    }
+
+    /**
      * Build the retrofit object, optionally with a custom client
      */
     public void build() {
@@ -100,4 +113,16 @@ public class ApiCall {
             build();
         }
     }
+
+    /**
+     * Enqueue async api method with given callback
+     * @param callback the object that will process the response
+     */
+    @CallSuper
+    public void enqueue(Callback callback) {
+        if (mMakkelijkeMarktApi == null) {
+            build();
+        }
+    }
+
 }

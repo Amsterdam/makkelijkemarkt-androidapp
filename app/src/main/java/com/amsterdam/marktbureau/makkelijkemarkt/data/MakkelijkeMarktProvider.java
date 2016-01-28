@@ -62,10 +62,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public class Account {
 
         @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-        public static final String _ID = "_id";
-
-        @Column(value = Column.FieldType.INTEGER, unique = true)
-        public static final String COL_ID = "id";
+        public static final String COL_ID = "_id";
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_NAAM = "naam";
@@ -87,10 +84,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public class Markt {
 
         @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-        public static final String _ID = "_id";
-
-        @Column(value = Column.FieldType.INTEGER, unique = true)
-        public static final String COL_ID = "id";
+        public static final String COL_ID = "_id";
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_NAAM = "naam";

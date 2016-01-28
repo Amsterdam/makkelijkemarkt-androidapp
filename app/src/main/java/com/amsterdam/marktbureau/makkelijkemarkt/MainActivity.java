@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         // load accounts and add mainfragment, not on rotate
         if (savedInstanceState == null) {
 
+            // @todo move these api calls later to a service that keeps running api calls on set intervals in a separate thread
+
             // update the local accounts by reloading them from the api
             ApiGetAccounts getAccounts = new ApiGetAccounts(this);
             getAccounts.enqueue();
-
-            // @todo move these api calls later to a service that keeps running api calls on set intervals in a separate thread
 
             // update the local markten by reloading them from the api (with a http client containing
             // an interceptor that will modify the response to transform the aanwezigeopties object

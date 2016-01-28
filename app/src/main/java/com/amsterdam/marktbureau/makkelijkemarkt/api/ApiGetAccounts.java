@@ -41,7 +41,7 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
         super.enqueue();
 
         // set the api function to call for loading the accounts
-        Call<List<ApiAccount>> call = mMakkelijkeMarktApi.loadAccounts();
+        Call<List<ApiAccount>> call = mMakkelijkeMarktApi.getAccounts();
 
         // call the api asynchronously
         call.enqueue(this);

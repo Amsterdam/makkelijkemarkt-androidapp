@@ -4,6 +4,8 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="about">About</string>
+    <string name="markten">Markten</string>
+    <string name="dagvergunningen">Dagvergunningen</string>
 
     <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
@@ -16,7 +18,9 @@
     <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 
 
-
+    <string name="notice_login_enter_password">Please enter your password</string>
+    <string name="notice_login_password_invalid">Invalid password</string>
+    <string name="network_required_notice">Network connectivity required, please check your internet connection</string>
 
 
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->

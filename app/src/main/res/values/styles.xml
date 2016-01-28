@@ -15,8 +15,16 @@
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <!-- Home theme for the Home- and Login screen only -->
+    <!-- Home theme: for the Home- and Login screen only -->
     <style name="HomeTheme" parent="AppTheme">
+    </style>
+
+    <!-- Markten theme: for the Markten screen only -->
+    <style name="MarktenTheme" parent="AppTheme">
+    </style>
+
+    <!-- Main theme: for the main screens of the application -->
+    <style name="MainTheme" parent="AppTheme">
     </style>
 
     <!-- About activity theme -->

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.amsterdam.marktbureau.makkelijkemarkt"
-    >
+    package="com.amsterdam.marktbureau.makkelijkemarkt">
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,27 +11,45 @@
         android:icon="@drawable/mm_orange"
         android:label="@string/app_title"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
 
-        <!-- Main Activity Home and Login -->
+        <!-- HOME - Home and Login activity -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_title"
-            android:theme="@style/HomeTheme"
-            >
+            android:theme="@style/HomeTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- About Activity -->
+        <!-- MARKTEN Activity -->
+        <activity
+            android:name=".MarktenActivity"
+            android:label="@string/markten"
+            android:theme="@style/MarktenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- DAGVERGUNNINGEN Activity-->
+        <activity
+            android:name=".DagvergunningenActivity"
+            android:label="@string/dagvergunningen"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MarktenActivity" />
+        </activity>
+
+        <!-- ABOUT Activity -->
         <activity
             android:name=".AboutActivity"
             android:label="@string/about"
-            android:theme="@style/AboutTheme"
-            >
+            android:theme="@style/AboutTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -40,10 +57,9 @@
 
         <!-- MakkelijkeMarkt Provider -->
         <provider
-            android:authorities="com.amsterdam.marktbureau.makkelijkemarkt.data"
             android:name=".data.MakkelijkeMarktProvider"
-            android:exported="false"
-            />
+            android:authorities="com.amsterdam.marktbureau.makkelijkemarkt.data"
+            android:exported="false" />
 
     </application>
 </manifest>

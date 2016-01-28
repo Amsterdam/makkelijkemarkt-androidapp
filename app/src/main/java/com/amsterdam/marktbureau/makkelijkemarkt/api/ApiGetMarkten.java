@@ -51,15 +51,17 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
         super.enqueue();
 
         // set the api function to call for loading the markten
-        Call<List<ApiMarkt>> call = mMakkelijkeMarktApi.loadMarkten();
+        Call<List<ApiMarkt>> call = mMakkelijkeMarktApi.getMarkten();
 
         // call the api asynchronously
         call.enqueue(this);
     }
 
     /**
-     *
-     * @return
+     * Create an okhttpclient with an interceptor that transforms the aanwezigeopties object in the
+     * json response from a collection of objects into a comma-separated string before returning the
+     * response to the caller
+     * @return an okhttpclient containing the interceptor
      */
     public OkHttpClient buildClientWithInterceptor() {
         Interceptor convertAanwezigeOpties = new Interceptor() {
