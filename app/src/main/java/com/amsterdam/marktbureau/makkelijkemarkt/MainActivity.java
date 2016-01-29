@@ -22,7 +22,6 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetMarkten;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
 
 /**
  * MainActivity of the application that presents the home and loginscreen
@@ -80,13 +79,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             ApiGetAccounts getAccounts = new ApiGetAccounts(this);
             getAccounts.enqueue();
 
-            // update the local markten by reloading them from the api (with a http client containing
+            // update the local markten by reloading them from the api (with an http client containing
             // an interceptor that will modify the response to transform the aanwezigeopties object
-            // into an array)
+            // into an array of strings)
             ApiGetMarkten getMarkten = new ApiGetMarkten(this);
-            OkHttpClient client = getMarkten.buildClientWithInterceptor();
-            getMarkten.setClient(client);
-            getMarkten.build();
+            getMarkten.addAanwezigeOptiesInterceptor();
             getMarkten.enqueue();
 
             // add the mainfragment to the framelayout container

@@ -20,7 +20,6 @@ import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,14 +57,14 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
     }
 
     /**
-     * Create an okhttpclient with an interceptor that transforms the aanwezigeopties object in the
-     * json response from a collection of objects into a comma-separated string before returning the
+     * Create an http request interceptor that transforms the aanwezigeopties object in the json
+     * response from a collection of objects into a comma-separated string before returning the
      * response to the caller
-     * @return an okhttpclient containing the interceptor
      */
-    public OkHttpClient buildClientWithInterceptor() {
-        Interceptor convertAanwezigeOpties = new Interceptor() {
+    public void addAanwezigeOptiesInterceptor() {
 
+        // create an interceptor object
+        Interceptor convertAanwezigeOpties = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 okhttp3.Response response = chain.proceed(chain.request());
@@ -116,10 +115,8 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
             }
         };
 
-        // build client with created interceptor
-        return new OkHttpClient.Builder()
-                .addInterceptor(convertAanwezigeOpties)
-                .build();
+        // add the interceptor to the http client builder
+        mClientBuilder.addInterceptor(convertAanwezigeOpties);
     }
 
     /**

@@ -4,8 +4,10 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -57,10 +59,6 @@ public class LoginFragment extends Fragment implements
 
     // keep a reference to toast messages
     private Toast mToast;
-
-    // login payload json object variable names
-    private static final String JSON_ACCOUNT_ID = "accountId";
-    private static final String JSON_PASSWORD = "password";
 
     /**
      * Constructor
@@ -126,10 +124,12 @@ public class LoginFragment extends Fragment implements
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_enter_password));
         } else {
 
+            // @todo add deviceUuid, clientApp, and clientVersion in the post request (see login/basicId api doc)
+
             // prepare the json payload for the post request from the entered login details
             JsonObject auth = new JsonObject();
-            auth.addProperty(JSON_ACCOUNT_ID, String.valueOf(mSelectedAccountId));
-            auth.addProperty(JSON_PASSWORD, mPassword.getText().toString());
+            auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_accound_id_name), String.valueOf(mSelectedAccountId));
+            auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_password_name), mPassword.getText().toString());
 
             // @todo start loading 'zandloper'
 
@@ -194,9 +194,15 @@ public class LoginFragment extends Fragment implements
         if (response.isSuccess() && response.body() != null) {
 
             // get the api key from the response gson
-            String uuid = response.body().get("uuid").getAsString();
+            String uuid = response.body().get(getString(R.string.makkelijkemarkt_api_uuid_name)).getAsString();
 
-            // @todo store the uuid in the shared preferences
+            // store the uuid in the shared preferences
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(getString(R.string.makkelijkemarkt_api_uuid_name), uuid);
+
+            // Commit the edits!
+            editor.apply();
 
             // @todo store the selected account object/id in the shared preferences
 
@@ -218,7 +224,7 @@ public class LoginFragment extends Fragment implements
 
         // @todo end loading 'zandloper'
 
-        // @todo show an error ? => research out in which possible cases onFailure is called
+        // @todo show an error ? => research in which possible cases onFailure is called
 
         Utility.log(getContext(), LOG_TAG, "onFailure message: "+ t.getMessage());
     }

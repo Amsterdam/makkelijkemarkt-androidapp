@@ -4,12 +4,19 @@
 package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.CallSuper;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
+
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
@@ -32,8 +39,8 @@ public class ApiCall {
     // retrofit api interface
     protected MakkelijkeMarktApi mMakkelijkeMarktApi;
 
-    // an optional different client to be used by retrofit
-    protected OkHttpClient mClient;
+    // a client builder for creating our client to be used by retrofit
+    protected OkHttpClient.Builder mClientBuilder;
 
     // an optional gson payload to send with the request
     protected JsonObject mPayload;
@@ -44,6 +51,7 @@ public class ApiCall {
      */
     public ApiCall(Context context) {
         mContext = context;
+        mClientBuilder = new OkHttpClient.Builder();
         setBaseUrl(mContext.getString(R.string.makkelijkemarkt_api_base_url));
     }
 
@@ -54,6 +62,7 @@ public class ApiCall {
      */
     public ApiCall(Context context, String baseUrl) {
         mContext = context;
+        mClientBuilder = new OkHttpClient.Builder();
         setBaseUrl(baseUrl);
     }
 
@@ -63,14 +72,6 @@ public class ApiCall {
      */
     public void setBaseUrl(String baseUrl) {
         mBaseUrl = baseUrl;
-    }
-
-    /**
-     * Set the http client that retrofit wil use
-     * @param client an okhttp client
-     */
-    public void setClient(OkHttpClient client) {
-        mClient = client;
     }
 
     /**
@@ -91,10 +92,48 @@ public class ApiCall {
         builder.baseUrl(mBaseUrl);
         builder.addConverterFactory(GsonConverterFactory.create());
 
-        // set a custom client if specified
-        if (mClient != null) {
-            builder.client(mClient);
+
+
+        // @todo refactor to use real app version, app name, okhttp version, etc.
+
+        // @todo refactor to get api-key somewhere more central (constructor?)
+
+        // @todo refactor to create headers somewhere more central and only create an interceptor here and add all headers to it
+
+        // @todo add language header? (Accept-Language: nl-NL,en-US;q=0.8)
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String apiKey = settings.getString(mContext.getString(R.string.makkelijkemarkt_api_uuid_name), null);
+
+        if (apiKey != null) {
+            Utility.log(mContext, LOG_TAG, "Stored api-key found: " + apiKey);
+
+            final String authHeaderValue = mContext.getString(R.string.makkelijkemarkt_api_authorization_header_prefix) +" "+ apiKey;
+
+            Interceptor addAuthorizationHeaderInterceptor = new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request().newBuilder()
+                            .removeHeader(
+                                    mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name))
+                            .addHeader(
+                                    mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name),
+                                    "Android App Makkelijke Markt v1.0 (okhttp/3.0.0-RC1)")
+                            .addHeader(
+                                    mContext.getString(R.string.makkelijkemarkt_api_authorization_header_name),
+                                    authHeaderValue)
+                            .build();
+
+                    return chain.proceed(request);
+                }};
+
+            mClientBuilder.addInterceptor(addAuthorizationHeaderInterceptor);
         }
+
+
+
+        // build and attach okhttpclient to retrofit
+        builder.client(mClientBuilder.build());
 
         // build retrofit
         Retrofit retrofit = builder.build();
@@ -124,5 +163,4 @@ public class ApiCall {
             build();
         }
     }
-
 }

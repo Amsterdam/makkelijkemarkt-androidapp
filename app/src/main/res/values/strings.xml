@@ -27,6 +27,16 @@
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
     <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
+    <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
+    <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
+    <string name="makkelijkemarkt_api_authorization_header_name" translatable="false">Authorization</string>
+    <string name="makkelijkemarkt_api_authorization_header_prefix" translatable="false">Bearer</string>
+
+    <string name="makkelijkemarkt_api_login_payload_accound_id_name" translatable="false">accountId</string>
+    <string name="makkelijkemarkt_api_login_payload_password_name" translatable="false">password</string>
+    <string name="makkelijkemarkt_api_login_payload_device_uuid_name" translatable="false">deviceUuid</string>
+    <string name="makkelijkemarkt_api_login_payload_client_app_name" translatable="false">clientApp</string>
+    <string name="makkelijkemarkt_api_login_payload_client_version_name" translatable="false">clientVersion</string>
 
     <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
     <string name="log_tag_separator" translatable="false">=============================></string>
