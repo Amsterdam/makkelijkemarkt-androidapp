@@ -24,28 +24,6 @@ public class ApiAccount {
     private List<String> roles = new ArrayList<String>();
 
     /**
-     * No args constructor for use in serialization
-     */
-    public ApiAccount() {
-    }
-
-    /**
-     * Constructor
-     * @param id
-     * @param username
-     * @param email
-     * @param roles
-     * @param naam
-     */
-    public ApiAccount(int id, String email, String naam, String username, List<String> roles) {
-        this.id = id;
-        this.email = email;
-        this.naam = naam;
-        this.username = username;
-        this.roles = roles;
-    }
-
-    /**
      * @return the id
      */
     public int getId() {

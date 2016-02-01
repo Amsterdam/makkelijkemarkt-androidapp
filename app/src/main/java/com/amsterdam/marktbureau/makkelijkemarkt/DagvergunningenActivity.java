@@ -3,7 +3,9 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,9 +38,9 @@ public class DagvergunningenActivity extends AppCompatActivity {
         // bind the elements to the view
         ButterKnife.bind(this);
 
-
-        // @todo get selected markt from sharedpreferences
-
+        // get selected markt naam from sharedpreferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String marktNaam = settings.getString(getString(R.string.sharedpreferences_key_markt_naam), "");
 
         // set the toolbar as supportactionbar, with default title disabled and homebutton enabled
         setSupportActionBar(mToolbar);
@@ -46,11 +48,9 @@ public class DagvergunningenActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            // @todo set selected markt naam as subtitle
-
-            // set the title in the toolbar
+            // set the title and subtitle in the toolbar
             mTitleView.setText(R.string.dagvergunningen);
-            mSubtitleView.setText("Test markt...");
+            mSubtitleView.setText(marktNaam);
             mSubtitleView.setVisibility(TextView.VISIBLE);
         }
 

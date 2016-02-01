@@ -3,9 +3,13 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt.data;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.net.Uri;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.MainActivity;
+
+import java.util.List;
 
 import de.triplet.simpleprovider.AbstractProvider;
 import de.triplet.simpleprovider.Column;
@@ -139,20 +143,14 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.TEXT)
         public static final String COL_TELEFOON = "telefoon";
 
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_PERFECT_VIEW_NUMMER = "perfect_view_nummer";
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_FOTO_URL = "foto_url";
 
         @Column(Column.FieldType.TEXT)
-        public static final String COL_FOTO = "foto";
+        public static final String COL_FOTO_MEDIUM_URL = "foto_medium_url";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_STATUS = "status";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_FOTO_LAST_UPDATE = "foto_last_update";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_FOTO_HASH = "foto_hash";
     }
 
     /**
@@ -170,17 +168,13 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KOOPMAN_ID = "koopman_id";
 
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_SOLLICITATIE_ID = "sollicitatie_id";
+        // @todo implement the ApiSollicitatie pojo and us it in the ApiDagvergunning pojo to get the sollicitatie id
 
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_FACTUUR_ID = "factuur_id";
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_SOLLICITATIE_ID = "sollicitatie_id";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_REGISTRATIE_ACCOUNT_ID = "registratie_account_id";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_DOORGEHAALD_ACCOUNT_ID = "doorgehaald_account_id";
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_DAG = "dag";
@@ -207,25 +201,16 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_DOORGEHAALD = "doorgehaald";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_DOORGEHAALD_DATUMTIJD = "doorgehaald_datumtijd";
-
-        @Column(Column.FieldType.REAL)
-        public static final String COL_DOORGEHAALD_GEOLOCATIE_LAT = "doorgehaald_geolocatie_lat";
-
-        @Column(Column.FieldType.REAL)
-        public static final String COL_DOORGEHAALD_GEOLOCATIE_LONG = "doorgehaald_geolocatie_long";
+        public static final String COL_EXTRA_METERS = "extra_meters";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_EXTRA_METERS = "extra_meters";
+        public static final String COL_TOTALE_LENGTE = "totale_lengte";
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_NOTITIE = "notitie";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AANMAAK_DATUMTIJD = "aanmaak_datumtijd";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AANTAL_ELEKTRA = "aantal_elektra";
@@ -244,6 +229,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AANTAL_EXTRA_METERS_VAST = "aantal_extra_meters_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_TOTALE_LENGTE_VAST = "totale_lengte_vast";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AANTAL_ELEKTRA_VAST = "aantal_elektra_vast";
@@ -351,5 +339,32 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KRACHTSTROOM = "krachtstroom";
+    }
+
+    /**
+     * Override of the insert function of the AbstractProvider class, in a way that it uses the
+     * SQLite insertOrThrow function that throws a SQLiteConstraintException when trying to insert
+     * insert a duplicate column value, and we can act on that
+     * @param uri Uri
+     * @param values ContentValues
+     * @return Uri to the inserted row
+     */
+    @Override
+    public Uri insert(Uri uri, ContentValues values)
+    {
+        List<String> segments = uri.getPathSegments();
+        if (segments == null || segments.size() != 1) {
+            return null;
+        }
+
+        long rowId = mDatabase.insertOrThrow(segments.get(0), null, values);
+
+        if (rowId > -1) {
+            getContext().getContentResolver().notifyChange(uri, null);
+
+            return ContentUris.withAppendedId(uri, rowId);
+        }
+
+        return null;
     }
 }

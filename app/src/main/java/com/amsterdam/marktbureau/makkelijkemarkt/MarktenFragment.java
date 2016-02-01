@@ -4,8 +4,10 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -62,7 +64,7 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
         // bind the elements to the view
         ButterKnife.bind(this, mainView);
 
-        // create an adapter for the account spinner
+        // create an adapter for the markten listview
         mMarktenAdapter = new SimpleCursorAdapter(
                 getContext(),
                 R.layout.markten_list_item,
@@ -80,17 +82,37 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
         return mainView;
     }
 
+    /**
+     * When selecting a markt in the listview get the markt id and naam and store it in the
+     * shared preferences
+     * @param position the selected position in the markten listview
+     */
     @OnItemClick(R.id.listview_markten)
-    public void onItemClick(int position, long id) {
-        Utility.log(getContext(), LOG_TAG, "position="+ position +" id="+ id);
+    public void onItemClick(int position) {
 
-        // @todo store the selected markt/id in the shared preferences
+        // get the markt id and naam from the selected item
+        Cursor selectedMarkt = (Cursor) mMarktenAdapter.getItem(position);
+        int id = selectedMarkt.getInt(selectedMarkt.getColumnIndex(MakkelijkeMarktProvider.Markt.COL_ID));
+        String naam = selectedMarkt.getString(selectedMarkt.getColumnIndex(MakkelijkeMarktProvider.Markt.COL_NAAM));
+
+        // add markt id and naam to the shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(getString(R.string.sharedpreferences_key_markt_id), id);
+        editor.putString(getString(R.string.sharedpreferences_key_markt_naam), naam);
+        editor.apply();
 
         // open the dagvergunningen activity
         Intent intent = new Intent(getActivity(), DagvergunningenActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Create the loader to get the markten from the database
+     * @param id the unique id for this loader
+     * @param args the arguments given in the initloader call in oncreateview
+     * @return a cursor containing the markten
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -108,11 +130,20 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
         return loader;
     }
 
+    /**
+     * When done loading update the adapter of the listview with the loaded markten
+     * @param loader the loader object
+     * @param data a cursor containing the markten
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mMarktenAdapter.swapCursor(data);
     }
 
+    /**
+     * Clear the markten from the listview adapter
+     * @param loader the loader object
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mMarktenAdapter.swapCursor(null);

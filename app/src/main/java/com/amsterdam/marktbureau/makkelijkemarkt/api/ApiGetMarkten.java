@@ -120,7 +120,7 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
     }
 
     /**
-     * Response from the loadMarkten method arrives here for updating the database
+     * Response from the getMarkten method arrives here for updating the database
      * @param response response we received from the api
      */
     @Override
@@ -147,7 +147,7 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
     }
 
     /**
-     * On failure of the loadMarkten method log the error message
+     * On failure of the getMarkten method log the error message
      * @param t the thrown exception
      */
     @Override

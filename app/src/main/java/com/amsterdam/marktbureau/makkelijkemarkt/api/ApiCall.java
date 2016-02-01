@@ -103,7 +103,7 @@ public class ApiCall {
         // @todo add language header? (Accept-Language: nl-NL,en-US;q=0.8)
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String apiKey = settings.getString(mContext.getString(R.string.makkelijkemarkt_api_uuid_name), null);
+        String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
 
         if (apiKey != null) {
             Utility.log(mContext, LOG_TAG, "Stored api-key found: " + apiKey);

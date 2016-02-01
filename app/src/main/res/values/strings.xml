@@ -23,6 +23,14 @@
     <string name="network_required_notice">Network connectivity required, please check your internet connection</string>
 
 
+    <string name="sharedpreferences_key_uuid" translatable="false">uuid</string>
+    <string name="sharedpreferences_key_account_id" translatable="false">accountId</string>
+    <string name="sharedpreferences_key_account_naam" translatable="false">accountNaam</string>
+    <string name="sharedpreferences_key_markt_id" translatable="false">marktId</string>
+    <string name="sharedpreferences_key_markt_naam" translatable="false">marktNaam</string>
+    <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
+
+
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
@@ -37,6 +45,11 @@
     <string name="makkelijkemarkt_api_login_payload_device_uuid_name" translatable="false">deviceUuid</string>
     <string name="makkelijkemarkt_api_login_payload_client_app_name" translatable="false">clientApp</string>
     <string name="makkelijkemarkt_api_login_payload_client_version_name" translatable="false">clientVersion</string>
+
+    <string name="makkelijkemarkt_api_dagvergunning_query_param_markt_id" translatable="false">marktId</string>
+    <string name="makkelijkemarkt_api_dagvergunning_query_param_dag" translatable="false">dag</string>
+
+    <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
 
     <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
     <string name="log_tag_separator" translatable="false">=============================></string>

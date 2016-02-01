@@ -104,13 +104,23 @@ public class LoginFragment extends Fragment implements
     }
 
     /**
-     * When selecting an account in the dropdown update the selected account id member var
+     * When selecting an account in the dropdown update the selected account id and naam
      * @param position position in the list
-     * @param id bound account id
      */
     @OnItemSelected(R.id.account)
-    public void onItemSelected(int position, long id) {
-        mSelectedAccountId = (int) id;
+    public void onItemSelected(int position) {
+
+        // get the account id and naam from the selected item
+        Cursor selectedAccount = (Cursor) mAccountsAdapter.getItem(position);
+        mSelectedAccountId = selectedAccount.getInt(selectedAccount.getColumnIndex(MakkelijkeMarktProvider.Account.COL_ID));
+        String naam = selectedAccount.getString(selectedAccount.getColumnIndex(MakkelijkeMarktProvider.Account.COL_NAAM));
+
+        // add account id and naam to the shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(getString(R.string.sharedpreferences_key_account_id), mSelectedAccountId);
+        editor.putString(getString(R.string.sharedpreferences_key_account_naam), naam);
+        editor.apply();
     }
 
     /**
@@ -199,12 +209,8 @@ public class LoginFragment extends Fragment implements
             // store the uuid in the shared preferences
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(getString(R.string.makkelijkemarkt_api_uuid_name), uuid);
-
-            // Commit the edits!
+            editor.putString(getString(R.string.sharedpreferences_key_uuid), uuid);
             editor.apply();
-
-            // @todo store the selected account object/id in the shared preferences
 
             // open the markten activity
             Intent intent = new Intent(getActivity(), MarktenActivity.class);

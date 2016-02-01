@@ -48,13 +48,8 @@ public interface MakkelijkeMarktApi {
      * Get a list of dagvergunningen for a given markt and date
      * @param marktId the id of the markt
      * @param dag the date
-     * @return
+     * @return a list of ApiDagvergunning objects
      */
     @GET("dagvergunning/")
     Call<List<ApiDagvergunning>> getDagvergunningen(@Query("marktId") String marktId, @Query("dag") String dag);
-
-
-
-
-
 }
