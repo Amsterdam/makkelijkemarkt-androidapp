@@ -89,15 +89,33 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         // @todo custom DagvergunningenAdapter maken met viewholder en bindview
 
         // create an adapter for the dagvergunningen listview
+//        mDagvergunningenAdapter = new SimpleCursorAdapter(
+//                getContext(),
+//                R.layout.dagvergunningen_list_item,
+//                null,
+//                new String[] {
+//                        MakkelijkeMarktProvider.Dagvergunning.COL_ID,
+//                        MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE,
+//                        MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD,
+//                        MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE
+//                },
+//                new int[] {
+//                        R.id.dagvergunning_id,
+//                        R.id.dagvergunning_erkenningsnummer,
+//                        R.id.dagvergunning_datumtijd,
+//                        R.id.dagvergunning_totale_lengte
+//                },
+//                0);
         mDagvergunningenAdapter = new SimpleCursorAdapter(
                 getContext(),
                 R.layout.dagvergunningen_list_item,
                 null,
                 new String[] {
                         MakkelijkeMarktProvider.Dagvergunning.COL_ID,
-                        MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE,
+                        "koopman_id",
                         MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD,
-                        MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE
+                        MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM,
+//                        MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE,
                 },
                 new int[] {
                         R.id.dagvergunning_id,
@@ -130,18 +148,18 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        // @todo custom contentprovider uri maken die de dagvergunningen gecombineerd met de koopman teruggeeft
-
-        // create the loader that will load the dagvergunningen for selected markt for today sorted
-        // descending on aanmaak tijd
+        // create the loader that will load the dagvergunningen with koopman data for selected
+        // markt for today sorted descending on aanmaak tijd
         CursorLoader loader = new CursorLoader(getActivity());
-        loader.setUri(MakkelijkeMarktProvider.mUriDagvergunning);
-        loader.setProjection(new String[]{
-                MakkelijkeMarktProvider.Dagvergunning.COL_ID,
-                MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE,
-                MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD,
-                MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE
-        });
+        loader.setUri(MakkelijkeMarktProvider.mUriDagvergunningKoopman);
+//        loader.setProjection(new String[]{
+//                "dagvergunning."+ MakkelijkeMarktProvider.Dagvergunning.COL_ID,
+//                "koopman._id",
+////                MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE,
+//                MakkelijkeMarktProvider.mTableDagvergunning +"."+ MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD,
+////                MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE,
+//                "koopman."+ MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM
+//        });
         loader.setSelection(
                 MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? AND " +
                 MakkelijkeMarktProvider.Dagvergunning.COL_DAG + " = ?"
@@ -164,6 +182,13 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        String[] columns = data.getColumnNames();
+        for (int i=0; i<columns.length; i++) {
+            String column = columns[i];
+            Utility.log(getContext(), LOG_TAG, column);
+        }
+
         mDagvergunningenAdapter.swapCursor(data);
     }
 

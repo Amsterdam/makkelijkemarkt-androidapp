@@ -5,10 +5,11 @@ package com.amsterdam.marktbureau.makkelijkemarkt.data;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
-import com.amsterdam.marktbureau.makkelijkemarkt.MainActivity;
-
+import java.util.HashMap;
 import java.util.List;
 
 import de.triplet.simpleprovider.AbstractProvider;
@@ -22,18 +23,18 @@ import de.triplet.simpleprovider.Table;
 public class MakkelijkeMarktProvider extends AbstractProvider {
 
     // use classname when logging
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MakkelijkeMarktProvider.class.getSimpleName();
 
     // get package name
     public static final String mPackageName = MakkelijkeMarktProvider.class.getPackage().getName();
 
     // table names
-    private static final String mTableAccount = "account";
-    private static final String mTableMarkt = "markt";
-    private static final String mTableKoopman = "koopman";
-    private static final String mTableDagvergunning = "dagvergunning";
-    private static final String mTableNotitie = "notitie";
-    private static final String mTableSollicitatie = "sollicitatie";
+    public static final String mTableAccount = "account";
+    public static final String mTableMarkt = "markt";
+    public static final String mTableKoopman = "koopman";
+    public static final String mTableDagvergunning = "dagvergunning";
+    public static final String mTableNotitie = "notitie";
+    public static final String mTableSollicitatie = "sollicitatie";
 
     // uris for the tables
     public static Uri mUriAccount = Uri.parse("content://" + mPackageName + "/" + mTableAccount);
@@ -42,6 +43,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public static Uri mUriDagvergunning = Uri.parse("content://" + mPackageName + "/" + mTableDagvergunning);
     public static Uri mUriNotitie = Uri.parse("content://" + mPackageName + "/" + mTableNotitie);
     public static Uri mUriSollicitatie = Uri.parse("content://" + mPackageName + "/" + mTableSollicitatie);
+
+    // other uris
+    public static Uri mUriDagvergunningKoopman = Uri.parse("content://" + mPackageName + "/" + mTableDagvergunning + mTableKoopman);
 
     /**
      * Get the content provider authority name
@@ -168,10 +172,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KOOPMAN_ID = "koopman_id";
 
-        // @todo implement the ApiSollicitatie pojo and us it in the ApiDagvergunning pojo to get the sollicitatie id
-
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_SOLLICITATIE_ID = "sollicitatie_id";
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_SOLLICITATIE_ID = "sollicitatie_id";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_REGISTRATIE_ACCOUNT_ID = "registratie_account_id";
@@ -249,45 +251,45 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_AANTAL4METER_KRAMEN = "aantal4meter_kramen";
     }
 
-    /**
-     * /notitie - Notitie table columns definition
-     */
-    @Table(mTableNotitie)
-    public class Notitie {
-
-        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-        public static final String COL_ID = "_id";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_MARKT_ID = "markt_id";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_DAG = "dag";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_BERICHT = "bericht";
-
-        @Column(Column.FieldType.REAL)
-        public static final String COL_AANGEMAAKT_GEOLOCATIE_LAT = "aangemaakt_geolocatie_lat";
-
-        @Column(Column.FieldType.REAL)
-        public static final String COL_AANGEMAAKT_GEOLOCATIE_LONG = "aangemaakt_geolocatie_long";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AFGEVINKT_STATUS = "afgevinkt_status";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_VERWIJDERD = "verwijderd";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANGEMAAKT_DATUMTIJD = "aangemaakt_datumtijd";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AFGEVINKT_DATUMTIJD = "afgevinkt_datumtijd";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
-    }
+//    /**
+//     * /notitie - Notitie table columns definition
+//     */
+//    @Table(mTableNotitie)
+//    public class Notitie {
+//
+//        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
+//        public static final String COL_ID = "_id";
+//
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_MARKT_ID = "markt_id";
+//
+//        @Column(Column.FieldType.TEXT)
+//        public static final String COL_DAG = "dag";
+//
+//        @Column(Column.FieldType.TEXT)
+//        public static final String COL_BERICHT = "bericht";
+//
+//        @Column(Column.FieldType.REAL)
+//        public static final String COL_AANGEMAAKT_GEOLOCATIE_LAT = "aangemaakt_geolocatie_lat";
+//
+//        @Column(Column.FieldType.REAL)
+//        public static final String COL_AANGEMAAKT_GEOLOCATIE_LONG = "aangemaakt_geolocatie_long";
+//
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_AFGEVINKT_STATUS = "afgevinkt_status";
+//
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_VERWIJDERD = "verwijderd";
+//
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_AANGEMAAKT_DATUMTIJD = "aangemaakt_datumtijd";
+//
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_AFGEVINKT_DATUMTIJD = "afgevinkt_datumtijd";
+//
+//        @Column(Column.FieldType.INTEGER)
+//        public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
+//    }
 
     /**
      * /sollicitatie - Sollicitatie table columns definition
@@ -366,5 +368,43 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         }
 
         return null;
+    }
+
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+        if (uri.getPath().equals(mUriDagvergunningKoopman.getPath())) {
+
+            SQLiteQueryBuilder dagvergunningKoopmanQueryBuilder = new SQLiteQueryBuilder();
+
+            String tables = "dagvergunning LEFT JOIN koopman ON (dagvergunning.koopman_id = koopman._id)";
+            dagvergunningKoopmanQueryBuilder.setTables(tables);
+
+            HashMap<String, String> columnMap = new HashMap<String, String>();
+            columnMap.put(
+                    mTableDagvergunning +"."+ Dagvergunning.COL_ID,
+                    mTableDagvergunning +"."+ Dagvergunning.COL_ID +" AS _id");
+            columnMap.put(
+                    mTableDagvergunning +"."+ Dagvergunning.COL_AANMAAK_DATUMTIJD,
+                    Dagvergunning.COL_AANMAAK_DATUMTIJD);
+            columnMap.put(
+                    "koopman._id",
+                    "koopman._id AS koopman_id");
+            columnMap.put(
+                    "koopman.achternaam",
+                    "achternaam");
+            dagvergunningKoopmanQueryBuilder.setProjectionMap(columnMap);
+
+            return dagvergunningKoopmanQueryBuilder.query(mDatabase,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+        }
+
+        return super.query(uri, projection, selection, selectionArgs, sortOrder);
     }
 }

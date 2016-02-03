@@ -17,7 +17,6 @@ import java.util.List;
 public class ApiDagvergunning {
 
     private int id;
-    private ApiMarkt markt;
     private String dag;
     private int aantal3MeterKramen;
     private int aantal4MeterKramen;
@@ -28,7 +27,6 @@ public class ApiDagvergunning {
     private boolean reiniging;
     private String erkenningsnummer;
     private String erkenningsnummerInvoerMethode;
-    private ApiKoopman koopman;
     private String aanwezig;
     private String notitie;
     private int aantal3meterKramenVast;
@@ -40,9 +38,12 @@ public class ApiDagvergunning {
     private String status;
     private String registratieDatumtijd;
     private List<Float> registratieGeolocatie = new ArrayList<Float>();
-    private ApiAccount registratieAccount;
     private String aanmaakDatumtijd;
     private boolean doorgehaald;
+    private ApiAccount registratieAccount;
+    private ApiMarkt markt;
+    private ApiKoopman koopman;
+    private ApiSollicitatie sollicitatie;
 
     /**
      * @return
@@ -56,20 +57,6 @@ public class ApiDagvergunning {
      */
     public void setId(int id) {
         this.id = id;
-    }
-
-    /**
-     * @return
-     */
-    public ApiMarkt getMarkt() {
-        return markt;
-    }
-
-    /**
-     * @param markt
-     */
-    public void setMarkt(ApiMarkt markt) {
-        this.markt = markt;
     }
 
     /**
@@ -210,20 +197,6 @@ public class ApiDagvergunning {
      */
     public void setErkenningsnummerInvoerMethode(String erkenningsnummerInvoerMethode) {
         this.erkenningsnummerInvoerMethode = erkenningsnummerInvoerMethode;
-    }
-
-    /**
-     * @return
-     */
-    public ApiKoopman getKoopman() {
-        return koopman;
-    }
-
-    /**
-     * @param koopman
-     */
-    public void setKoopman(ApiKoopman koopman) {
-        this.koopman = koopman;
     }
 
     /**
@@ -383,20 +356,6 @@ public class ApiDagvergunning {
     /**
      * @return
      */
-    public ApiAccount getRegistratieAccount() {
-        return registratieAccount;
-    }
-
-    /**
-     * @param registratieAccount
-     */
-    public void setRegistratieAccount(ApiAccount registratieAccount) {
-        this.registratieAccount = registratieAccount;
-    }
-
-    /**
-     * @return
-     */
     public String getAanmaakDatumtijd() {
         return aanmaakDatumtijd;
     }
@@ -423,6 +382,62 @@ public class ApiDagvergunning {
     }
 
     /**
+     * @return
+     */
+    public ApiKoopman getKoopman() {
+        return koopman;
+    }
+
+    /**
+     * @param koopman
+     */
+    public void setKoopman(ApiKoopman koopman) {
+        this.koopman = koopman;
+    }
+
+    /**
+     * @return
+     */
+    public ApiAccount getRegistratieAccount() {
+        return registratieAccount;
+    }
+
+    /**
+     * @param registratieAccount
+     */
+    public void setRegistratieAccount(ApiAccount registratieAccount) {
+        this.registratieAccount = registratieAccount;
+    }
+
+    /**
+     * @return
+     */
+    public ApiMarkt getMarkt() {
+        return markt;
+    }
+
+    /**
+     * @param markt
+     */
+    public void setMarkt(ApiMarkt markt) {
+        this.markt = markt;
+    }
+
+    /**
+     * @return
+     */
+    public ApiSollicitatie getSollicitatie() {
+        return sollicitatie;
+    }
+
+    /**
+     * @param sollicitatie
+     */
+    public void setSollicitatie(ApiSollicitatie sollicitatie) {
+        this.sollicitatie = sollicitatie;
+    }
+
+    /**
      * Convert object to type contentvalues
      * @return contentvalues object containing the objects name value pairs
      */
@@ -430,7 +445,6 @@ public class ApiDagvergunning {
         ContentValues dagvergunningValues = new ContentValues();
 
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ID, getId());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID,getMarkt().getId());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_DAG, getDag());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN, getAantal3MeterKramen());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN, getAantal4MeterKramen());
@@ -441,7 +455,6 @@ public class ApiDagvergunning {
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, isReiniging());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, getErkenningsnummer());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE, getErkenningsnummerInvoerMethode());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID, getKoopman().getId());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG, getAanwezig());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE, getNotitie());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, getAantal3meterKramenVast());
@@ -452,11 +465,29 @@ public class ApiDagvergunning {
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, isKrachtstroomVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE, getStatus());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD, getRegistratieDatumtijd());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT, getRegistratieGeolocatie().get(0));
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LONG, getRegistratieGeolocatie().get(1));
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID, getRegistratieAccount().getId());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD, getAanmaakDatumtijd());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_DOORGEHAALD, isDoorgehaald());
+
+        if (getRegistratieGeolocatie() != null && getRegistratieGeolocatie().size() > 1) {
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT, getRegistratieGeolocatie().get(0));
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LONG, getRegistratieGeolocatie().get(1));
+        }
+
+        if (getRegistratieAccount() != null) {
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID, getRegistratieAccount().getId());
+        }
+
+        if (getMarkt() != null) {
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID,getMarkt().getId());
+        }
+
+        if (getKoopman() != null) {
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID, getKoopman().getId());
+        }
+
+        if (getSollicitatie() != null) {
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID, getSollicitatie().getId());
+        }
 
         return dagvergunningValues;
     }

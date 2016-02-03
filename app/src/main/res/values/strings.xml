@@ -31,8 +31,8 @@
     <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
 
 
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
     <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
     <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>

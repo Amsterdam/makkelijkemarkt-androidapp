@@ -90,24 +90,26 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
 
                 // insert or update the koopman
                 ApiKoopman koopman = dagvergunning.getKoopman();
-                try {
+                if (koopman != null) {
+                    try {
 
-                    Uri koopmanUri = mContext.getContentResolver().insert(
-                            MakkelijkeMarktProvider.mUriKoopman,
-                            koopman.toContentValues()
-                    );
-                    Utility.log(mContext, LOG_TAG, "Inserted koopman: " + koopman.getId() + ", get it here: " + koopmanUri.toString());
+                        Uri koopmanUri = mContext.getContentResolver().insert(
+                                MakkelijkeMarktProvider.mUriKoopman,
+                                koopman.toContentValues()
+                        );
+                        Utility.log(mContext, LOG_TAG, "Inserted koopman: " + koopman.getId() + ", get it here: " + koopmanUri.toString());
 
-                } catch (SQLiteConstraintException e) {
+                    } catch (SQLiteConstraintException e) {
 
-                    // update the existing query record
-                    int updated = mContext.getContentResolver().update(
-                            MakkelijkeMarktProvider.mUriKoopman,
-                            koopman.toContentValues(),
-                            MakkelijkeMarktProvider.Koopman.COL_ID + " = ?",
-                            new String[]{ String.valueOf(koopman.getId()) }
-                    );
-                    Utility.log(mContext, LOG_TAG, "Updated koopman: " + koopman.getId());
+                        // update the existing query record
+                        int updated = mContext.getContentResolver().update(
+                                MakkelijkeMarktProvider.mUriKoopman,
+                                koopman.toContentValues(),
+                                MakkelijkeMarktProvider.Koopman.COL_ID + " = ?",
+                                new String[]{String.valueOf(koopman.getId())}
+                        );
+                        Utility.log(mContext, LOG_TAG, "Updated koopman: " + koopman.getId());
+                    }
                 }
             }
 

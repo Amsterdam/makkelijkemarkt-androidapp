@@ -183,7 +183,7 @@ public class ApiMarkt {
     }
 
     /**
-     * Convert object to type contentvalues
+     * Convert markt object to type contentvalues object
      * @return contentvalues object containing the objects name value pairs
      */
     public ContentValues toContentValues() {
