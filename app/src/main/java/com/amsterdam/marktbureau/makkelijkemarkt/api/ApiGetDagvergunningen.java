@@ -11,6 +11,7 @@ import android.net.Uri;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import java.util.List;
@@ -109,6 +110,30 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
                                 new String[]{String.valueOf(koopman.getId())}
                         );
                         Utility.log(mContext, LOG_TAG, "Updated koopman: " + koopman.getId());
+                    }
+                }
+
+                // insert or update the sollicitatie
+                ApiSollicitatie sollicitatie = dagvergunning.getSollicitatie();
+                if (sollicitatie != null) {
+                    try {
+
+                        Uri sollicitatieUri = mContext.getContentResolver().insert(
+                                MakkelijkeMarktProvider.mUriSollicitatie,
+                                sollicitatie.toContentValues()
+                        );
+                        Utility.log(mContext, LOG_TAG, "Inserted sollicitatie: " + sollicitatie.getId() + ", get it here: " + sollicitatieUri.toString());
+
+                    } catch (SQLiteConstraintException e) {
+
+                        // update the existing query record
+                        int updated = mContext.getContentResolver().update(
+                                MakkelijkeMarktProvider.mUriSollicitatie,
+                                sollicitatie.toContentValues(),
+                                MakkelijkeMarktProvider.Sollicitatie.COL_ID + " = ?",
+                                new String[]{String.valueOf(sollicitatie.getId())}
+                        );
+                        Utility.log(mContext, LOG_TAG, "Updated sollicitatie: " + sollicitatie.getId());
                     }
                 }
             }

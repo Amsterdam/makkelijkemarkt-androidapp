@@ -57,6 +57,7 @@
         android:paddingEnd="@dimen/small_margin"
         android:textSize="@dimen/textsize_title_large"
         android:ems="10"
+        android:text="123"
         />
 
     <Button

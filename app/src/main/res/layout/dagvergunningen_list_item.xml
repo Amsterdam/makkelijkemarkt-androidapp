@@ -1,41 +1,126 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/markten_list_item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="@dimen/margin"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:gravity="center_vertical"
     >
 
-    <TextView
-        android:id="@+id/dagvergunning_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
+    <ImageView
+        android:id="@+id/koopman_foto"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="100dp"
+        android:scaleType="fitStart"
         />
 
-    <TextView
-        android:id="@+id/dagvergunning_erkenningsnummer"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="7"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dagvergunning_id"
-        android:textColor="@color/primary_text"
-        />
+        android:paddingLeft="@dimen/margin"
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:id="@+id/dagvergunning_datumtijd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dagvergunning_erkenningsnummer"
-        android:textColor="@color/primary_text"
-        />
+        <RelativeLayout
+            android:id="@+id/koopman_naam_tijd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_margin"
+            >
 
-    <TextView
-        android:id="@+id/dagvergunning_totale_lengte"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dagvergunning_datumtijd"
-        android:textColor="@color/primary_text"
-        />
+            <TextView
+                android:id="@+id/koopman_voorletters_achternaam"
+                android:layout_width="wrap_content"
+                android:maxWidth="220dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/textsize_title_small"
+                android:textStyle="bold"
+                />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/dagvergunning_registratie_datumtijd"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/textsize_content_small"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/erkenningsnummer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/koopman_naam_tijd"
+            android:layout_marginBottom="@dimen/mini_margin"
+            android:textColor="@color/primary_text"
+            />
+
+        <RelativeLayout
+            android:id="@+id/sollicitatie_nummer_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/erkenningsnummer"
+            android:layout_marginBottom="@dimen/mini_margin"
+            >
+
+            <TextView
+                android:id="@+id/sollicitatie_sollicitatie_nummer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:textColor="@color/primary_text"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/sollicitatie_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/sollicitatie_sollicitatie_nummer"
+                android:layout_toEndOf="@+id/sollicitatie_sollicitatie_nummer"
+                android:paddingTop="@dimen/micro_margin"
+                android:paddingRight="@dimen/mini_margin"
+                android:paddingBottom="@dimen/micro_margin"
+                android:paddingLeft="@dimen/mini_margin"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/totalelengte_accountnaam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sollicitatie_nummer_status"
+            >
+
+            <TextView
+                android:id="@+id/dagvergunning_totale_lente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/primary_text"
+                />
+
+            <TextView
+                android:id="@+id/account_naam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/secondary_text"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>

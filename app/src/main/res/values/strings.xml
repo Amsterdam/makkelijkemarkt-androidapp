@@ -15,6 +15,14 @@
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>
 
+    <string name="length_meter">meter</string>
+    <string name="label_erkenningsnummer">Erkenningsnr.</string>
+    <string name="label_sollicitatienummer">Sollicitatienr.</string>
+    <string name="sollicitatie_status_soll">soll</string>
+    <string name="sollicitatie_status_lot">lot</string>
+    <string name="sollicitatie_status_vpl">vpl</string>
+    <string name="sollicitatie_status_vkk">vkk</string>
+
     <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 
 
@@ -50,6 +58,7 @@
     <string name="makkelijkemarkt_api_dagvergunning_query_param_dag" translatable="false">dag</string>
 
     <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
+    <string name="date_format_tijd" translatable="false">HH:mm</string>
 
     <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
     <string name="log_tag_separator" translatable="false">=============================></string>

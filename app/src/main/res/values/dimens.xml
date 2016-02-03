@@ -2,6 +2,8 @@
 
     <dimen name="toolbar_height">56dp</dimen>
 
+    <dimen name="micro_margin">1dp</dimen>
+    <dimen name="mini_margin">2dp</dimen>
     <dimen name="small_margin">4dp</dimen>
     <dimen name="margin">8dp</dimen>
     <dimen name="large_margin">12dp</dimen>

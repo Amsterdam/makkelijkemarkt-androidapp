@@ -45,7 +45,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public static Uri mUriSollicitatie = Uri.parse("content://" + mPackageName + "/" + mTableSollicitatie);
 
     // other uris
-    public static Uri mUriDagvergunningKoopman = Uri.parse("content://" + mPackageName + "/" + mTableDagvergunning + mTableKoopman);
+    public static Uri mUriDagvergunningJoined = Uri.parse("content://" + mPackageName + "/" + mTableDagvergunning + "joined");
 
     /**
      * Get the content provider authority name
@@ -370,41 +370,110 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         return null;
     }
 
+    /**
+     * Catch non-standard table queries
+     */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
-        if (uri.getPath().equals(mUriDagvergunningKoopman.getPath())) {
+        // @todo refactor this to use a uri matcher?
 
-            SQLiteQueryBuilder dagvergunningKoopmanQueryBuilder = new SQLiteQueryBuilder();
+        if (uri.getPath().equals(mUriDagvergunningJoined.getPath())) {
 
-            String tables = "dagvergunning LEFT JOIN koopman ON (dagvergunning.koopman_id = koopman._id)";
-            dagvergunningKoopmanQueryBuilder.setTables(tables);
-
-            HashMap<String, String> columnMap = new HashMap<String, String>();
-            columnMap.put(
-                    mTableDagvergunning +"."+ Dagvergunning.COL_ID,
-                    mTableDagvergunning +"."+ Dagvergunning.COL_ID +" AS _id");
-            columnMap.put(
-                    mTableDagvergunning +"."+ Dagvergunning.COL_AANMAAK_DATUMTIJD,
-                    Dagvergunning.COL_AANMAAK_DATUMTIJD);
-            columnMap.put(
-                    "koopman._id",
-                    "koopman._id AS koopman_id");
-            columnMap.put(
-                    "koopman.achternaam",
-                    "achternaam");
-            dagvergunningKoopmanQueryBuilder.setProjectionMap(columnMap);
-
-            return dagvergunningKoopmanQueryBuilder.query(mDatabase,
-                    projection,
-                    selection,
-                    selectionArgs,
-                    null,
-                    null,
-                    sortOrder
-            );
+            // query the dagvergunningen table joined with it's linked tables with the given arguments
+            return getDagvergunningenJoined(uri, projection, selection, selectionArgs, sortOrder);
         }
 
         return super.query(uri, projection, selection, selectionArgs, sortOrder);
+    }
+
+    /**
+     * Query the dagvergunningen table joined with it's linked tables with the given arguments
+     * @param uri the given uri of the content
+     * @param projection the columns we need
+     * @param selection the columns in the WHERE clause
+     * @param selectionArgs the arguments in the WHERE clause
+     * @param sortOrder the sorting params
+     * @return a cursor containing the resultset
+     */
+    private Cursor getDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder dagvergunningKoopmanQueryBuilder = new SQLiteQueryBuilder();
+
+        // left join the dagvergunning table with the linked koopman, account, and sollicitatie tables
+        String tables = mTableDagvergunning +
+                        " LEFT JOIN " + mTableKoopman + " ON (" +
+                        mTableDagvergunning + "." + Dagvergunning.COL_KOOPMAN_ID + " = " +
+                        mTableKoopman + "." + Koopman.COL_ID + ")" +
+                        " LEFT JOIN " + mTableAccount + " ON (" +
+                        mTableDagvergunning + "." + Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID + " = " +
+                        mTableAccount + "." + Account.COL_ID + ")" +
+                        " LEFT JOIN " + mTableSollicitatie + " ON (" +
+                        mTableDagvergunning + "." + Dagvergunning.COL_SOLLICITATIE_ID + " = " +
+                        mTableSollicitatie + "." + Sollicitatie.COL_ID + ")";
+        dagvergunningKoopmanQueryBuilder.setTables(tables);
+
+        // create a projection map that will rename the ambiguous columns, and just copy the
+        // others with their original name (when using a projection map you have to specify all
+        // columns that you need in the resultset)
+        HashMap<String, String> columnMap = new HashMap<>();
+
+        // rename ambiguous columns
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ID, "_id"));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "koopman_koopman_id"));
+        columnMap.putAll(createProjectionMap(mTableAccount, Account.COL_ID, "account_account_id"));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_ID, "sollicitatie_sollicitatie_id"));
+
+        // dagvergunning columns copied
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REGISTRATIE_DATUMTIJD, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_TOTALE_LENGTE, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_STATUS_SOLLICITATIE, null));
+
+        // koopman columns copied
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));
+
+        // account columns copied
+        columnMap.putAll(createProjectionMap(mTableAccount, Account.COL_NAAM, null));
+
+        // sollicitatie columns copied
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_SOLLICITATIE_NUMMER, null));
+
+        // apply the mapping
+        dagvergunningKoopmanQueryBuilder.setProjectionMap(columnMap);
+
+        // and run the query with the given arguments
+        return dagvergunningKoopmanQueryBuilder.query(mDatabase,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    /**
+     * Helper function to create the sql to rename columns using the AS keyword
+     * @param tableName the table name for the fully qualified column name
+     * @param columnName the original column name
+     * @param asColumnName the name to rename the column
+     * @return a hashmap containing only one item with two strings containing the sql to rename
+     */
+    private HashMap<String, String> createProjectionMap(String tableName, String columnName, String asColumnName) {
+        HashMap<String, String> map = new HashMap<>();
+
+        // rename the column if we received a asColumnName
+        if (asColumnName != null) {
+            map.put(tableName + "." + columnName,
+                    tableName + "." + columnName + " AS " + asColumnName);
+        } else {
+            // else just use the original column name
+            map.put(tableName + "." + columnName,
+                    columnName);
+        }
+
+        return map;
     }
 }

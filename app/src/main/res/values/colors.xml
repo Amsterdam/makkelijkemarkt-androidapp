@@ -11,4 +11,11 @@
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
 
+    <!-- Sollicitatie status colors -->
+    <color name="sollicitatie_status_undefined">@color/primary_dark</color>
+    <color name="sollicitatie_status_soll">#009900</color>
+    <color name="sollicitatie_status_lot">#f0ad41</color>
+    <color name="sollicitatie_status_vpl">#428bca</color>
+    <color name="sollicitatie_status_vkk">#5bc0de</color>
+
 </resources>
