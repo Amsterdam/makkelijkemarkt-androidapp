@@ -12,10 +12,10 @@ import android.support.v4.app.FragmentTransaction;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningenActivity extends BaseActivity {
+public class DagvergunningActivity extends BaseActivity {
 
     // use classname when logging
-    private static final String LOG_TAG = DagvergunningenActivity.class.getSimpleName();
+    private static final String LOG_TAG = DagvergunningActivity.class.getSimpleName();
 
     /**
      *
@@ -36,7 +36,7 @@ public class DagvergunningenActivity extends BaseActivity {
         // add the about fragment to the container
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.container, new DagvergunningenFragment());
+            transaction.add(R.id.container, new DagvergunningFragment());
             transaction.commit();
         }
     }

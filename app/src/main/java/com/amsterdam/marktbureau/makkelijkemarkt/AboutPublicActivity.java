@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class AboutActivity extends AppCompatActivity {
+public class AboutPublicActivity extends AppCompatActivity {
 
     // bind layout elements
     @Bind(R.id.toolbar) Toolbar mToolbar;

@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -85,10 +86,12 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
         // @todo remove api call here and only call on interval basis in the service?
         // @todo or keep it here, so we can show a zandloper and start calling it on interval basis in the service once this call is finished?
-        ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
-        getDagvergunningen.setMarktId(String.valueOf(mMarktId));
-        getDagvergunningen.setDag(mDag);
-        getDagvergunningen.enqueue();
+        if (savedInstanceState == null) {
+            ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
+            getDagvergunningen.setMarktId(String.valueOf(mMarktId));
+            getDagvergunningen.setDag(mDag);
+            getDagvergunningen.enqueue();
+        }
 
         // create an adapter for the dagvergunningen listview
         mDagvergunningenAdapter = new DagvergunningenListAdapter(getActivity(), null, 0);
@@ -106,32 +109,31 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     }
 
     /**
-     * Select an existing dagvergunning
+     * Select an existing dagvergunning and open it in the dagvergunning activity
      * @param position the position in the listview
      */
     @OnItemClick(R.id.listview_dagvergunningen)
     public void onItemClick(int position) {
 
-        // get the dagvergunning id from the selected item
+        // get the dagvergunning id from the adapter based on the selected item position
         Cursor selectedDagvergunning = (Cursor) mDagvergunningenAdapter.getItem(position);
         int id = selectedDagvergunning.getInt(selectedDagvergunning.getColumnIndex(
                         MakkelijkeMarktProvider.Dagvergunning.COL_ID));
 
-        Utility.log(getContext(), LOG_TAG, "Dagvergunning clicked: "+ id);
-
-        // @todo open the dagvergunning activity to edit the selected dagvergunning
-
+        // open the dagvergunning activity to edit the selected dagvergunning
+        Intent intent = new Intent(getActivity(), DagvergunningActivity.class);
+        intent.putExtra(MakkelijkeMarktProvider.mTableDagvergunning +
+                        MakkelijkeMarktProvider.Dagvergunning.COL_ID, id);
+        startActivity(intent);
     }
 
     /**
-     * Add a new dagvergunning
+     * Open the dagvergunning activity to add a new dagvergunning
      */
     @OnClick(R.id.fab_add_dagvergunning)
     public void addDagvergunningClick() {
-        Utility.log(getContext(), LOG_TAG, "Add dagvergunning clicked!");
-
-        // @todo open the dagvergunning activity to create a new dagvergunning
-
+        Intent intent = new Intent(getActivity(), DagvergunningActivity.class);
+        startActivity(intent);
     }
 
     /**

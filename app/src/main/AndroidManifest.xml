@@ -45,14 +45,32 @@
                 android:value=".MarktenActivity" />
         </activity>
 
-        <!-- ABOUT Activity -->
+        <!-- DAGVERGUNNING Activity-->
         <activity
-            android:name=".AboutActivity"
+            android:name=".DagvergunningActivity"
+            android:label="@string/dagvergunning"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DagvergunningenActivity" />
+        </activity>
+
+        <!-- ABOUT Public Activity -->
+        <activity
+            android:name=".AboutPublicActivity"
             android:label="@string/about"
             android:theme="@style/AboutTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+
+        <!-- ABOUT Private Activity -->
+        <activity
+            android:name=".AboutPrivateActivity"
+            android:label="@string/about"
+            android:theme="@style/AboutTheme">
         </activity>
 
         <!-- MakkelijkeMarkt Provider -->

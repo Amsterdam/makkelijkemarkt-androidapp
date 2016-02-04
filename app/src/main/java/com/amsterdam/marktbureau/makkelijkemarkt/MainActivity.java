@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         // open the about activity
         if (id == R.id.action_about) {
-            startActivity(new Intent(this, AboutActivity.class));
+            startActivity(new Intent(this, AboutPublicActivity.class));
             return true;
         }
 

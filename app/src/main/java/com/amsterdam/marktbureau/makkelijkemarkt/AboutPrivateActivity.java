@@ -7,29 +7,24 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 /**
- *
  * @author marcolangebeeke
  */
-public class MarktenActivity extends BaseActivity {
+public class AboutPrivateActivity extends BaseActivity {
 
     // use classname when logging
-    private static final String LOG_TAG = MarktenActivity.class.getSimpleName();
+    private static final String LOG_TAG = AboutPrivateActivity.class.getSimpleName();
 
-    /**
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // set the title in the toolbar
-        setToolbarTitle(getString(R.string.markten));
+        // set the title and subtitle in the toolbar
+        setToolbarTitle(getString(R.string.about));
 
-        // add the markten fragment to the container
+        // add the about fragment to the container
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.container, new MarktenFragment());
+            transaction.add(R.id.container, new AboutFragment());
             transaction.commit();
         }
     }
