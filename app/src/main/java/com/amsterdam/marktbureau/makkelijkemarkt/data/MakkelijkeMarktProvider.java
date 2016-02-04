@@ -354,16 +354,22 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values)
     {
+        // check if we have at least one path segment
         List<String> segments = uri.getPathSegments();
         if (segments == null || segments.size() != 1) {
             return null;
         }
 
+        // try to insert or throw an exception
         long rowId = mDatabase.insertOrThrow(segments.get(0), null, values);
 
+        // if no exception was thrown and we received an id, the row was inserted succesfully
         if (rowId > -1) {
+
+            // send notification to loader
             getContext().getContentResolver().notifyChange(uri, null);
 
+            // return the uri where the inserted row can be found
             return ContentUris.withAppendedId(uri, rowId);
         }
 

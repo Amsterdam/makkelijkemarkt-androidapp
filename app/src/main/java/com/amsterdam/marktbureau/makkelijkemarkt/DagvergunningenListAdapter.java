@@ -21,7 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
+ *
  * @author marcolangebeeke
  */
 public class DagvergunningenListAdapter extends CursorAdapter {
@@ -30,18 +34,17 @@ public class DagvergunningenListAdapter extends CursorAdapter {
     private static final String LOG_TAG = DagvergunningenListAdapter.class.getSimpleName();
 
     /**
-     *
+     * Constructor
      * @param context
      * @param cursor
      * @param flags
      */
-    public DagvergunningenListAdapter(Context context, Cursor cursor, int flags)
-    {
+    public DagvergunningenListAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
     }
 
     /**
-     *
+     * Inflate the dagvergunningen_list_item view and attach the viewholder for easy referencing
      * @param context
      * @param cursor
      * @param parent
@@ -61,10 +64,10 @@ public class DagvergunningenListAdapter extends CursorAdapter {
     }
 
     /**
-     *
-     * @param view
-     * @param context
-     * @param cursor
+     * Bind the cursor data to the view elements
+     * @param view listitem view containing the elements
+     * @param context the context
+     * @param cursor a cursor containing the dagvergunning data
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
@@ -114,6 +117,7 @@ public class DagvergunningenListAdapter extends CursorAdapter {
             viewHolder.sollicitatieStatusText.setVisibility(View.VISIBLE);
             viewHolder.sollicitatieStatusText.setText(sollicitatieStatus);
 
+            // map the color for the sollicitatie status
             int sollicitatieStatusColor = R.color.sollicitatie_status_undefined;
             if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_lot))) {
                 sollicitatieStatusColor = R.color.sollicitatie_status_lot;
@@ -139,43 +143,33 @@ public class DagvergunningenListAdapter extends CursorAdapter {
     }
 
     /**
-     *
+     * Viewholder helper class for easy referencing the view elements
      */
-    public static class ViewHolder
-    {
-        public final ImageView koopmanFoto;
+    public static class ViewHolder {
 
-        public final RelativeLayout koopmanNaamTijd;
-        public final TextView koopmanVoorlettersAchternaamText;
-        public final TextView dagvergunningRegistratieDatumtijdText;
+        // bind the elements
+        @Bind(R.id.koopman_foto) ImageView koopmanFoto;
 
-        public final TextView erkenningsnummerText;
+        @Bind(R.id.koopman_naam_tijd) RelativeLayout koopmanNaamTijd;
+        @Bind(R.id.koopman_voorletters_achternaam) TextView koopmanVoorlettersAchternaamText;
+        @Bind(R.id.dagvergunning_registratie_datumtijd) TextView dagvergunningRegistratieDatumtijdText;
 
-        public final RelativeLayout sollicitatieNummerStatus;
-        public final TextView sollicitatieSollicitatieNummerText;
-        public final TextView sollicitatieStatusText;
+        @Bind(R.id.erkenningsnummer) TextView erkenningsnummerText;
 
-        public final RelativeLayout totaleLengteAccountNaam;
-        public final TextView dagvergunningTotaleLengteText;
-        public final TextView accountNaamText;
+        @Bind(R.id.sollicitatie_nummer_status) RelativeLayout sollicitatieNummerStatus;
+        @Bind(R.id.sollicitatie_sollicitatie_nummer) TextView sollicitatieSollicitatieNummerText;
+        @Bind(R.id.sollicitatie_status) TextView sollicitatieStatusText;
 
-        public ViewHolder(View view)
-        {
-            koopmanFoto = (ImageView) view.findViewById(R.id.koopman_foto);
+        @Bind(R.id.totalelengte_accountnaam) RelativeLayout totaleLengteAccountNaam;
+        @Bind(R.id.dagvergunning_totale_lente) TextView dagvergunningTotaleLengteText;
+        @Bind(R.id.account_naam) TextView accountNaamText;
 
-            koopmanNaamTijd = (RelativeLayout) view.findViewById(R.id.koopman_naam_tijd);
-            koopmanVoorlettersAchternaamText = (TextView) view.findViewById(R.id.koopman_voorletters_achternaam);
-            dagvergunningRegistratieDatumtijdText = (TextView) view.findViewById(R.id.dagvergunning_registratie_datumtijd);
-
-            erkenningsnummerText = (TextView) view.findViewById(R.id.erkenningsnummer);
-
-            sollicitatieNummerStatus = (RelativeLayout) view.findViewById(R.id.sollicitatie_nummer_status);
-            sollicitatieSollicitatieNummerText = (TextView) view.findViewById(R.id.sollicitatie_sollicitatie_nummer);
-            sollicitatieStatusText = (TextView) view.findViewById(R.id.sollicitatie_status);
-
-            totaleLengteAccountNaam = (RelativeLayout) view.findViewById(R.id.totalelengte_accountnaam);
-            dagvergunningTotaleLengteText = (TextView) view.findViewById(R.id.dagvergunning_totale_lente);
-            accountNaamText = (TextView) view.findViewById(R.id.account_naam);
+        /**
+         * Bind the view elements using butterknife
+         * @param view the listitem view
+         */
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
         }
     }
 }

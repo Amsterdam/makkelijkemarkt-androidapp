@@ -89,6 +89,9 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
                 // add dagvergunningen values to array for bulkinsert later
                 contentValues[i] = dagvergunning.toContentValues();
 
+                // @todo refactor inserting/updating the db to make it faster
+                // @todo by first collecting the data and then using delete+bulkinsert ?
+
                 // insert or update the koopman
                 ApiKoopman koopman = dagvergunning.getKoopman();
                 if (koopman != null) {

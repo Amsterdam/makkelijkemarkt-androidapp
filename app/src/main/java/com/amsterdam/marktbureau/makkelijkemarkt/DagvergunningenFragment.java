@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -24,8 +25,11 @@ import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 /**
+ *
  * @author marcolangebeeke
  */
 public class DagvergunningenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -35,6 +39,7 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
     // bind layout elements
     @Bind(R.id.listview_dagvergunningen) ListView mDagvergunningenListView;
+    @Bind(R.id.fab_add_dagvergunning) FloatingActionButton mFabAddDagvergunning;
 
     // the id of the selected markt
     private int mMarktId;
@@ -101,10 +106,39 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     }
 
     /**
-     *
-     * @param id
-     * @param args
-     * @return
+     * Select an existing dagvergunning
+     * @param position the position in the listview
+     */
+    @OnItemClick(R.id.listview_dagvergunningen)
+    public void onItemClick(int position) {
+
+        // get the dagvergunning id from the selected item
+        Cursor selectedDagvergunning = (Cursor) mDagvergunningenAdapter.getItem(position);
+        int id = selectedDagvergunning.getInt(selectedDagvergunning.getColumnIndex(
+                        MakkelijkeMarktProvider.Dagvergunning.COL_ID));
+
+        Utility.log(getContext(), LOG_TAG, "Dagvergunning clicked: "+ id);
+
+        // @todo open the dagvergunning activity to edit the selected dagvergunning
+
+    }
+
+    /**
+     * Add a new dagvergunning
+     */
+    @OnClick(R.id.fab_add_dagvergunning)
+    public void addDagvergunningClick() {
+        Utility.log(getContext(), LOG_TAG, "Add dagvergunning clicked!");
+
+        // @todo open the dagvergunning activity to create a new dagvergunning
+
+    }
+
+    /**
+     * Create a cursor loader to get the dagvergunningen from the db
+     * @param id unique id for this loader
+     * @param args the markt id and dag arguments for setting the selection
+     * @return a cursor loader ready to be started
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

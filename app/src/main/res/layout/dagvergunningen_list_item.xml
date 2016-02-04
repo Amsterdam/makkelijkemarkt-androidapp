@@ -6,6 +6,7 @@
     android:padding="@dimen/margin"
     >
 
+    <!-- Koopman foto -->
     <ImageView
         android:id="@+id/koopman_foto"
         android:layout_width="0dp"
@@ -19,6 +20,9 @@
         android:layout_weight="7"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/margin"
+        android:paddingStart="@dimen/margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
         android:orientation="vertical"
         >
 
@@ -29,6 +33,7 @@
             android:layout_marginBottom="@dimen/small_margin"
             >
 
+            <!-- Koopman naam -->
             <TextView
                 android:id="@+id/koopman_voorletters_achternaam"
                 android:layout_width="wrap_content"
@@ -36,23 +41,27 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:textColor="@color/primary_text"
                 android:textSize="@dimen/textsize_title_small"
                 android:textStyle="bold"
                 />
 
+            <!-- Dagvergunning registratie tijd -->
             <TextView
                 android:id="@+id/dagvergunning_registratie_datumtijd"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/secondary_text"
+                android:textColor="@color/primary"
                 android:textSize="@dimen/textsize_content_small"
                 />
 
         </RelativeLayout>
 
+        <!-- Koopman erkenningsnummer -->
         <TextView
             android:id="@+id/erkenningsnummer"
             android:layout_width="wrap_content"
@@ -70,6 +79,7 @@
             android:layout_marginBottom="@dimen/mini_margin"
             >
 
+            <!-- Sollicitatie nummer -->
             <TextView
                 android:id="@+id/sollicitatie_sollicitatie_nummer"
                 android:layout_width="wrap_content"
@@ -81,6 +91,7 @@
                 android:visibility="gone"
                 />
 
+            <!-- Sollicitatie status -->
             <TextView
                 android:id="@+id/sollicitatie_status"
                 android:layout_width="wrap_content"
@@ -104,23 +115,29 @@
             android:layout_below="@id/sollicitatie_nummer_status"
             >
 
+            <!-- Totale lengte -->
             <TextView
                 android:id="@+id/dagvergunning_totale_lente"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:textColor="@color/primary_text"
                 />
 
+            <!-- Registratue account naam -->
             <TextView
                 android:id="@+id/account_naam"
                 android:layout_width="wrap_content"
+                android:maxWidth="200dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/secondary_text"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:singleLine="true"
+                android:textColor="@color/primary"
                 />
 
         </RelativeLayout>
-
     </RelativeLayout>
 </LinearLayout>
