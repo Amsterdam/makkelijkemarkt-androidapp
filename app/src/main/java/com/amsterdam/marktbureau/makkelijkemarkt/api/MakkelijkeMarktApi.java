@@ -45,6 +45,13 @@ public interface MakkelijkeMarktApi {
     Call<JsonObject> postLoginBasicId(@Body JsonObject auth);
 
     /**
+     * Send Get request to logout of the api server session
+     * @return a gson object with object lifeTime set to 0
+     */
+    @GET("logout/")
+    Call<JsonObject> getLogout();
+
+    /**
      * Get a list of dagvergunningen for a given markt and date
      * @param marktId the id of the markt
      * @param dag the date

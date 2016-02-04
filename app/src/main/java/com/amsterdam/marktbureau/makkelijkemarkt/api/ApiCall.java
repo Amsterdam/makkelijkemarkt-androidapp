@@ -46,6 +46,10 @@ public class ApiCall {
     protected JsonObject mPayload;
 
     /**
+     * @todo act on '401 Unauthorized' response from api if we are logged out for some reason
+     */
+
+    /**
      * Constructor setting the given context and a default api base url
      * @param context the context
      */
