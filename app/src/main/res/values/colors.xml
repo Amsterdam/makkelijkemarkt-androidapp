@@ -18,4 +18,6 @@
     <color name="sollicitatie_status_vpl">#428bca</color>
     <color name="sollicitatie_status_vkk">#5bc0de</color>
 
+    <color name="dagvergunning_melding_background">#700000</color>
+
 </resources>

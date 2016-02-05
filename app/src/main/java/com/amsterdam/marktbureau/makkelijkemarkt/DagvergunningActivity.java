@@ -17,9 +17,13 @@ public class DagvergunningActivity extends BaseActivity {
     // use classname when logging
     private static final String LOG_TAG = DagvergunningActivity.class.getSimpleName();
 
+    // the dagvergunningfragment
+    DagvergunningFragment mDagvergunningFragment;
+
     /**
-     *
-     * @param savedInstanceState
+     * Get markt naam from the shared prefs, set the title and subtile, and instantiate the
+     * dagvergunning fragment
+     * @param savedInstanceState the saved activity statew
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,20 @@ public class DagvergunningActivity extends BaseActivity {
         setToolbarTitle(getString(R.string.dagvergunning));
         setToolbarSubtitle(marktNaam);
 
-        // add the about fragment to the container
+        // TODO: Instantiate fragments the same way in the other activities
+
+        // create new or get existing instance of dagvergunningfragment
         if (savedInstanceState == null) {
+            mDagvergunningFragment = new DagvergunningFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.container, new DagvergunningFragment());
+            transaction.add(
+                    R.id.container,
+                    mDagvergunningFragment,
+                    DagvergunningActivity.class.getSimpleName() + DagvergunningFragment.class.getSimpleName());
             transaction.commit();
+        } else {
+            mDagvergunningFragment = (DagvergunningFragment) getSupportFragmentManager().findFragmentByTag(
+                    DagvergunningActivity.class.getSimpleName() + DagvergunningFragment.class.getSimpleName());
         }
     }
 }

@@ -7,6 +7,9 @@
     <string name="markten">Markten</string>
     <string name="dagvergunningen">Dagvergunningen</string>
     <string name="dagvergunning">Dagvergunning</string>
+    <string name="koopman">Koopman</string>
+    <string name="product">Product</string>
+    <string name="overzicht">Overzicht</string>
 
     <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
