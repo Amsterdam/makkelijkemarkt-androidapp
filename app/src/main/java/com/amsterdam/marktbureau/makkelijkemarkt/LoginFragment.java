@@ -180,7 +180,29 @@ public class LoginFragment extends Fragment implements
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        // populate the adapter with the loaded accounts
         mAccountsAdapter.swapCursor(data);
+
+        // get the id of previously selected account from the shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int accountId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_account_id), 0);
+        if (accountId != 0) {
+
+            // update selected account id member var
+            mSelectedAccountId = accountId;
+
+            // select the account in the spinner dropdown
+            if (data.moveToFirst()) {
+                while (!data.isAfterLast()) {
+                    if (data.getLong(data.getColumnIndex(MakkelijkeMarktProvider.Account.COL_ID)) == mSelectedAccountId) {
+                        mAcount.setSelection(data.getPosition());
+                        break;
+                    }
+                    data.moveToNext();
+                }
+            }
+        }
     }
 
     /**

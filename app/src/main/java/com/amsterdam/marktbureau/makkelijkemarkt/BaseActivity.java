@@ -80,7 +80,7 @@ public class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        // open the about activity
+        // log the user out
         if (id == R.id.action_logout) {
             logout();
             return true;
@@ -127,7 +127,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // @todo start zandloper here
 
-        // @todo stop api running service
+        // @todo stop running api service
 
         // call api logout method
         ApiGetLogout getLogout = new ApiGetLogout(this);
@@ -135,16 +135,18 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response response) {
 
-                // no need to check the response from the api:
-                // 200 with correct api-key,
-                // 400 without api-key,
-                // 500 with incorrect api-key
+                // no need to check the response from the api because:
+                // 200 = correct api-key
+                // 400 = without api-key
+                // 500 = incorrect api-key
 
-                // clear shared preferences
+                // clear all shared preferences, accept for account id
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                settings.edit()
-                        .clear()
-                        .apply();
+                int accountId = settings.getInt(getString(R.string.sharedpreferences_key_account_id), 0);
+                settings.edit().clear().apply();
+                if (accountId != 0) {
+                    settings.edit().putInt(getString(R.string.sharedpreferences_key_account_id), accountId).apply();
+                }
 
                 // @todo end zandloper
 

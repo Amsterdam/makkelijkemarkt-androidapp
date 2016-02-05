@@ -30,7 +30,7 @@ public class DagvergunningActivity extends BaseActivity {
         String marktNaam = settings.getString(getString(R.string.sharedpreferences_key_markt_naam), "");
 
         // set the title and subtitle in the toolbar
-        setToolbarTitle(getString(R.string.dagvergunningen));
+        setToolbarTitle(getString(R.string.dagvergunning));
         setToolbarSubtitle(marktNaam);
 
         // add the about fragment to the container
