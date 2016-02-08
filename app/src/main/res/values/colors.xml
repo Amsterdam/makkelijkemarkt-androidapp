@@ -19,5 +19,6 @@
     <color name="sollicitatie_status_vkk">#5bc0de</color>
 
     <color name="dagvergunning_melding_background">#700000</color>
+    <color name="edittext_hint">#cccccc</color>
 
 </resources>

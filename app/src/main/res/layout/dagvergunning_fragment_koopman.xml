@@ -6,10 +6,115 @@
     tools:context=".DagvergunningActivity"
     >
 
-    <TextView
+    <!-- Search erkenningsnummer -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Koopman"
-        />
+        >
+
+        <EditText
+            android:id="@+id/erkenningsnummer"
+            android:layout_toLeftOf="@+id/search_erkenningsnummer_button"
+            android:layout_toStartOf="@+id/search_erkenningsnummer_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            android:inputType="number"
+            android:saveEnabled="true"
+            android:textSize="@dimen/textsize_title_small"
+            android:maxLength="@integer/erkenningsnummer_maxlength"
+            android:maxLines="1"
+            android:hint="@string/erkenningsnummer_hint"
+            android:textColorHint="@color/edittext_hint"
+            android:imeOptions="actionDone"
+            />
+
+        <ImageButton
+            android:id="@+id/search_erkenningsnummer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            style="?android:attr/buttonBarButtonStyle"
+            android:src="@drawable/ic_action_search"
+            />
+
+    </RelativeLayout>
+
+
+    <!-- Search sollicitatienummer -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText
+            android:id="@+id/sollicitatienummer"
+            android:layout_toLeftOf="@+id/search_sollicitatienummer_button"
+            android:layout_toStartOf="@+id/search_sollicitatienummer_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            android:inputType="number"
+            android:saveEnabled="true"
+            android:textSize="@dimen/textsize_title_small"
+            android:maxLength="@integer/sollicitatienummer_maxlength"
+            android:maxLines="1"
+            android:hint="@string/sollicitatienummer_hint"
+            android:textColorHint="@color/edittext_hint"
+            android:imeOptions="actionDone"
+            />
+
+        <ImageButton
+            android:id="@+id/search_sollicitatienummer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            style="?android:attr/buttonBarButtonStyle"
+            android:src="@drawable/ic_action_search"
+            />
+
+    </RelativeLayout>
+
+    <!-- Navigation buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/scan_barcode_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:gravity="center"
+            android:elevation="4dp"
+            android:background="@drawable/button"
+            android:text="Barcode Scannen"
+            />
+
+        <Button
+            android:id="@+id/scan_nfctag_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:gravity="center"
+            android:background="@drawable/button"
+            android:text="NFC Scannen"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>

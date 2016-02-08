@@ -136,10 +136,7 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
 
             // delete existing markten and insert downloaded marken into db
             if (contentValues.length > 0) {
-
-                int deleted = mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
-                Utility.log(mContext, LOG_TAG, "Markten deleted: " + deleted);
-
+                mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
                 int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, contentValues);
                 Utility.log(mContext, LOG_TAG, "Markten inserted: " + inserted);
             }

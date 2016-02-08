@@ -64,10 +64,7 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
 
             // delete existing accounts and insert downloaded accounts into db
             if (contentValues.length > 0) {
-
-                int deleted = mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriAccount, null, null);
-                Utility.log(mContext, LOG_TAG, "Accounts deleted: " + deleted);
-
+                mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriAccount, null, null);
                 int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriAccount, contentValues);
                 Utility.log(mContext, LOG_TAG, "Accounts inserted: " + inserted);
             }

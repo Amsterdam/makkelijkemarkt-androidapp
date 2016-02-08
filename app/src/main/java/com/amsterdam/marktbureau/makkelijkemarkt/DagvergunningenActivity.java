@@ -17,6 +17,12 @@ public class DagvergunningenActivity extends BaseActivity {
     // use classname when logging
     private static final String LOG_TAG = DagvergunningenActivity.class.getSimpleName();
 
+    // create unique dagvergunningenfragent instance tag
+    private static final String DAGVERGUNNINGEN_FRAGMENT_TAG = LOG_TAG + DagvergunningenFragment.class.getSimpleName() + "_TAG";
+
+    // the dagvergunningenfragment
+    private DagvergunningenFragment mDagvergunningenFragment;
+
     /**
      *
      * @param savedInstanceState
@@ -35,9 +41,16 @@ public class DagvergunningenActivity extends BaseActivity {
 
         // add the about fragment to the container
         if (savedInstanceState == null) {
+            mDagvergunningenFragment = new DagvergunningenFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.container, new DagvergunningenFragment());
+            transaction.add(
+                    R.id.container,
+                    mDagvergunningenFragment,
+                    DAGVERGUNNINGEN_FRAGMENT_TAG);
             transaction.commit();
+        } else {
+            mDagvergunningenFragment = (DagvergunningenFragment) getSupportFragmentManager().findFragmentByTag(
+                    DAGVERGUNNINGEN_FRAGMENT_TAG);
         }
     }
 }

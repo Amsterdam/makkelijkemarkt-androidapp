@@ -27,19 +27,48 @@ public class DagvergunningFragment extends Fragment {
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragment.class.getSimpleName();
 
+    // key constants for keeping state
+    private static final String DAGVERGUNNING_ID_KEY = "dagvergunning_id";
+    private static final String CURRENT_TAB = "current_tab";
+
+    // key constants for viewpagerfragment instance tags
+    private static final String KOOPMAN_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentKoopman.class.getSimpleName() + "_TAG";
+    private static final String PRODUCT_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentProduct.class.getSimpleName() + "_TAG";
+    private static final String OVERZICHT_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentOverzicht.class.getSimpleName() + "_TAG";
+
     // bind layout elements
     @Bind(R.id.dagvergunning_tablayout) TabLayout mTabLayout;
     @Bind(R.id.dagvergunning_meldingen_container) LinearLayout mMeldingenContainer;
     @Bind(R.id.dagvergunning_meldingen) LinearLayout mMeldingenPlaceholder;
     @Bind(R.id.dagvergunning_pager) ViewPager mViewPager;
 
+    // viewpager adapter
     private DagvergunningPagerAdapter mPagerAdapter;
 
     // keep dagvergunning id if we are editing an existing one
     private int mId = -1;
 
-    // key constants for keeping state
-    private static final String DAGVERGUNNING_ID_KEY = "dagvergunning_id";
+    // koopman data
+    // ..
+
+    // product data
+    // ..
+
+    // overzicht data
+    // ..
+
+    // viewpager fragment references
+    DagvergunningFragmentKoopman mKoopmanFragment;
+    DagvergunningFragmentProduct mProductFragment;
+    DagvergunningFragmentOverzicht mOverzichtFragment;
+
+    // viepager fragment ready state
+    private boolean mKoopmanFragmentReady = false;
+    private boolean mProductFragmentReady = false;
+    private boolean mOverzichtFragmentReady = false;
+
+    // keep the current tab
+    private int mCurrentTab = 0;
 
     /**
      * Constructor
@@ -72,19 +101,40 @@ public class DagvergunningFragment extends Fragment {
              */
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
+                mCurrentTab = tab.getPosition();
+                mViewPager.setCurrentItem(mCurrentTab);
+
+                Utility.log(getContext(), LOG_TAG, "Switched to tab: " + mCurrentTab);
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
+
+        if (savedInstanceState == null) {
+            Utility.log(getContext(), LOG_TAG, "viewpager fragments created");
+            mKoopmanFragment = new DagvergunningFragmentKoopman();
+            mProductFragment = new DagvergunningFragmentProduct();
+            mOverzichtFragment = new DagvergunningFragmentOverzicht();
+        } else {
+            Utility.log(getContext(), LOG_TAG, "viewpager fragments re-used");
+            mKoopmanFragment = (DagvergunningFragmentKoopman) getChildFragmentManager().getFragment(savedInstanceState, KOOPMAN_FRAGMENT_TAG);
+            mProductFragment = (DagvergunningFragmentProduct) getChildFragmentManager().getFragment(savedInstanceState, PRODUCT_FRAGMENT_TAG);
+            mOverzichtFragment = (DagvergunningFragmentOverzicht) getChildFragmentManager().getFragment(savedInstanceState, OVERZICHT_FRAGMENT_TAG);
+        }
 
         // create the fragment pager adapter
         mPagerAdapter = new DagvergunningPagerAdapter(
-                getActivity().getSupportFragmentManager(), mTabLayout.getTabCount());
+                getChildFragmentManager(),
+                mTabLayout.getTabCount(),
+                mKoopmanFragment,
+                mProductFragment,
+                mOverzichtFragment);
 
         // create the fragment pager adapter
         mViewPager.setAdapter(mPagerAdapter);
@@ -121,19 +171,28 @@ public class DagvergunningFragment extends Fragment {
 
             // restore fragment state
             mId = savedInstanceState.getInt(DAGVERGUNNING_ID_KEY);
+            mCurrentTab = savedInstanceState.getInt(CURRENT_TAB);
 
+            // select tab of viepager from saved fragment state
+            if (mViewPager.getCurrentItem() != mCurrentTab) {
+                mViewPager.setCurrentItem(mCurrentTab);
+            }
         }
+    }
 
-        if (mId > 0) {
+    private void populateKoopmanFragment() {
+        // TODO: load selected vergunning and populate step fragment elements
+//        if (mId > 0) {
+//            mKoopmanFragment.mErkenningsnummerText.setText("Vergunning id: " + mId);
+//        }
+    }
 
-            Utility.log(getContext(), LOG_TAG, "Dagvergunning id: "+ mId);
+    private void populateProductFragment() {
+        // TODO: load selected vergunning and populate step fragment elements
+    }
 
-            // TODO: load selected vergunning and populate step fragment elements
-        }
-
-        // TODO: if the user entered/selected certain elements re-populate them (based on the fragment member vars)
-        // TODO: see how to populate fragment elements that are in the step fragments of the viewpager
-        // TODO: and the other way round, how to save information entered in the step fragment elements back to the savestate of the main dagvergunning fragment
+    private void populateOverzichtFragment() {
+        // TODO: load selected vergunning and populate step fragment elements
     }
 
     /**
@@ -146,9 +205,19 @@ public class DagvergunningFragment extends Fragment {
 
         // save fragment state
         outState.putInt(DAGVERGUNNING_ID_KEY, mId);
+        outState.putInt(CURRENT_TAB, mCurrentTab);
 
+        // save viewpager fragments to state
+        getChildFragmentManager().putFragment(outState, KOOPMAN_FRAGMENT_TAG, mKoopmanFragment);
+        getChildFragmentManager().putFragment(outState, PRODUCT_FRAGMENT_TAG, mProductFragment);
+        getChildFragmentManager().putFragment(outState, OVERZICHT_FRAGMENT_TAG, mOverzichtFragment);
     }
 
+    /**
+     * Open/close meldingen view
+     * @param view view that needs to collapse
+     * @param collapse collapse or open
+     */
     private void collapseView(View view, boolean collapse) {
         ViewGroup.LayoutParams lp = view.getLayoutParams();
 
@@ -160,4 +229,20 @@ public class DagvergunningFragment extends Fragment {
 
         view.setLayoutParams(lp);
     }
+
+    public void koopmanFragmentReady() {
+        mKoopmanFragmentReady = true;
+        populateKoopmanFragment();
+    }
+
+    public void productFragmentReady() {
+        mProductFragmentReady = true;
+        populateProductFragment();
+    }
+
+    public void overzichtFragmentReady() {
+        mOverzichtFragmentReady = true;
+        populateOverzichtFragment();
+    }
+
 }

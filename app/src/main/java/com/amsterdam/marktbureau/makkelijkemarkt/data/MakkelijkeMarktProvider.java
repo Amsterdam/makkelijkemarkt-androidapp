@@ -6,8 +6,12 @@ package com.amsterdam.marktbureau.makkelijkemarkt.data;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 
 import java.util.HashMap;
 import java.util.List;
@@ -360,6 +364,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
             return null;
         }
 
+        // TODO: use insertWithOnConflict here as well? (don't throw an exception but replace the existing row instead?)
+
         // try to insert or throw an exception
         long rowId = mDatabase.insertOrThrow(segments.get(0), null, values);
 
@@ -367,7 +373,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         if (rowId > -1) {
 
             // send notification to loader
-            getContext().getContentResolver().notifyChange(uri, null);
+            if (getContext() != null) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
 
             // return the uri where the inserted row can be found
             return ContentUris.withAppendedId(uri, rowId);
@@ -377,20 +385,84 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     }
 
     /**
+     * Override the super class bulkinsert method so we can act differently on insert conflicts, notify
+     * bound cursor loaders, and we run all the inserts transaction-based, which is much faster
+     * @param uri the uri (table) to update
+     * @param values the values we want to insert
+     * @return amount of records inserted
+     */
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        int insertCount = 0;
+
+        // check if we have at least one path segment (table name)
+        List<String> segments = uri.getPathSegments();
+        if (segments == null || segments.size() != 1) {
+            return 0;
+        }
+
+        // start the transaction
+        mDatabase.beginTransaction();
+        try {
+            // insert values and replace them if they already exist
+            for(ContentValues value : values) {
+                long _id = mDatabase.insertWithOnConflict(
+                        segments.get(0),
+                        null,
+                        value,
+                        SQLiteDatabase.CONFLICT_REPLACE);
+
+                if (_id != -1) {
+                    insertCount++;
+                }
+            }
+            mDatabase.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            Utility.log(getContext(), LOG_TAG, e.getMessage());
+        } finally {
+            mDatabase.endTransaction();
+        }
+
+        // if records were inserted we notify the loaders bound to the given uri
+        if (insertCount > 0 && getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return insertCount;
+    }
+
+    /**
      * Catch non-standard table queries
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Cursor cursor;
+        Uri notificationUri = uri;
 
         // @todo refactor this to use a uri matcher?
 
         if (uri.getPath().equals(mUriDagvergunningJoined.getPath())) {
 
             // query the dagvergunningen table joined with it's linked tables with the given arguments
-            return getDagvergunningenJoined(uri, projection, selection, selectionArgs, sortOrder);
+            cursor = queryDagvergunningenJoined(uri, projection, selection, selectionArgs, sortOrder);
+
+            // subscribe the cursor to a different notification uri, because we will update the
+            // dagvergunningen table not with the join, which will cause that the this joined
+            // cursor will not be notified of changes otherwise
+            notificationUri = MakkelijkeMarktProvider.mUriDagvergunning;
+
+        } else {
+
+            // call the default query method of the super class
+            cursor = super.query(uri, projection, selection, selectionArgs, sortOrder);
         }
 
-        return super.query(uri, projection, selection, selectionArgs, sortOrder);
+        // set the uri that must be notified of any changes
+        if (cursor != null && getContext() != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), notificationUri);
+        }
+
+        return cursor;
     }
 
     /**
@@ -402,7 +474,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      * @param sortOrder the sorting params
      * @return a cursor containing the resultset
      */
-    private Cursor getDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    private Cursor queryDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder dagvergunningKoopmanQueryBuilder = new SQLiteQueryBuilder();
 
         // left join the dagvergunning table with the linked koopman, account, and sollicitatie tables

@@ -12,13 +12,19 @@ import android.support.v4.app.FragmentTransaction;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningActivity extends BaseActivity {
+public class DagvergunningActivity extends BaseActivity implements
+        DagvergunningFragmentKoopman.OnReadyListener,
+        DagvergunningFragmentProduct.OnReadyListener,
+        DagvergunningFragmentOverzicht.OnReadyListener {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningActivity.class.getSimpleName();
 
+    // create unique dagvergunningfragent instance tag
+    private static final String DAGVERGUNNING_FRAGMENT_TAG = LOG_TAG + DagvergunningFragment.class.getSimpleName() + "_TAG";
+
     // the dagvergunningfragment
-    DagvergunningFragment mDagvergunningFragment;
+    private DagvergunningFragment mDagvergunningFragment;
 
     /**
      * Get markt naam from the shared prefs, set the title and subtile, and instantiate the
@@ -37,8 +43,6 @@ public class DagvergunningActivity extends BaseActivity {
         setToolbarTitle(getString(R.string.dagvergunning));
         setToolbarSubtitle(marktNaam);
 
-        // TODO: Instantiate fragments the same way in the other activities
-
         // create new or get existing instance of dagvergunningfragment
         if (savedInstanceState == null) {
             mDagvergunningFragment = new DagvergunningFragment();
@@ -46,11 +50,32 @@ public class DagvergunningActivity extends BaseActivity {
             transaction.add(
                     R.id.container,
                     mDagvergunningFragment,
-                    DagvergunningActivity.class.getSimpleName() + DagvergunningFragment.class.getSimpleName());
+                    DAGVERGUNNING_FRAGMENT_TAG);
             transaction.commit();
         } else {
             mDagvergunningFragment = (DagvergunningFragment) getSupportFragmentManager().findFragmentByTag(
-                    DagvergunningActivity.class.getSimpleName() + DagvergunningFragment.class.getSimpleName());
+                    DAGVERGUNNING_FRAGMENT_TAG);
         }
+    }
+
+    /**
+     * DagvergunningFragmentKoopman callback to inform the dagvergunningfragment that it's ready
+     */
+    public void onKoopmanFragmentReady() {
+        mDagvergunningFragment.koopmanFragmentReady();
+    }
+
+    /**
+     * DagvergunningFragmentProduct callback to inform the dagvergunningfragment that it's ready
+     */
+    public void onProductFragmentReady() {
+        mDagvergunningFragment.productFragmentReady();
+    }
+
+    /**
+     * DagvergunningFragmentOverzicht callback to inform the dagvergunningfragment that it's ready
+     */
+    public void onOverzichtFragmentReady() {
+        mDagvergunningFragment.overzichtFragmentReady();
     }
 }

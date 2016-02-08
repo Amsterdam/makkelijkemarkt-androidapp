@@ -26,6 +26,8 @@
     <string name="sollicitatie_status_lot">lot</string>
     <string name="sollicitatie_status_vpl">vpl</string>
     <string name="sollicitatie_status_vkk">vkk</string>
+    <string name="erkenningsnummer_hint">Erkenningsnummer</string>
+    <string name="sollicitatienummer_hint">Sollicitatienummer</string>
 
     <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 
@@ -43,10 +45,6 @@
     <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
 
 
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
-    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
     <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
     <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
     <string name="makkelijkemarkt_api_authorization_header_name" translatable="false">Authorization</string>
@@ -60,11 +58,5 @@
 
     <string name="makkelijkemarkt_api_dagvergunning_query_param_markt_id" translatable="false">marktId</string>
     <string name="makkelijkemarkt_api_dagvergunning_query_param_dag" translatable="false">dag</string>
-
-    <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
-    <string name="date_format_tijd" translatable="false">HH:mm</string>
-
-    <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
-    <string name="log_tag_separator" translatable="false">=============================></string>
 
 </resources>

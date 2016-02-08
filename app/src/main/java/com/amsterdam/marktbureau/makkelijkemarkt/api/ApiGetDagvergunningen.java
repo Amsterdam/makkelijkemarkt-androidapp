@@ -5,8 +5,6 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteConstraintException;
-import android.net.Uri;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
@@ -14,6 +12,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -80,79 +79,49 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
     public void onResponse(Response<List<ApiDagvergunning>> response) {
         if (response.body() != null && response.body().size() > 0) {
 
-            // copy the values to a contentvalues array that can be used in the
-            // contentprovider bulkinsert method
-            ContentValues[] contentValues = new ContentValues[response.body().size()];
+            List<ContentValues> dagvergunningValues = new ArrayList<>();
+            List<ContentValues> koopmanValues = new ArrayList<>();
+            List<ContentValues> sollicitatieValues = new ArrayList<>();
+
+            // copy the values to a contentvalues list that can be used in the contentprovider bulkinsert method
             for (int i = 0; i < response.body().size(); i++) {
                 ApiDagvergunning dagvergunning = response.body().get(i);
 
-                // add dagvergunningen values to array for bulkinsert later
-                contentValues[i] = dagvergunning.toContentValues();
+                if (dagvergunning != null) {
 
-                // @todo refactor inserting/updating the db to make it faster
-                // @todo by first collecting the data and then using delete+bulkinsert ?
+                    // add dagvergunning values to list for bulkinsert later
+                    dagvergunningValues.add(dagvergunning.toContentValues());
 
-                // insert or update the koopman
-                ApiKoopman koopman = dagvergunning.getKoopman();
-                if (koopman != null) {
-                    try {
-
-                        Uri koopmanUri = mContext.getContentResolver().insert(
-                                MakkelijkeMarktProvider.mUriKoopman,
-                                koopman.toContentValues()
-                        );
-                        Utility.log(mContext, LOG_TAG, "Inserted koopman: " + koopman.getId() + ", get it here: " + koopmanUri.toString());
-
-                    } catch (SQLiteConstraintException e) {
-
-                        // update the existing query record
-                        int updated = mContext.getContentResolver().update(
-                                MakkelijkeMarktProvider.mUriKoopman,
-                                koopman.toContentValues(),
-                                MakkelijkeMarktProvider.Koopman.COL_ID + " = ?",
-                                new String[]{String.valueOf(koopman.getId())}
-                        );
-                        Utility.log(mContext, LOG_TAG, "Updated koopman: " + koopman.getId());
+                    // add koopman values to list for bulkinsert later
+                    ApiKoopman koopman = dagvergunning.getKoopman();
+                    if (koopman != null) {
+                        koopmanValues.add(koopman.toContentValues());
                     }
-                }
 
-                // insert or update the sollicitatie
-                ApiSollicitatie sollicitatie = dagvergunning.getSollicitatie();
-                if (sollicitatie != null) {
-                    try {
-
-                        Uri sollicitatieUri = mContext.getContentResolver().insert(
-                                MakkelijkeMarktProvider.mUriSollicitatie,
-                                sollicitatie.toContentValues()
-                        );
-                        Utility.log(mContext, LOG_TAG, "Inserted sollicitatie: " + sollicitatie.getId() + ", get it here: " + sollicitatieUri.toString());
-
-                    } catch (SQLiteConstraintException e) {
-
-                        // update the existing query record
-                        int updated = mContext.getContentResolver().update(
-                                MakkelijkeMarktProvider.mUriSollicitatie,
-                                sollicitatie.toContentValues(),
-                                MakkelijkeMarktProvider.Sollicitatie.COL_ID + " = ?",
-                                new String[]{String.valueOf(sollicitatie.getId())}
-                        );
-                        Utility.log(mContext, LOG_TAG, "Updated sollicitatie: " + sollicitatie.getId());
+                    // add sollicitatie values to list for bulkinsert later
+                    ApiSollicitatie sollicitatie = dagvergunning.getSollicitatie();
+                    if (sollicitatie != null) {
+                        sollicitatieValues.add(sollicitatie.toContentValues());
                     }
                 }
             }
 
-            // delete existing dagvergunningen and insert downloaded dagvergunningen into db
-            if (contentValues.length > 0) {
+            // update downloaded koopmannen into db using our custom bulkinsert
+            if (koopmanValues.size() > 0) {
+                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues.toArray(new ContentValues[koopmanValues.size()]));
+                Utility.log(mContext, LOG_TAG, "Koopmannen inserted: " + inserted);
+            }
 
-                // delete all dagvergunningen voor selected markt and dag
-                int deleted = mContext.getContentResolver().delete(
-                        MakkelijkeMarktProvider.mUriDagvergunning,
-                        MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? AND " + MakkelijkeMarktProvider.Dagvergunning.COL_DAG + " = ?",
-                        new String[]{ mMarktId, mDag });
-                Utility.log(mContext, LOG_TAG, "Dagvergunningen deleted: " + deleted);
+            // update downloaded sollicitaties into db using our custom bulkinsert
+            if (sollicitatieValues.size() > 0) {
+                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues.toArray(new ContentValues[sollicitatieValues.size()]));
+                Utility.log(mContext, LOG_TAG, "Sollicitaties inserted: " + inserted);
+            }
 
-                // insert new dagvergunningen
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriDagvergunning, contentValues);
+            // replace downloaded dagvergunningen into db using our custom bulkinsert
+            if (dagvergunningValues.size() > 0) {
+                mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriDagvergunning, null, null);
+                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues.toArray(new ContentValues[dagvergunningValues.size()]));
                 Utility.log(mContext, LOG_TAG, "Dagvergunningen inserted: " + inserted);
             }
         }

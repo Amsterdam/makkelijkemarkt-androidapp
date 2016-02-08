@@ -19,13 +19,18 @@ public class DagvergunningPagerAdapter extends FragmentStatePagerAdapter {
     DagvergunningFragmentProduct mProductFragment;
     DagvergunningFragmentOverzicht mOverzichtFragment;
 
-    public DagvergunningPagerAdapter(FragmentManager fragmentManager, int numOfTabs) {
+    public DagvergunningPagerAdapter(
+            FragmentManager fragmentManager,
+            int numOfTabs,
+            DagvergunningFragmentKoopman koopmanFragment,
+            DagvergunningFragmentProduct productFragment,
+            DagvergunningFragmentOverzicht overzichtFragment) {
         super(fragmentManager);
         mNumOfFragments = numOfTabs;
 
-        mKoopmanFragment = new DagvergunningFragmentKoopman();
-        mProductFragment = new DagvergunningFragmentProduct();
-        mOverzichtFragment = new DagvergunningFragmentOverzicht();
+        mKoopmanFragment = koopmanFragment;
+        mProductFragment = productFragment;
+        mOverzichtFragment = overzichtFragment;
     }
 
     @Override
