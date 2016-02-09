@@ -89,9 +89,8 @@ public class DagvergunningenListAdapter extends CursorAdapter {
         // registratietijd
         String registratieDatumtijd = cursor.getString(cursor.getColumnIndex(
                 MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD));
-        viewHolder.dagvergunningRegistratieDatumtijdText.setText(registratieDatumtijd);
         try {
-            Date registratieDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(registratieDatumtijd);
+            Date registratieDate = new SimpleDateFormat(context.getString(R.string.date_format_datumtijd), Locale.getDefault()).parse(registratieDatumtijd);
             SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.date_format_tijd));
             String registratieTijd = sdf.format(registratieDate);
             viewHolder.dagvergunningRegistratieDatumtijdText.setText(registratieTijd);
@@ -113,22 +112,10 @@ public class DagvergunningenListAdapter extends CursorAdapter {
         // sollicitatie status
         String sollicitatieStatus = cursor.getString(cursor.getColumnIndex(
                 MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE));
-        if (sollicitatieStatus != null && !sollicitatieStatus.equals("")) {
+        if (sollicitatieStatus != null && !sollicitatieStatus.equals("?") && !sollicitatieStatus.equals("")) {
             viewHolder.sollicitatieStatusText.setVisibility(View.VISIBLE);
             viewHolder.sollicitatieStatusText.setText(sollicitatieStatus);
-
-            // map the color for the sollicitatie status
-            int sollicitatieStatusColor = R.color.sollicitatie_status_undefined;
-            if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_lot))) {
-                sollicitatieStatusColor = R.color.sollicitatie_status_lot;
-            } else if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_soll))) {
-                sollicitatieStatusColor = R.color.sollicitatie_status_soll;
-            } else if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_vkk))) {
-                sollicitatieStatusColor = R.color.sollicitatie_status_vkk;
-            } else if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_vpl))) {
-                sollicitatieStatusColor = R.color.sollicitatie_status_vpl;
-            }
-            viewHolder.sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(context, sollicitatieStatusColor));
+            viewHolder.sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(context, Utility.getSollicitatieStatusColor(context, sollicitatieStatus)));
         }
 
         // totale lengte

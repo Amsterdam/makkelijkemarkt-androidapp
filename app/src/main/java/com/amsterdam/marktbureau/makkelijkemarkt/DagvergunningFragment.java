@@ -4,9 +4,16 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +21,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+import com.bumptech.glide.Glide;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,19 +34,16 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningFragment extends Fragment {
+public class DagvergunningFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragment.class.getSimpleName();
 
-    // key constants for keeping state
-    private static final String DAGVERGUNNING_ID_KEY = "dagvergunning_id";
-    private static final String CURRENT_TAB = "current_tab";
-
-    // key constants for viewpagerfragment instance tags
+    // key constants for referencing viewpager state
     private static final String KOOPMAN_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentKoopman.class.getSimpleName() + "_TAG";
     private static final String PRODUCT_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentProduct.class.getSimpleName() + "_TAG";
     private static final String OVERZICHT_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentOverzicht.class.getSimpleName() + "_TAG";
+    private static final String CURRENT_TAB = "current_tab";
 
     // bind layout elements
     @Bind(R.id.dagvergunning_tablayout) TabLayout mTabLayout;
@@ -45,17 +54,8 @@ public class DagvergunningFragment extends Fragment {
     // viewpager adapter
     private DagvergunningPagerAdapter mPagerAdapter;
 
-    // keep dagvergunning id if we are editing an existing one
-    private int mId = -1;
-
-    // koopman data
-    // ..
-
-    // product data
-    // ..
-
-    // overzicht data
-    // ..
+    // unique id for the markten loader
+    private static final int DAGVERGUNNING_LOADER = 4;
 
     // viewpager fragment references
     DagvergunningFragmentKoopman mKoopmanFragment;
@@ -69,6 +69,24 @@ public class DagvergunningFragment extends Fragment {
 
     // keep the current tab
     private int mCurrentTab = 0;
+
+    // dagvergunning data
+    private int mMarktId = -1;
+    private String mDag;
+    private int mId = -1;
+    private String mErkenningsnummer;
+    private String mRegistratieDatumtijd;
+    private int mTotaleLengte = -1;
+    private String mSollicitatieStatus;
+    private String mKoopmanAanwezig;
+    private int mKoopmanId = -1;
+    private String mKoopmanVoorletters;
+    private String mKoopmanAchternaam;
+    private String mKoopmanFotoMedium;
+    private int mRegistratieAccountId = -1;
+    private String mRegistratieAccountNaam;
+    private int mSollicitatieId = -1;
+    private int mSollicitatieNummer = -1;
 
     /**
      * Constructor
@@ -103,8 +121,6 @@ public class DagvergunningFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 mCurrentTab = tab.getPosition();
                 mViewPager.setCurrentItem(mCurrentTab);
-
-                Utility.log(getContext(), LOG_TAG, "Switched to tab: " + mCurrentTab);
             }
 
             @Override
@@ -117,12 +133,11 @@ public class DagvergunningFragment extends Fragment {
         });
 
         if (savedInstanceState == null) {
-            Utility.log(getContext(), LOG_TAG, "viewpager fragments created");
             mKoopmanFragment = new DagvergunningFragmentKoopman();
             mProductFragment = new DagvergunningFragmentProduct();
             mOverzichtFragment = new DagvergunningFragmentOverzicht();
         } else {
-            Utility.log(getContext(), LOG_TAG, "viewpager fragments re-used");
+            mCurrentTab = savedInstanceState.getInt(CURRENT_TAB);
             mKoopmanFragment = (DagvergunningFragmentKoopman) getChildFragmentManager().getFragment(savedInstanceState, KOOPMAN_FRAGMENT_TAG);
             mProductFragment = (DagvergunningFragmentProduct) getChildFragmentManager().getFragment(savedInstanceState, PRODUCT_FRAGMENT_TAG);
             mOverzichtFragment = (DagvergunningFragmentOverzicht) getChildFragmentManager().getFragment(savedInstanceState, OVERZICHT_FRAGMENT_TAG);
@@ -136,22 +151,28 @@ public class DagvergunningFragment extends Fragment {
                 mProductFragment,
                 mOverzichtFragment);
 
-        // create the fragment pager adapter
+        // set the fragment pager adapter and add a pagechange listener to update the tab selection
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.addOnPageChangeListener(
-                new TabLayout.TabLayoutOnPageChangeListener(mTabLayout)
-        );
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         return view;
     }
 
     /**
-     * Get date retrieved with the intent, or restore state
+     * Get data retrieved with the intent, or restore state
      * @param savedInstanceState the previously saved state
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // get the id of selected market from the shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mMarktId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_markt_id), 0);
+
+        // get the date of today for the dag param
+        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
+        mDag = sdf.format(new Date());
 
         // only on fragment creation, not on rotation/re-creation
         if (savedInstanceState == null) {
@@ -167,32 +188,40 @@ public class DagvergunningFragment extends Fragment {
                     mId = dagvergunningId;
                 }
             }
+
+            // init loader if an existing dagvergunning was selected
+            if (mId > 0) {
+
+                // create an argument bundle with the dagvergunning id and initialize the loader
+                Bundle args = new Bundle();
+                args.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID, mId);
+                getLoaderManager().initLoader(DAGVERGUNNING_LOADER, args, this);
+            }
         } else {
 
-            // restore fragment state
-            mId = savedInstanceState.getInt(DAGVERGUNNING_ID_KEY);
-            mCurrentTab = savedInstanceState.getInt(CURRENT_TAB);
+            // restore dagvergunning state
+            mMarktId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID);
+            mDag = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_DAG);
+            mId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID);
+            mErkenningsnummer = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE);
+            mRegistratieDatumtijd = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD);
+            mTotaleLengte = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE);
+            mSollicitatieStatus = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE);
+            mKoopmanAanwezig = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG);
+            mKoopmanId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID);
+            mKoopmanVoorletters = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS);
+            mKoopmanAchternaam = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM);
+            mKoopmanFotoMedium = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL);
+            mRegistratieAccountId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID);
+            mRegistratieAccountNaam = savedInstanceState.getString(MakkelijkeMarktProvider.Account.COL_NAAM);
+            mSollicitatieId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID);
+            mSollicitatieNummer = savedInstanceState.getInt(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER);
 
-            // select tab of viepager from saved fragment state
+            // select tab of viewpager from saved fragment state
             if (mViewPager.getCurrentItem() != mCurrentTab) {
                 mViewPager.setCurrentItem(mCurrentTab);
             }
         }
-    }
-
-    private void populateKoopmanFragment() {
-        // TODO: load selected vergunning and populate step fragment elements
-//        if (mId > 0) {
-//            mKoopmanFragment.mErkenningsnummerText.setText("Vergunning id: " + mId);
-//        }
-    }
-
-    private void populateProductFragment() {
-        // TODO: load selected vergunning and populate step fragment elements
-    }
-
-    private void populateOverzichtFragment() {
-        // TODO: load selected vergunning and populate step fragment elements
     }
 
     /**
@@ -203,14 +232,117 @@ public class DagvergunningFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // save fragment state
-        outState.putInt(DAGVERGUNNING_ID_KEY, mId);
-        outState.putInt(CURRENT_TAB, mCurrentTab);
+        // save dagvergunning state
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID, mMarktId);
+        outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_DAG, mDag);
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID, mId);
+        outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, mErkenningsnummer);
+        outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD, mRegistratieDatumtijd);
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE, mTotaleLengte);
+        outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE, mSollicitatieStatus);
+        outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG, mKoopmanAanwezig);
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID, mKoopmanId);
+        outState.putString(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS, mKoopmanVoorletters);
+        outState.putString(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM, mKoopmanAchternaam);
+        outState.putString(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL, mKoopmanFotoMedium);
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID, mRegistratieAccountId);
+        outState.putString(MakkelijkeMarktProvider.Account.COL_NAAM, mRegistratieAccountNaam);
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID, mSollicitatieId);
+        outState.putInt(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER, mSollicitatieNummer);
 
-        // save viewpager fragments to state
+        // save viewpager state
+        outState.putInt(CURRENT_TAB, mCurrentTab);
         getChildFragmentManager().putFragment(outState, KOOPMAN_FRAGMENT_TAG, mKoopmanFragment);
         getChildFragmentManager().putFragment(outState, PRODUCT_FRAGMENT_TAG, mProductFragment);
         getChildFragmentManager().putFragment(outState, OVERZICHT_FRAGMENT_TAG, mOverzichtFragment);
+    }
+
+    /**
+     * Populate koopman fragment from local member vars
+     */
+    private void populateKoopmanFragment() {
+
+        // koopman foto
+        if (mKoopmanFotoMedium != null) {
+
+            // make the koopman details visible
+            mKoopmanFragment.mKoopmanDetail.setVisibility(View.VISIBLE);
+
+            Glide.with(getContext()).load(mKoopmanFotoMedium)
+                    .error(R.drawable.no_koopman_image)
+                    .into(mKoopmanFragment.mKoopmanFotoImage);
+        }
+
+        // koopman naam
+        if (mKoopmanVoorletters != null && mKoopmanAchternaam != null) {
+            mKoopmanFragment.mKoopmanVoorlettersAchternaamText.setText(
+                    mKoopmanVoorletters + " " + mKoopmanAchternaam);
+        }
+
+        // dagvergunning registratie tijd
+        if (mRegistratieDatumtijd != null) {
+            try {
+                Date registratieDate = new SimpleDateFormat(
+                        getString(R.string.date_format_datumtijd),
+                        Locale.getDefault()).parse(mRegistratieDatumtijd);
+                SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_tijd));
+                String registratieTijd = sdf.format(registratieDate);
+                mKoopmanFragment.mRegistratieDatumtijdText.setText(registratieTijd);
+            } catch (java.text.ParseException e) {
+                Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: "+ e.getMessage());
+            }
+        }
+
+        // koopman erkenningsnummer
+        if (mErkenningsnummer != null) {
+            mKoopmanFragment.mErkenningsnummerText.setText(
+                    getString(R.string.label_erkenningsnummer) + ": " + mErkenningsnummer);
+        }
+
+        // koopman sollicitatienummer
+        if (mSollicitatieNummer != -1) {
+            mKoopmanFragment.mSollicitatienummerText.setVisibility(View.VISIBLE);
+            mKoopmanFragment.mSollicitatienummerText.setText(
+                    getString(R.string.label_sollicitatienummer) + ": " + mSollicitatieNummer);
+        }
+
+        // koopman sollicitatie status
+        if (mSollicitatieStatus != null && !mSollicitatieStatus.equals("?") && !mSollicitatieStatus.equals("")) {
+            mKoopmanFragment.mSollicitatieStatusText.setVisibility(View.VISIBLE);
+            mKoopmanFragment.mSollicitatieStatusText.setText(mSollicitatieStatus);
+            mKoopmanFragment.mSollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
+                    getContext(),
+                    Utility.getSollicitatieStatusColor(getContext(), mSollicitatieStatus)));
+        }
+
+        // dagvergunning totale lengte
+        if (mTotaleLengte != -1) {
+            mKoopmanFragment.mTotaleLengte.setText(mTotaleLengte + " " + getString(R.string.length_meter));
+        }
+
+        // registratie account naam
+        if (mRegistratieAccountNaam != null) {
+            mKoopmanFragment.mAccountNaam.setText(mRegistratieAccountNaam);
+        }
+
+        // koopman aanwezig status
+        if (mKoopmanAanwezig != null) {
+            mKoopmanFragment.setAanwezig(mKoopmanAanwezig);
+        }
+
+        Utility.log(getContext(), LOG_TAG, "Koopman populated!");
+    }
+
+    /**
+     * TODO: populate product fragment from local member vars
+     */
+    private void populateProductFragment() {
+    }
+
+    /**
+     * TODO: populate overzicht fragment from local member vars
+     */
+    private void populateOverzichtFragment() {
     }
 
     /**
@@ -230,6 +362,21 @@ public class DagvergunningFragment extends Fragment {
         view.setLayoutParams(lp);
     }
 
+    public void populateFragments() {
+
+        if (mKoopmanFragmentReady) {
+            populateKoopmanFragment();
+        }
+
+        if (mProductFragmentReady) {
+            populateProductFragment();
+        }
+
+        if (mOverzichtFragmentReady) {
+            populateOverzichtFragment();
+        }
+    }
+
     public void koopmanFragmentReady() {
         mKoopmanFragmentReady = true;
         populateKoopmanFragment();
@@ -245,4 +392,64 @@ public class DagvergunningFragment extends Fragment {
         populateOverzichtFragment();
     }
 
+    /**
+     * Create the loader that will load the dagvergunning from the db when we are editing an existing one
+     * @param id the unique loader id
+     * @param args an arguments bundle that contains the dagvergunning id
+     * @return a cursor with one record containing the joined dagvergunning details
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        // load the dagvergunning with given id in the arguments bundle
+        if (args != null && args.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID, 0) != 0) {
+            CursorLoader loader = new CursorLoader(getActivity());
+            loader.setUri(MakkelijkeMarktProvider.mUriDagvergunningJoined);
+            loader.setSelection(
+                    MakkelijkeMarktProvider.mTableDagvergunning + "." + MakkelijkeMarktProvider.Dagvergunning.COL_ID + " = ? "
+            );
+            loader.setSelectionArgs(new String[]{
+                    String.valueOf(args.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID, 0))
+            });
+
+            return loader;
+        }
+
+        return null;
+    }
+
+    /**
+     * On loading finished get the data that we need for populating the viewpager fragments and set
+     * the local dagvergunning vars
+     * @param loader the loader
+     * @param data a cursor with one record containing the joined dagvergunning details
+     */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data != null && data.moveToFirst()) {
+
+            Utility.log(getContext(), LOG_TAG, "dagvergunning loaded!");
+
+            mErkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE));
+            mRegistratieDatumtijd = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD));
+            mTotaleLengte = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE));
+            mSollicitatieStatus = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE));
+            mKoopmanAanwezig = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG));
+            mKoopmanId = data.getInt(data.getColumnIndex("koopman_koopman_id"));
+            mKoopmanVoorletters = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS));
+            mKoopmanAchternaam = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM));
+            mKoopmanFotoMedium = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL));
+            mRegistratieAccountId = data.getInt(data.getColumnIndex("account_account_id"));
+            mRegistratieAccountNaam = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Account.COL_NAAM));
+            mSollicitatieId = data.getInt(data.getColumnIndex("sollicitatie_sollicitatie_id"));
+            mSollicitatieNummer = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
+
+            // update their view elements
+            populateFragments();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 }

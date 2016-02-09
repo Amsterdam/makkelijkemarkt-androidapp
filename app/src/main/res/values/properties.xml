@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>-->
+    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
 
+    <string name="date_format_datumtijd" translatable="false">"yyyy-MM-dd HH:mm:ss"</string>
     <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
     <string name="date_format_tijd" translatable="false">HH:mm</string>
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Aanwezig titles and values -->
+    <string-array name="array_aanwezig_title">
+        <item>Zelf aanwezig</item>
+        <item>Partner aanwezig</item>
+        <item>Vervanger met toestemming aanwezig</item>
+        <item>Vervanger zonder toestemming aanwezig</item>
+        <item>Vervanger met ontheffing aanwezig</item>
+    </string-array>
+    <string-array name="array_aanwezig_value">
+        <item>zelf</item>
+        <item>partner</item>
+        <item>vervanger_met_toestemming</item>
+        <item>vervanger_zonder_toestemming</item>
+        <item>vervanger_met_ontheffing</item>
+    </string-array>
+
+</resources>

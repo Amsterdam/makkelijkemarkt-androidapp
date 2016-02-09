@@ -188,7 +188,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.TEXT)
         public static final String COL_ERKENNINGSNUMMER_INVOER_METHODE = "erkenningsnummer_invoer_methode";
 
-        @Column(Column.FieldType.INTEGER)
+        @Column(Column.FieldType.TEXT)
         public static final String COL_REGISTRATIE_DATUMTIJD = "registratie_datumtijd";
 
         @Column(Column.FieldType.REAL)
@@ -202,6 +202,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.TEXT)
         public static final String COL_AANWEZIG = "aanwezig";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_STATUS_SOLLICITATIE = "status_solliciatie";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_DOORGEHAALD = "doorgehaald";
@@ -244,9 +247,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KRACHTSTROOM_VAST = "krachtstroom_vast";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_STATUS_SOLLICITATIE = "status_solliciatie";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AANTAL3METER_KRAMEN = "aantal3meter_kramen";
@@ -506,6 +506,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REGISTRATIE_DATUMTIJD, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_TOTALE_LENGTE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_STATUS_SOLLICITATIE, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANWEZIG, null));
 
         // koopman columns copied
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));

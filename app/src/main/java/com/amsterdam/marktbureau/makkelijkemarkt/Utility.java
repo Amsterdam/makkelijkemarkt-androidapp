@@ -125,4 +125,26 @@ public class Utility {
 
         return builder.toString();
     }
+
+    /**
+     * Map a string resource id to a color resource id based on name
+     * @param context the context to get the resources from
+     * @param sollicitatieStatus the sollicitatie status string
+     * @return the mapped color resource id
+     */
+    public static int getSollicitatieStatusColor(Context context, String sollicitatieStatus) {
+        int sollicitatieStatusColor = R.color.sollicitatie_status_undefined;
+
+        if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_lot))) {
+            sollicitatieStatusColor = R.color.sollicitatie_status_lot;
+        } else if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_soll))) {
+            sollicitatieStatusColor = R.color.sollicitatie_status_soll;
+        } else if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_vkk))) {
+            sollicitatieStatusColor = R.color.sollicitatie_status_vkk;
+        } else if (sollicitatieStatus.equals(context.getString(R.string.sollicitatie_status_vpl))) {
+            sollicitatieStatusColor = R.color.sollicitatie_status_vpl;
+        }
+
+        return sollicitatieStatusColor;
+    }
 }

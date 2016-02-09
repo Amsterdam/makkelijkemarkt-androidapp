@@ -13,6 +13,7 @@
         android:layout_weight="2"
         android:layout_height="100dp"
         android:scaleType="fitStart"
+        android:src="@drawable/no_koopman_image"
         />
 
     <RelativeLayout

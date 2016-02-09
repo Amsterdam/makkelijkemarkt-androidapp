@@ -39,7 +39,6 @@
             android:layout_height="1dp"
             android:background="@color/primary_dark"
             />
-
     </LinearLayout>
 
     <!-- Fragment Pager -->
@@ -48,7 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/dagvergunning_meldingen_container"
-        android:padding="@dimen/margin"
         />
 
     <!-- Navigation buttons -->
