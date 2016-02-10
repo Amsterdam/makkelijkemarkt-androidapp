@@ -13,9 +13,9 @@ import android.support.v4.app.FragmentTransaction;
  * @author marcolangebeeke
  */
 public class DagvergunningActivity extends BaseActivity implements
-        DagvergunningFragmentKoopman.OnReadyListener,
-        DagvergunningFragmentProduct.OnReadyListener,
-        DagvergunningFragmentOverzicht.OnReadyListener {
+        DagvergunningFragmentKoopman.Callback,
+        DagvergunningFragmentProduct.Callback,
+        DagvergunningFragmentOverzicht.Callback {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningActivity.class.getSimpleName();

@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -60,6 +61,8 @@ public class LoginFragment extends Fragment implements
     // keep a reference to toast messages
     private Toast mToast;
 
+    private ProgressDialog mLoginProcessDialog;
+
     /**
      * Constructor
      */
@@ -100,6 +103,12 @@ public class LoginFragment extends Fragment implements
         // disable allcaps for the button title
         mLoginButton.setTransformationMethod(null);
 
+        // create the login progress dialog
+        mLoginProcessDialog = new ProgressDialog(getContext());
+        mLoginProcessDialog.setMessage(getString(R.string.login) + "...");
+        mLoginProcessDialog.setCancelable(false);
+        mLoginProcessDialog.setIndeterminate(true);
+
         return mainView;
     }
 
@@ -134,19 +143,27 @@ public class LoginFragment extends Fragment implements
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_enter_password));
         } else {
 
-            // @todo add deviceUuid, clientApp, and clientVersion in the post request (see login/basicId api doc)
+            // check if we have a network
+            if (Utility.isNetworkAvailable(getContext())) {
 
-            // prepare the json payload for the post request from the entered login details
-            JsonObject auth = new JsonObject();
-            auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_accound_id_name), String.valueOf(mSelectedAccountId));
-            auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_password_name), mPassword.getText().toString());
+                // @todo add deviceUuid, clientApp, and clientVersion in the post request (see login/basicId api doc)
 
-            // @todo start loading 'zandloper'
+                // prepare the json payload for the post request from the entered login details
+                JsonObject auth = new JsonObject();
+                auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_accound_id_name), String.valueOf(mSelectedAccountId));
+                auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_password_name), mPassword.getText().toString());
 
-            // create a login post request and add the account details as json
-            ApiPostLoginBasicId postLogin = new ApiPostLoginBasicId(getContext());
-            postLogin.setPayload(auth);
-            postLogin.enqueue(this);
+                // show progress dialog
+                mLoginProcessDialog.show();
+
+                // create a login post request and add the account details as json
+                ApiPostLoginBasicId postLogin = new ApiPostLoginBasicId(getContext());
+                postLogin.setPayload(auth);
+                postLogin.enqueue(this);
+
+            } else {
+                mToast = Utility.showToast(getActivity(), mToast, getString(R.string.network_required_notice));
+            }
         }
     }
 
@@ -221,7 +238,8 @@ public class LoginFragment extends Fragment implements
     @Override
     public void onResponse(Response<JsonObject> response) {
 
-        // @todo end loading 'zandloper'
+        // hide progress dialog
+        mLoginProcessDialog.dismiss();
 
         if (response.isSuccess() && response.body() != null) {
 
@@ -250,7 +268,8 @@ public class LoginFragment extends Fragment implements
     @Override
     public void onFailure(Throwable t) {
 
-        // @todo end loading 'zandloper'
+        // hide progress dialog
+        mLoginProcessDialog.dismiss();
 
         // @todo show an error ? => research in which possible cases onFailure is called
 

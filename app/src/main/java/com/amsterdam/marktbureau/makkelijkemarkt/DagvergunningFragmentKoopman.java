@@ -61,7 +61,7 @@ public class DagvergunningFragmentKoopman extends Fragment {
     /**
      * Callback interface so we can talk to the activity
      */
-    public interface OnReadyListener {
+    public interface Callback {
         void onKoopmanFragmentReady();
     }
 
@@ -95,7 +95,7 @@ public class DagvergunningFragmentKoopman extends Fragment {
 
         // inform the activity that the koopman fragment is ready so it can be manipulated by the
         // dagvergunning fragment
-        ((OnReadyListener) getActivity()).onKoopmanFragmentReady();
+        ((Callback) getActivity()).onKoopmanFragmentReady();
 
         return view;
     }

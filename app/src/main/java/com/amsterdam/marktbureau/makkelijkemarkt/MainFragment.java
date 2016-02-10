@@ -29,10 +29,10 @@ public class MainFragment extends Fragment {
     /**
      * Callback interface
      */
-    public interface Callback
-    {
+    public interface Callback {
+
         // replace a fragment
-        void replaceFragment(Fragment fragment);
+        void replaceLoginFragment();
     }
 
     /**
@@ -70,6 +70,6 @@ public class MainFragment extends Fragment {
     public void openLoginFragment() {
 
         // use a callback in mainactivity to replace the fragment in the container
-        ((Callback) getActivity()).replaceFragment(new LoginFragment());
+        ((Callback) getActivity()).replaceLoginFragment();
     }
 }

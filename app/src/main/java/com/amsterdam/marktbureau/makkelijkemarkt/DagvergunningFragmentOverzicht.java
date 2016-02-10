@@ -23,8 +23,10 @@ public class DagvergunningFragmentOverzicht extends Fragment {
     public DagvergunningFragmentOverzicht() {
     }
 
-    // callback interface so we can talk back to the activity
-    public interface OnReadyListener {
+    /**
+     * Callback interface so we can talk back to the activity
+     */
+    public interface Callback {
         void onOverzichtFragmentReady();
     }
 
@@ -37,7 +39,7 @@ public class DagvergunningFragmentOverzicht extends Fragment {
 
         // inform the activity that the overzicht fragment is ready so it can be manipulated by the
         // dagvergunning fragment
-        ((OnReadyListener) getActivity()).onOverzichtFragmentReady();
+        ((Callback) getActivity()).onOverzichtFragmentReady();
 
         return view;
     }

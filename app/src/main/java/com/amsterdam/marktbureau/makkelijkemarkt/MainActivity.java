@@ -6,7 +6,6 @@ package com.amsterdam.marktbureau.makkelijkemarkt;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +30,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
     // use classname when logging
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    // the main and login fragments
+    private MainFragment mMainFragment;
+    private LoginFragment mLoginFragment;
+
+    // create unique fragment instance tags
+    private static final String MAIN_FRAGMENT_TAG = LOG_TAG + MainFragment.class.getSimpleName() + "_TAG";
+    private static final String LOGIN_FRAGMENT_TAG = LOG_TAG + LoginFragment.class.getSimpleName() + "_TAG";
 
     // bind layout elements
     @Bind(R.id.toolbar) Toolbar mToolbar;
@@ -73,7 +80,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         // load accounts and add mainfragment, not on rotate
         if (savedInstanceState == null) {
 
-            // @todo move these api calls later to a service that keeps running api calls on set intervals in a separate thread
+            // create a mainfragment and add it to the framelayout container
+            mMainFragment = new MainFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.container, mMainFragment, MAIN_FRAGMENT_TAG);
+            transaction.commit();
+
+            // TODO: move these api calls later to a service that keeps running api calls on set intervals in a separate thread
+            // TODO: check internet connection before calling the api
 
             // update the local accounts by reloading them from the api
             ApiGetAccounts getAccounts = new ApiGetAccounts(this);
@@ -86,18 +100,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             getMarkten.addAanwezigeOptiesInterceptor();
             getMarkten.enqueue();
 
-            // add the mainfragment to the framelayout container
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.container, new MainFragment());
-            transaction.commit();
+        } else {
+
+            // re-use existing instance of main fragment
+            mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
         }
     }
 
     /**
-     * Replace the container framelayout with given fragment
-     * @param fragment the fragment to place in the container
+     * Replace the container framelayout with the login fragment
      */
-    public void replaceFragment(Fragment fragment)
+    public void replaceLoginFragment()
     {
         if (getSupportActionBar() != null) {
 
@@ -113,11 +126,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         }
 
         // replace the fragment using the fragmentmanager
+        mLoginFragment = new LoginFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment, null);
+        transaction.replace(R.id.container, mLoginFragment, LOGIN_FRAGMENT_TAG);
 
         // add the fragment name to the backstack to support the back-button
-        transaction.addToBackStack(fragment.getClass().getSimpleName());
+        transaction.addToBackStack(LoginFragment.class.getSimpleName());
 
         // execute the transaction
         transaction.commit();

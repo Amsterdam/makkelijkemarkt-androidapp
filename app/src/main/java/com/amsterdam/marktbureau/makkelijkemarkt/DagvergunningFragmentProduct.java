@@ -23,8 +23,10 @@ public class DagvergunningFragmentProduct extends Fragment {
     public DagvergunningFragmentProduct() {
     }
 
-    // callback interface so we can talk back to the activity
-    public interface OnReadyListener {
+    /**
+     * Callback interface so we can talk back to the activity
+     */
+    public interface Callback {
         void onProductFragmentReady();
     }
 
@@ -37,7 +39,7 @@ public class DagvergunningFragmentProduct extends Fragment {
 
         // inform the activity that the product fragment is ready so it can be manipulated by the
         // dagvergunning fragment
-        ((OnReadyListener) getActivity()).onProductFragmentReady();
+        ((Callback) getActivity()).onProductFragmentReady();
 
         return view;
     }
