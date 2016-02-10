@@ -221,6 +221,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             if (mViewPager.getCurrentItem() != mCurrentTab) {
                 mViewPager.setCurrentItem(mCurrentTab);
             }
+
+            Utility.log(getContext(), LOG_TAG, "State restored!");
         }
     }
 
@@ -255,6 +257,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         getChildFragmentManager().putFragment(outState, KOOPMAN_FRAGMENT_TAG, mKoopmanFragment);
         getChildFragmentManager().putFragment(outState, PRODUCT_FRAGMENT_TAG, mProductFragment);
         getChildFragmentManager().putFragment(outState, OVERZICHT_FRAGMENT_TAG, mOverzichtFragment);
+
+        Utility.log(getContext(), LOG_TAG, "State saved!");
     }
 
     /**
@@ -334,15 +338,19 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
-     * TODO: populate product fragment from local member vars
+     * Populate product fragment from local member vars
      */
     private void populateProductFragment() {
+
+        Utility.log(getContext(), LOG_TAG, "Product populated!");
     }
 
     /**
-     * TODO: populate overzicht fragment from local member vars
+     * Populate overzicht fragment from local member vars
      */
     private void populateOverzichtFragment() {
+
+        Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
     }
 
     /**

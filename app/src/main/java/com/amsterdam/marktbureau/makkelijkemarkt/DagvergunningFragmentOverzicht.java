@@ -17,6 +17,9 @@ import butterknife.ButterKnife;
  */
 public class DagvergunningFragmentOverzicht extends Fragment {
 
+    // use classname when logging
+    private static final String LOG_TAG = DagvergunningFragmentOverzicht.class.getSimpleName();
+
     /**
      * Constructor
      */
@@ -30,6 +33,13 @@ public class DagvergunningFragmentOverzicht extends Fragment {
         void onOverzichtFragmentReady();
     }
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dagvergunning_fragment_overzicht, container, false);
@@ -37,10 +47,21 @@ public class DagvergunningFragmentOverzicht extends Fragment {
         // bind the elements to the view
         ButterKnife.bind(this, view);
 
-        // inform the activity that the overzicht fragment is ready so it can be manipulated by the
-        // dagvergunning fragment
-        ((Callback) getActivity()).onOverzichtFragmentReady();
-
         return view;
+    }
+
+    /**
+     * Inform the activity that the overzicht fragment is ready so it can be manipulated by the
+     * dagvergunning fragment
+     * @param savedInstanceState saved fragment state
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Utility.log(getContext(), LOG_TAG, "onActivityCreated called");
+
+        // call the activity
+        ((Callback) getActivity()).onOverzichtFragmentReady();
     }
 }

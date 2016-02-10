@@ -93,11 +93,22 @@ public class DagvergunningFragmentKoopman extends Fragment {
         mAanwezigAdapter.setDropDownViewResource(android.R.layout.simple_list_item_activated_1);
         mAanwezigSpinner.setAdapter(mAanwezigAdapter);
 
-        // inform the activity that the koopman fragment is ready so it can be manipulated by the
-        // dagvergunning fragment
-        ((Callback) getActivity()).onKoopmanFragmentReady();
-
         return view;
+    }
+
+    /**
+     * Inform the activity that the koopman fragment is ready so it can be manipulated by the
+     * dagvergunning fragment
+     * @param savedInstanceState saved fragment state
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Utility.log(getContext(), LOG_TAG, "onActivityCreated called");
+
+        // call the activity
+        ((Callback) getActivity()).onKoopmanFragmentReady();
     }
 
     /**
@@ -107,7 +118,6 @@ public class DagvergunningFragmentKoopman extends Fragment {
     @OnItemSelected(R.id.aanwezig_spinner)
     public void onItemSelected(int position) {
         mAanwezigSelectedValue = mAanwezigValues[position];
-        Utility.log(getContext(), LOG_TAG, "Aanwezig: "+ mAanwezigSelectedValue);
     }
 
     /**
