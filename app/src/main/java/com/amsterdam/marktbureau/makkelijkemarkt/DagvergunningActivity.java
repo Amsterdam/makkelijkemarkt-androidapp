@@ -47,10 +47,7 @@ public class DagvergunningActivity extends BaseActivity implements
         if (savedInstanceState == null) {
             mDagvergunningFragment = new DagvergunningFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(
-                    R.id.container,
-                    mDagvergunningFragment,
-                    DAGVERGUNNING_FRAGMENT_TAG);
+            transaction.add(R.id.container, mDagvergunningFragment, DAGVERGUNNING_FRAGMENT_TAG);
             transaction.commit();
         } else {
             mDagvergunningFragment = (DagvergunningFragment) getSupportFragmentManager().findFragmentByTag(

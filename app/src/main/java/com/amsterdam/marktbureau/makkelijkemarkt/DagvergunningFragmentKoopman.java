@@ -50,7 +50,7 @@ public class DagvergunningFragmentKoopman extends Fragment {
     // string array and adapter for the aanwezig spinner
     private String[] mAanwezigValues;
     private ArrayAdapter<CharSequence> mAanwezigAdapter;
-    private String mAanwezigSelectedValue;
+    String mAanwezigSelectedValue;
 
     /**
      * Constructor

@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -19,6 +21,9 @@ public class DagvergunningFragmentProduct extends Fragment {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragmentProduct.class.getSimpleName();
+
+    // bind layout elements
+    @Bind(R.id.product_test) TextView mProductTest;
 
     /**
      * Constructor

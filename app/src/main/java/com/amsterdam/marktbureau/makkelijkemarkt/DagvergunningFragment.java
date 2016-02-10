@@ -112,24 +112,27 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.product)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.overzicht)));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-
             /**
              * When selecting a tab change the related fragment in the viewpager
              * @param tab the selected tab
              */
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
+                // get the possibly changed values from the pager fragments before switching pages TODO: modify to only get from current fragment
+                getAllFragmentValues();
+
+                // get new tab position and switch to new fragment in viewpager
                 mCurrentTab = tab.getPosition();
                 mViewPager.setCurrentItem(mCurrentTab);
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                //
+                setAllFragmentValues();
             }
-
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         if (savedInstanceState == null) {
@@ -234,6 +237,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        // get the possibly changed values from the pager fragments before saving state TODO: modify to only get from current fragment
+        getAllFragmentValues();
+
         // save dagvergunning state
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID, mMarktId);
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_DAG, mDag);
@@ -264,93 +270,120 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     /**
      * Populate koopman fragment from local member vars
      */
-    private void populateKoopmanFragment() {
+    private void setKoopmanFragmentValues() {
+        if (mKoopmanFragmentReady) {
 
-        // koopman foto
-        if (mKoopmanFotoMedium != null) {
+            // koopman foto
+            if (mKoopmanFotoMedium != null) {
 
-            // make the koopman details visible
-            mKoopmanFragment.mKoopmanDetail.setVisibility(View.VISIBLE);
+                // make the koopman details visible
+                mKoopmanFragment.mKoopmanDetail.setVisibility(View.VISIBLE);
 
-            Glide.with(getContext()).load(mKoopmanFotoMedium)
-                    .error(R.drawable.no_koopman_image)
-                    .into(mKoopmanFragment.mKoopmanFotoImage);
-        }
-
-        // koopman naam
-        if (mKoopmanVoorletters != null && mKoopmanAchternaam != null) {
-            mKoopmanFragment.mKoopmanVoorlettersAchternaamText.setText(
-                    mKoopmanVoorletters + " " + mKoopmanAchternaam);
-        }
-
-        // dagvergunning registratie tijd
-        if (mRegistratieDatumtijd != null) {
-            try {
-                Date registratieDate = new SimpleDateFormat(
-                        getString(R.string.date_format_datumtijd),
-                        Locale.getDefault()).parse(mRegistratieDatumtijd);
-                SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_tijd));
-                String registratieTijd = sdf.format(registratieDate);
-                mKoopmanFragment.mRegistratieDatumtijdText.setText(registratieTijd);
-            } catch (java.text.ParseException e) {
-                Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: "+ e.getMessage());
+                Glide.with(getContext()).load(mKoopmanFotoMedium)
+                        .error(R.drawable.no_koopman_image)
+                        .into(mKoopmanFragment.mKoopmanFotoImage);
             }
-        }
 
-        // koopman erkenningsnummer
-        if (mErkenningsnummer != null) {
-            mKoopmanFragment.mErkenningsnummerText.setText(
-                    getString(R.string.label_erkenningsnummer) + ": " + mErkenningsnummer);
-        }
+            // koopman naam
+            if (mKoopmanVoorletters != null && mKoopmanAchternaam != null) {
+                mKoopmanFragment.mKoopmanVoorlettersAchternaamText.setText(
+                        mKoopmanVoorletters + " " + mKoopmanAchternaam);
+            }
 
-        // koopman sollicitatienummer
-        if (mSollicitatieNummer != -1) {
-            mKoopmanFragment.mSollicitatienummerText.setVisibility(View.VISIBLE);
-            mKoopmanFragment.mSollicitatienummerText.setText(
-                    getString(R.string.label_sollicitatienummer) + ": " + mSollicitatieNummer);
-        }
+            // dagvergunning registratie tijd
+            if (mRegistratieDatumtijd != null) {
+                try {
+                    Date registratieDate = new SimpleDateFormat(
+                            getString(R.string.date_format_datumtijd),
+                            Locale.getDefault()).parse(mRegistratieDatumtijd);
+                    SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_tijd));
+                    String registratieTijd = sdf.format(registratieDate);
+                    mKoopmanFragment.mRegistratieDatumtijdText.setText(registratieTijd);
+                } catch (java.text.ParseException e) {
+                    Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: " + e.getMessage());
+                }
+            }
 
-        // koopman sollicitatie status
-        if (mSollicitatieStatus != null && !mSollicitatieStatus.equals("?") && !mSollicitatieStatus.equals("")) {
-            mKoopmanFragment.mSollicitatieStatusText.setVisibility(View.VISIBLE);
-            mKoopmanFragment.mSollicitatieStatusText.setText(mSollicitatieStatus);
-            mKoopmanFragment.mSollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
-                    getContext(),
-                    Utility.getSollicitatieStatusColor(getContext(), mSollicitatieStatus)));
-        }
+            // koopman erkenningsnummer
+            if (mErkenningsnummer != null) {
+                mKoopmanFragment.mErkenningsnummerText.setText(
+                        getString(R.string.label_erkenningsnummer) + ": " + mErkenningsnummer);
+            }
 
-        // dagvergunning totale lengte
-        if (mTotaleLengte != -1) {
-            mKoopmanFragment.mTotaleLengte.setText(mTotaleLengte + " " + getString(R.string.length_meter));
-        }
+            // koopman sollicitatienummer
+            if (mSollicitatieNummer != -1) {
+                mKoopmanFragment.mSollicitatienummerText.setVisibility(View.VISIBLE);
+                mKoopmanFragment.mSollicitatienummerText.setText(
+                        getString(R.string.label_sollicitatienummer) + ": " + mSollicitatieNummer);
+            }
 
-        // registratie account naam
-        if (mRegistratieAccountNaam != null) {
-            mKoopmanFragment.mAccountNaam.setText(mRegistratieAccountNaam);
-        }
+            // koopman sollicitatie status
+            if (mSollicitatieStatus != null && !mSollicitatieStatus.equals("?") && !mSollicitatieStatus.equals("")) {
+                mKoopmanFragment.mSollicitatieStatusText.setVisibility(View.VISIBLE);
+                mKoopmanFragment.mSollicitatieStatusText.setText(mSollicitatieStatus);
+                mKoopmanFragment.mSollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
+                        getContext(),
+                        Utility.getSollicitatieStatusColor(getContext(), mSollicitatieStatus)));
+            }
 
-        // koopman aanwezig status
-        if (mKoopmanAanwezig != null) {
-            mKoopmanFragment.setAanwezig(mKoopmanAanwezig);
-        }
+            // dagvergunning totale lengte
+            if (mTotaleLengte != -1) {
+                mKoopmanFragment.mTotaleLengte.setText(mTotaleLengte + " " + getString(R.string.length_meter));
+            }
 
-        Utility.log(getContext(), LOG_TAG, "Koopman populated!");
+            // registratie account naam
+            if (mRegistratieAccountNaam != null) {
+                mKoopmanFragment.mAccountNaam.setText(mRegistratieAccountNaam);
+            }
+
+            // koopman aanwezig status
+            if (mKoopmanAanwezig != null) {
+                Utility.log(getContext(), LOG_TAG, "mKoopmanAanwezig=" + mKoopmanAanwezig);
+                mKoopmanFragment.setAanwezig(mKoopmanAanwezig);
+            }
+
+            Utility.log(getContext(), LOG_TAG, "Koopman populated!");
+        }
+    }
+
+    public void getKoopmanFragmentValues() {
+        if (mKoopmanFragmentReady) {
+            mKoopmanAanwezig = mKoopmanFragment.mAanwezigSelectedValue;
+        }
     }
 
     /**
      * Populate product fragment from local member vars
      */
-    private void populateProductFragment() {
+    private void setProductFragmentValues() {
+        if (mProductFragmentReady) {
 
-        Utility.log(getContext(), LOG_TAG, "Product populated!");
+            mProductFragment.mProductTest.setText("Product");
+
+            Utility.log(getContext(), LOG_TAG, "Product populated!");
+        }
+    }
+
+    private void getProductFragmentValues() {
+        if (mProductFragmentReady) {
+        }
     }
 
     /**
      * Populate overzicht fragment from local member vars
      */
-    private void populateOverzichtFragment() {
+    private void setOverzichtFragmentValues() {
+        if (mOverzichtFragmentReady) {
 
-        Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
+            mOverzichtFragment.mOverzichtTest.setText("Overzicht");
+
+            Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
+        }
+    }
+
+    private void getOverzichtFragmentValues() {
+        if (mOverzichtFragmentReady) {
+        }
     }
 
     /**
@@ -370,34 +403,48 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         view.setLayoutParams(lp);
     }
 
-    public void populateFragments() {
+    private void setFragmentValuesByPosition(int position) {
 
-        if (mKoopmanFragmentReady) {
-            populateKoopmanFragment();
+        switch (position) {
+            case 0:
+                setKoopmanFragmentValues();
+                break;
+            case 1:
+                setProductFragmentValues();
+                break;
+            case 2:
+                setOverzichtFragmentValues();
+                break;
+            default:
+                break;
         }
+    }
 
-        if (mProductFragmentReady) {
-            populateProductFragment();
-        }
+    public void setAllFragmentValues() {
+        setKoopmanFragmentValues();
+        setProductFragmentValues();
+        setOverzichtFragmentValues();
+    }
 
-        if (mOverzichtFragmentReady) {
-            populateOverzichtFragment();
-        }
+    public void getAllFragmentValues() {
+        getKoopmanFragmentValues();
+        getProductFragmentValues();
+        getOverzichtFragmentValues();
     }
 
     public void koopmanFragmentReady() {
         mKoopmanFragmentReady = true;
-        populateKoopmanFragment();
+        setKoopmanFragmentValues();
     }
 
     public void productFragmentReady() {
         mProductFragmentReady = true;
-        populateProductFragment();
+        setProductFragmentValues();
     }
 
     public void overzichtFragmentReady() {
         mOverzichtFragmentReady = true;
-        populateOverzichtFragment();
+        setOverzichtFragmentValues();
     }
 
     /**
@@ -453,7 +500,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mSollicitatieNummer = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
 
             // update their view elements
-            populateFragments();
+            setAllFragmentValues();
         }
     }
 
