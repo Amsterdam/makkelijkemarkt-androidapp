@@ -58,9 +58,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private static final int DAGVERGUNNING_LOADER = 4;
 
     // viewpager fragment references
-    DagvergunningFragmentKoopman mKoopmanFragment;
-    DagvergunningFragmentProduct mProductFragment;
-    DagvergunningFragmentOverzicht mOverzichtFragment;
+    private DagvergunningFragmentKoopman mKoopmanFragment;
+    private DagvergunningFragmentProduct mProductFragment;
+    private DagvergunningFragmentOverzicht mOverzichtFragment;
 
     // viepager fragment ready state
     private boolean mKoopmanFragmentReady = false;
@@ -91,8 +91,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     /**
      * Constructor
      */
-    public DagvergunningFragment() {
-    }
+    public DagvergunningFragment() {}
 
     /**
      * Initialize the layout and it's elements
@@ -119,11 +118,14 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                // get the possibly changed values from the pager fragments before switching pages TODO: modify to only get from current fragment
-                getAllFragmentValues();
-
-                // get new tab position and switch to new fragment in viewpager
+                // get new tab position
                 mCurrentTab = tab.getPosition();
+
+                // get the possibly changed values from the pager fragments before switching pages TODO: modify to only get from current fragment
+//                getAllFragmentValues();
+                getFragmentValuesByPosition(mCurrentTab);
+
+                // switch to new fragment in viewpager
                 mViewPager.setCurrentItem(mCurrentTab);
 
                 //
@@ -155,6 +157,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mOverzichtFragment);
 
         // set the fragment pager adapter and add a pagechange listener to update the tab selection
+        // Important: set the offscreenpagelimit to the amount of fragments we are using minus 1 (the
+        // currently active fragment) this makes sure all fragments in the viewpager are attached to
+        // the fragmentmanager and can be referenced
+        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
@@ -238,7 +244,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         super.onSaveInstanceState(outState);
 
         // get the possibly changed values from the pager fragments before saving state TODO: modify to only get from current fragment
-        getAllFragmentValues();
+//        getAllFragmentValues();
+        getFragmentValuesByPosition(mCurrentTab);
 
         // save dagvergunning state
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID, mMarktId);
@@ -404,7 +411,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     private void setFragmentValuesByPosition(int position) {
-
         switch (position) {
             case 0:
                 setKoopmanFragmentValues();
@@ -414,6 +420,22 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 break;
             case 2:
                 setOverzichtFragmentValues();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void getFragmentValuesByPosition(int position) {
+        switch (position) {
+            case 0:
+                getKoopmanFragmentValues();
+                break;
+            case 1:
+                getProductFragmentValues();
+                break;
+            case 2:
+                getOverzichtFragmentValues();
                 break;
             default:
                 break;
@@ -504,7 +526,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         }
     }
 
+    /**
+     * On loader reset, do nothing
+     */
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
+    public void onLoaderReset(Loader<Cursor> loader) {}
 }
