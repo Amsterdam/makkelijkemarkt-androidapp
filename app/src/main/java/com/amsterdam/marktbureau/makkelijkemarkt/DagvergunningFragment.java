@@ -94,13 +94,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public DagvergunningFragment() {}
 
     /**
-     * Initialize the layout and it's elements
+     * Initialize the layout and it's view elements
      * @return the fragments view
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // get the markten fragment
+        // get the dagvergunning fragment
         View view = inflater.inflate(R.layout.dagvergunning_fragment, container, false);
 
         // bind the elements to the view
@@ -118,18 +118,14 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                // get new tab position
-                mCurrentTab = tab.getPosition();
-
-                // get the possibly changed values from the pager fragments before switching pages TODO: modify to only get from current fragment
-//                getAllFragmentValues();
+                // get the possibly changed values from the currently active pager fragment before switching pages
                 getFragmentValuesByPosition(mCurrentTab);
 
-                // switch to new fragment in viewpager
+                // get new tab position and switch to new fragment in viewpager
+                mCurrentTab = tab.getPosition();
                 mViewPager.setCurrentItem(mCurrentTab);
 
-                //
-                setAllFragmentValues();
+                setFragmentValuesByPosition(mCurrentTab);
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {}
@@ -137,15 +133,19 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             public void onTabReselected(TabLayout.Tab tab) {}
         });
 
+        // create new view components or restore them from saved state
         if (savedInstanceState == null) {
             mKoopmanFragment = new DagvergunningFragmentKoopman();
             mProductFragment = new DagvergunningFragmentProduct();
             mOverzichtFragment = new DagvergunningFragmentOverzicht();
         } else {
             mCurrentTab = savedInstanceState.getInt(CURRENT_TAB);
-            mKoopmanFragment = (DagvergunningFragmentKoopman) getChildFragmentManager().getFragment(savedInstanceState, KOOPMAN_FRAGMENT_TAG);
-            mProductFragment = (DagvergunningFragmentProduct) getChildFragmentManager().getFragment(savedInstanceState, PRODUCT_FRAGMENT_TAG);
-            mOverzichtFragment = (DagvergunningFragmentOverzicht) getChildFragmentManager().getFragment(savedInstanceState, OVERZICHT_FRAGMENT_TAG);
+            mKoopmanFragment = (DagvergunningFragmentKoopman) getChildFragmentManager()
+                    .getFragment(savedInstanceState, KOOPMAN_FRAGMENT_TAG);
+            mProductFragment = (DagvergunningFragmentProduct) getChildFragmentManager()
+                    .getFragment(savedInstanceState, PRODUCT_FRAGMENT_TAG);
+            mOverzichtFragment = (DagvergunningFragmentOverzicht) getChildFragmentManager()
+                    .getFragment(savedInstanceState, OVERZICHT_FRAGMENT_TAG);
         }
 
         // create the fragment pager adapter
@@ -157,7 +157,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mOverzichtFragment);
 
         // set the fragment pager adapter and add a pagechange listener to update the tab selection
-        // Important: set the offscreenpagelimit to the amount of fragments we are using minus 1 (the
+        // important: set the offscreenpagelimit to the amount of fragments we are using minus 1 (the
         // currently active fragment) this makes sure all fragments in the viewpager are attached to
         // the fragmentmanager and can be referenced
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
@@ -208,7 +208,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             }
         } else {
 
-            // restore dagvergunning state
+            // restore dagvergunning data from saved state
             mMarktId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID);
             mDag = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_DAG);
             mId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID);
@@ -243,8 +243,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // get the possibly changed values from the pager fragments before saving state TODO: modify to only get from current fragment
-//        getAllFragmentValues();
+        // get the possibly changed values from the currently active pager fragments before saving state
         getFragmentValuesByPosition(mCurrentTab);
 
         // save dagvergunning state
@@ -442,18 +441,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         }
     }
 
-    public void setAllFragmentValues() {
-        setKoopmanFragmentValues();
-        setProductFragmentValues();
-        setOverzichtFragmentValues();
-    }
-
-    public void getAllFragmentValues() {
-        getKoopmanFragmentValues();
-        getProductFragmentValues();
-        getOverzichtFragmentValues();
-    }
-
     public void koopmanFragmentReady() {
         mKoopmanFragmentReady = true;
         setKoopmanFragmentValues();
@@ -522,7 +509,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mSollicitatieNummer = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
 
             // update their view elements
-            setAllFragmentValues();
+            setFragmentValuesByPosition(mCurrentTab);
         }
     }
 
