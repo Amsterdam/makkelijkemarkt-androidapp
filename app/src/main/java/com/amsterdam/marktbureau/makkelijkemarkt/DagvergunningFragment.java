@@ -121,11 +121,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 // get the possibly changed values from the currently active pager fragment before switching pages
                 getFragmentValuesByPosition(mCurrentTab);
 
-                // get new tab position and switch to new fragment in viewpager
+                // get new tab position and switch to new fragment in viewpager and populate it
                 mCurrentTab = tab.getPosition();
                 mViewPager.setCurrentItem(mCurrentTab);
-
                 setFragmentValuesByPosition(mCurrentTab);
+
+                // prevent the keyboard from popping up on pager fragment load
+                Utility.hideKeyboard(getActivity());
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {}
@@ -233,6 +235,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             Utility.log(getContext(), LOG_TAG, "State restored!");
         }
+
+        // prevent the keyboard from popping up on first pager fragment load
+        Utility.hideKeyboard(getActivity());
     }
 
     /**

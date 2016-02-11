@@ -63,7 +63,7 @@ public class Utility {
      * Hide the softkeyboard from an activity
      * @param activity Activity
      */
-    public static void hideKeyboardFromActivity(Activity activity) {
+    public static void hideKeyboard(Activity activity) {
 
         // get the inputmanager from the activity
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -85,7 +85,7 @@ public class Utility {
      * @param context Context
      * @param view View
      */
-    public static void hideKeyboardFromContext(Context context, View view) {
+    public static void hideKeyboard(Context context, View view) {
 
         // get the inputmanager from the given context
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
