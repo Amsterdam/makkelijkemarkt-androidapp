@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 
@@ -32,6 +33,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     // get package name
     public static final String mPackageName = MakkelijkeMarktProvider.class.getPackage().getName();
 
+    // create a base uri from the package name
+    public static final Uri mBaseUri = Uri.parse("content://" + mPackageName);
+
     // table names
     public static final String mTableAccount = "account";
     public static final String mTableMarkt = "markt";
@@ -41,15 +45,16 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public static final String mTableSollicitatie = "sollicitatie";
 
     // uris for the tables
-    public static Uri mUriAccount = Uri.parse("content://" + mPackageName + "/" + mTableAccount);
-    public static Uri mUriMarkt = Uri.parse("content://" + mPackageName + "/" + mTableMarkt);
-    public static Uri mUriKoopman = Uri.parse("content://" + mPackageName + "/" + mTableKoopman);
-    public static Uri mUriDagvergunning = Uri.parse("content://" + mPackageName + "/" + mTableDagvergunning);
-    public static Uri mUriNotitie = Uri.parse("content://" + mPackageName + "/" + mTableNotitie);
-    public static Uri mUriSollicitatie = Uri.parse("content://" + mPackageName + "/" + mTableSollicitatie);
+    public static Uri mUriAccount = mBaseUri.buildUpon().appendPath(mTableAccount).build();
+    public static Uri mUriMarkt = mBaseUri.buildUpon().appendPath(mTableMarkt).build();
+    public static Uri mUriKoopman = mBaseUri.buildUpon().appendPath(mTableKoopman).build();
+    public static Uri mUriDagvergunning = mBaseUri.buildUpon().appendPath(mTableDagvergunning).build();
+    public static Uri mUriNotitie = mBaseUri.buildUpon().appendPath(mTableNotitie).build();
+    public static Uri mUriSollicitatie = mBaseUri.buildUpon().appendPath(mTableSollicitatie).build();
 
     // other uris
-    public static Uri mUriDagvergunningJoined = Uri.parse("content://" + mPackageName + "/" + mTableDagvergunning + "joined");
+    public static Uri mUriDagvergunningJoined = mBaseUri.buildUpon().appendPath(mTableDagvergunning + "joined").build();
+    public static Uri mUriKoopmanJoined = mBaseUri.buildUpon().appendPath(mTableKoopman + "joined").build();
 
     /**
      * Get the content provider authority name
@@ -157,8 +162,11 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.TEXT)
         public static final String COL_FOTO_MEDIUM_URL = "foto_medium_url";
 
-        @Column(Column.FieldType.INTEGER)
+        @Column(Column.FieldType.TEXT)
         public static final String COL_STATUS = "status";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_PERFECTVIEWNUMMER = "perfectviewnummer";
     }
 
     /**
@@ -255,45 +263,45 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_AANTAL4METER_KRAMEN = "aantal4meter_kramen";
     }
 
-//    /**
-//     * /notitie - Notitie table columns definition
-//     */
-//    @Table(mTableNotitie)
-//    public class Notitie {
-//
-//        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-//        public static final String COL_ID = "_id";
-//
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_MARKT_ID = "markt_id";
-//
-//        @Column(Column.FieldType.TEXT)
-//        public static final String COL_DAG = "dag";
-//
-//        @Column(Column.FieldType.TEXT)
-//        public static final String COL_BERICHT = "bericht";
-//
-//        @Column(Column.FieldType.REAL)
-//        public static final String COL_AANGEMAAKT_GEOLOCATIE_LAT = "aangemaakt_geolocatie_lat";
-//
-//        @Column(Column.FieldType.REAL)
-//        public static final String COL_AANGEMAAKT_GEOLOCATIE_LONG = "aangemaakt_geolocatie_long";
-//
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_AFGEVINKT_STATUS = "afgevinkt_status";
-//
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_VERWIJDERD = "verwijderd";
-//
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_AANGEMAAKT_DATUMTIJD = "aangemaakt_datumtijd";
-//
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_AFGEVINKT_DATUMTIJD = "afgevinkt_datumtijd";
-//
-//        @Column(Column.FieldType.INTEGER)
-//        public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
-//    }
+    /**
+     * /notitie - Notitie table columns definition
+     */
+    @Table(mTableNotitie)
+    public class Notitie {
+
+        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
+        public static final String COL_ID = "_id";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_MARKT_ID = "markt_id";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_DAG = "dag";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_BERICHT = "bericht";
+
+        @Column(Column.FieldType.REAL)
+        public static final String COL_AANGEMAAKT_GEOLOCATIE_LAT = "aangemaakt_geolocatie_lat";
+
+        @Column(Column.FieldType.REAL)
+        public static final String COL_AANGEMAAKT_GEOLOCATIE_LONG = "aangemaakt_geolocatie_long";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AFGEVINKT_STATUS = "afgevinkt_status";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_VERWIJDERD = "verwijderd";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANGEMAAKT_DATUMTIJD = "aangemaakt_datumtijd";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AFGEVINKT_DATUMTIJD = "afgevinkt_datumtijd";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
+    }
 
     /**
      * /sollicitatie - Sollicitatie table columns definition
@@ -349,8 +357,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
     /**
      * Override of the insert function of the AbstractProvider class, in a way that it uses the
-     * SQLite insertOrThrow function that throws a SQLiteConstraintException when trying to insert
-     * insert a duplicate column value, and we can act on that
+     * SQLite insertWithOnConflict function that replaces the record when trying to insert insert
+     * a duplicate column value
      * @param uri Uri
      * @param values ContentValues
      * @return Uri to the inserted row
@@ -364,10 +372,20 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
             return null;
         }
 
-        // TODO: use insertWithOnConflict here as well? (don't throw an exception but replace the existing row instead?)
-
-        // try to insert or throw an exception
-        long rowId = mDatabase.insertOrThrow(segments.get(0), null, values);
+        // try to insert or replace record
+        long rowId = 0;
+        mDatabase.beginTransaction();
+        try {
+            rowId = mDatabase.insertWithOnConflict(
+                    segments.get(0),
+                    null,
+                    values,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+        } catch (SQLiteException e) {
+            Utility.log(getContext(), LOG_TAG, e.getMessage());
+        } finally {
+            mDatabase.endTransaction();
+        }
 
         // if no exception was thrown and we received an id, the row was inserted succesfully
         if (rowId > -1) {
@@ -392,7 +410,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      * @return amount of records inserted
      */
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         int insertCount = 0;
 
         // check if we have at least one path segment (table name)
@@ -446,10 +464,16 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
             // query the dagvergunningen table joined with it's linked tables with the given arguments
             cursor = queryDagvergunningenJoined(uri, projection, selection, selectionArgs, sortOrder);
 
-            // subscribe the cursor to a different notification uri, because we will update the
-            // dagvergunningen table not with the join, which will cause that the this joined
-            // cursor will not be notified of changes otherwise
+            // subscribe the cursor to a different notification uri
             notificationUri = MakkelijkeMarktProvider.mUriDagvergunning;
+
+        } else if (uri.getPath().equals(mUriKoopmanJoined.getPath())) {
+
+            // query the koopman table joined with the sollicitatie table
+            cursor = queryKoopmanJoined(uri, projection, selection, selectionArgs, sortOrder);
+
+            // subscribe the cursor to a different notification uri
+            notificationUri = MakkelijkeMarktProvider.mUriKoopman;
 
         } else {
 
@@ -475,7 +499,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      * @return a cursor containing the resultset
      */
     private Cursor queryDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        SQLiteQueryBuilder dagvergunningKoopmanQueryBuilder = new SQLiteQueryBuilder();
+        SQLiteQueryBuilder dagvergunningJoinedQueryBuilder = new SQLiteQueryBuilder();
 
         // left join the dagvergunning table with the linked koopman, account, and sollicitatie tables
         String tables = mTableDagvergunning +
@@ -488,49 +512,89 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
                         " LEFT JOIN " + mTableSollicitatie + " ON (" +
                         mTableDagvergunning + "." + Dagvergunning.COL_SOLLICITATIE_ID + " = " +
                         mTableSollicitatie + "." + Sollicitatie.COL_ID + ")";
-        dagvergunningKoopmanQueryBuilder.setTables(tables);
+        dagvergunningJoinedQueryBuilder.setTables(tables);
 
         // create a projection map that will rename the ambiguous columns, and just copy the
         // others with their original name (when using a projection map you have to specify all
         // columns that you need in the resultset)
         HashMap<String, String> columnMap = new HashMap<>();
-
-        // rename ambiguous columns
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ID, "_id"));
-        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "koopman_koopman_id"));
-        columnMap.putAll(createProjectionMap(mTableAccount, Account.COL_ID, "account_account_id"));
-        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_ID, "sollicitatie_sollicitatie_id"));
-
-        // dagvergunning columns copied
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REGISTRATIE_DATUMTIJD, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_TOTALE_LENGTE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_STATUS_SOLLICITATIE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANWEZIG, null));
-
-        // koopman columns copied
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL3METER_KRAMEN, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL4METER_KRAMEN, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_EXTRA_METERS, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL_ELEKTRA, "dagvergunning_aantal_elektra"));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL_ELEKTRA_VAST, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_KRACHTSTROOM, "dagvergunning_krachtstroom"));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_KRACHTSTROOM_VAST, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_NOTITIE, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REINIGING, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "koopman_koopman_id"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));
-
-        // account columns copied
+        columnMap.putAll(createProjectionMap(mTableAccount, Account.COL_ID, "account_account_id"));
         columnMap.putAll(createProjectionMap(mTableAccount, Account.COL_NAAM, null));
-
-        // sollicitatie columns copied
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_ID, "sollicitatie_sollicitatie_id"));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_SOLLICITATIE_NUMMER, null));
-
-        // apply the mapping
-        dagvergunningKoopmanQueryBuilder.setProjectionMap(columnMap);
+        dagvergunningJoinedQueryBuilder.setProjectionMap(columnMap);
 
         // and run the query with the given arguments
-        return dagvergunningKoopmanQueryBuilder.query(mDatabase,
+        return dagvergunningJoinedQueryBuilder.query(mDatabase,
                 projection,
                 selection,
                 selectionArgs,
                 null,
                 null,
-                sortOrder
-        );
+                sortOrder);
+    }
+
+    /**
+     * Query the koopman table joined with the sollicitatie and markt tables
+     */
+    private Cursor queryKoopmanJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder koopmanJoinedQueryBuilder = new SQLiteQueryBuilder();
+
+        String tables = mTableKoopman +
+                " LEFT JOIN " + mTableSollicitatie + " ON (" +
+                mTableKoopman + "." + Koopman.COL_ID + " = " +
+                mTableSollicitatie + "." + Sollicitatie.COL_KOOPMAN_ID + ")" +
+                " LEFT JOIN " + mTableMarkt + " ON (" +
+                mTableSollicitatie + "." + Sollicitatie.COL_MARKT_ID + " = " +
+                mTableMarkt + "." + Markt.COL_ID + ")";
+        koopmanJoinedQueryBuilder.setTables(tables);
+
+        // create a projection map that will rename the ambiguous columns
+        HashMap<String, String> columnMap = new HashMap<>();
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "_id"));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ERKENNINGSNUMMER, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_ID, "sollicitatie_id"));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_SOLLICITATIE_NUMMER, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_DOORGEHAALD, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_STATUS, "sollicitatie_status"));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_MARKT_ID, null));
+        columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_ID, "markt_markt_id"));
+        columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_AFKORTING, null));
+        koopmanJoinedQueryBuilder.setProjectionMap(columnMap);
+
+        // and run the query with the given arguments
+        return koopmanJoinedQueryBuilder.query(mDatabase,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder);
     }
 
     /**

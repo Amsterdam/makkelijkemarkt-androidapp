@@ -7,6 +7,9 @@ import android.content.ContentValues;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author marcolangebeeke
@@ -22,6 +25,8 @@ public class ApiKoopman {
     private String fotoUrl;
     private String fotoMediumUrl;
     private String status;
+    private int perfectViewNummer;
+    private List<ApiSollicitatie> sollicitaties = new ArrayList<ApiSollicitatie>();
 
     /**
      * @return
@@ -150,6 +155,34 @@ public class ApiKoopman {
     }
 
     /**
+     * @return
+     */
+    public int getPerfectViewNummer() {
+        return perfectViewNummer;
+    }
+
+    /**
+     * @param perfectViewNummer
+     */
+    public void setPerfectViewNummer(int perfectViewNummer) {
+        this.perfectViewNummer = perfectViewNummer;
+    }
+
+    /**
+     * @return
+     */
+    public List<ApiSollicitatie> getSollicitaties() {
+        return sollicitaties;
+    }
+
+    /**
+     * @param sollicitaties
+     */
+    public void setSollicitaties(List<ApiSollicitatie> sollicitaties) {
+        this.sollicitaties = sollicitaties;
+    }
+
+    /**
      * Convert object to type contentvalues
      * @return contentvalues object containing the objects name value pairs
      */
@@ -165,6 +198,9 @@ public class ApiKoopman {
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL, getFotoUrl());
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL, getFotoMediumUrl());
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_STATUS, getStatus());
+        koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_PERFECTVIEWNUMMER, getPerfectViewNummer());
+
+        // the list of sollicitaties is not added to the contentvalues object
 
         return koopmanValues;
     }

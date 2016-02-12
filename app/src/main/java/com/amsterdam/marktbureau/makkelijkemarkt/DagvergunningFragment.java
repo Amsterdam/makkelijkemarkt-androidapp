@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -20,8 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
-import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,7 +53,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     // viewpager adapter
     private DagvergunningPagerAdapter mPagerAdapter;
 
-    // unique id for the markten loader
+    // unique id for the dagvergunning loader
     private static final int DAGVERGUNNING_LOADER = 4;
 
     // viewpager fragment references
@@ -87,6 +86,20 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private String mRegistratieAccountNaam;
     private int mSollicitatieId = -1;
     private int mSollicitatieNummer = -1;
+
+    // dagvergunning product data
+    private int mAantal3MeterKramen = -1;
+    private int mAantal3MeterKramenVast = -1;
+    private int mAantal4MeterKramen = -1;
+    private int mAantal4MeterKramenVast = -1;
+    private int mAantalExtraMeters = -1;
+    private int mAantalExtraMetersVast = -1;
+    private int mAantalElektra = -1;
+    private int mAantalElektraVast = -1;
+    private int mKrachtstroom = -1;
+    private int mKrachtstroomVast = -1;
+    private int mReiniging= -1;
+    private String mNotitie;
 
     /**
      * Constructor
@@ -227,6 +240,18 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mRegistratieAccountNaam = savedInstanceState.getString(MakkelijkeMarktProvider.Account.COL_NAAM);
             mSollicitatieId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID);
             mSollicitatieNummer = savedInstanceState.getInt(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER);
+            mAantal3MeterKramen = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN);
+            mAantal3MeterKramenVast = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST);
+            mAantal4MeterKramen = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN);
+            mAantal4MeterKramen = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST);
+            mAantalExtraMeters = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS);
+            mAantalExtraMetersVast = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST);
+            mAantalElektra = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA);
+            mAantalElektraVast = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST);
+            mKrachtstroom = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM);
+            mKrachtstroomVast = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST);
+            mReiniging = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING);
+            mNotitie = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE);
 
             // select tab of viewpager from saved fragment state
             if (mViewPager.getCurrentItem() != mCurrentTab) {
@@ -268,6 +293,18 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         outState.putString(MakkelijkeMarktProvider.Account.COL_NAAM, mRegistratieAccountNaam);
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID, mSollicitatieId);
         outState.putInt(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER, mSollicitatieNummer);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN, mAantal3MeterKramen);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, mAantal3MeterKramenVast);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN, mAantal4MeterKramen);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, mAantal4MeterKramenVast);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, mAantalExtraMeters);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, mAantalExtraMetersVast);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, mAantalElektra);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, mAantalElektraVast);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, mKrachtstroom);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, mKrachtstroomVast);
+        outState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, mReiniging);
+        outState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE, mNotitie);
 
         // save viewpager state
         outState.putInt(CURRENT_TAB, mCurrentTab);
@@ -284,22 +321,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private void setKoopmanFragmentValues() {
         if (mKoopmanFragmentReady) {
 
-            // koopman foto
-            if (mKoopmanFotoMedium != null) {
-
-                // make the koopman details visible
-                mKoopmanFragment.mKoopmanDetail.setVisibility(View.VISIBLE);
-
-                Glide.with(getContext()).load(mKoopmanFotoMedium)
-                        .error(R.drawable.no_koopman_image)
-                        .into(mKoopmanFragment.mKoopmanFotoImage);
+            if (mKoopmanId > 0) {
+                mKoopmanFragment.setKoopman(mKoopmanId);
             }
 
-            // koopman naam
-            if (mKoopmanVoorletters != null && mKoopmanAchternaam != null) {
-                mKoopmanFragment.mKoopmanVoorlettersAchternaamText.setText(
-                        mKoopmanVoorletters + " " + mKoopmanAchternaam);
-            }
+//            if (mAantalElektra != -1) {
+//                mKoopmanFragment.mKoopmanVoorlettersAchternaamText.setText(String.valueOf(mAantalElektra));
+//            }
 
             // dagvergunning registratie tijd
             if (mRegistratieDatumtijd != null) {
@@ -313,28 +341,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 } catch (java.text.ParseException e) {
                     Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: " + e.getMessage());
                 }
-            }
-
-            // koopman erkenningsnummer
-            if (mErkenningsnummer != null) {
-                mKoopmanFragment.mErkenningsnummerText.setText(
-                        getString(R.string.label_erkenningsnummer) + ": " + mErkenningsnummer);
-            }
-
-            // koopman sollicitatienummer
-            if (mSollicitatieNummer != -1) {
-                mKoopmanFragment.mSollicitatienummerText.setVisibility(View.VISIBLE);
-                mKoopmanFragment.mSollicitatienummerText.setText(
-                        getString(R.string.label_sollicitatienummer) + ": " + mSollicitatieNummer);
-            }
-
-            // koopman sollicitatie status
-            if (mSollicitatieStatus != null && !mSollicitatieStatus.equals("?") && !mSollicitatieStatus.equals("")) {
-                mKoopmanFragment.mSollicitatieStatusText.setVisibility(View.VISIBLE);
-                mKoopmanFragment.mSollicitatieStatusText.setText(mSollicitatieStatus);
-                mKoopmanFragment.mSollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
-                        getContext(),
-                        Utility.getSollicitatieStatusColor(getContext(), mSollicitatieStatus)));
             }
 
             // dagvergunning totale lengte
@@ -499,6 +505,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             Utility.log(getContext(), LOG_TAG, "dagvergunning loaded!");
 
+            // dagvergunning values
             mErkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE));
             mRegistratieDatumtijd = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD));
             mTotaleLengte = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE));
@@ -512,9 +519,33 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mRegistratieAccountNaam = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Account.COL_NAAM));
             mSollicitatieId = data.getInt(data.getColumnIndex("sollicitatie_sollicitatie_id"));
             mSollicitatieNummer = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
+            mAantal3MeterKramen = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN));
+            mAantal3MeterKramenVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST));
+            mAantal4MeterKramen = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN));
+            mAantal4MeterKramen = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST));
+            mAantalExtraMeters = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS));
+            mAantalExtraMetersVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST));
+            mAantalElektra = data.getInt(data.getColumnIndex("dagvergunning_aantal_elektra"));
+            mAantalElektraVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST));
+            mKrachtstroom = data.getInt(data.getColumnIndex("dagvergunning_krachtstroom"));
+            mKrachtstroomVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST));
+            mReiniging = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING));
+            mNotitie = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE));
 
-            // update their view elements
+            // update the view elements of the currently selected tab
             setFragmentValuesByPosition(mCurrentTab);
+
+            // load the koopman details from the api
+            if (mErkenningsnummer != null && mErkenningsnummer != "") {
+                ApiGetKoopman getKoopman = new ApiGetKoopman(getContext());
+                getKoopman.setErkenningsnummer(mErkenningsnummer);
+                getKoopman.enqueue();
+            }
+
+            // init the koopmanfragment cursorloader
+            if (mKoopmanId > 0) {
+
+            }
         }
     }
 

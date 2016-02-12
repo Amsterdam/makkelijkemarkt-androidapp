@@ -28,7 +28,7 @@ public class ApiSollicitatie {
     private boolean krachtstroom;
     private boolean doorgehaald;
     private String doorgehaaldReden;
-    private ApiKoopman koopman;
+    private int koopmanId;
     private ApiMarkt markt;
 
     /**
@@ -195,15 +195,15 @@ public class ApiSollicitatie {
     /**
      * @return
      */
-    public ApiKoopman getKoopman() {
-        return koopman;
+    public int getKoopmanId() {
+        return koopmanId;
     }
 
     /**
-     * @param koopman
+     * @param koopmanId
      */
-    public void setKoopman(ApiKoopman koopman) {
-        this.koopman = koopman;
+    public void setKoopmanId(int koopmanId) {
+        this.koopmanId = koopmanId;
     }
 
     /**
@@ -238,13 +238,10 @@ public class ApiSollicitatie {
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS, getAantalExtraMeters());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA, getAantalElektra());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM, isKrachtstroom());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KOOPMAN_ID, getKoopmanId());
 
         if (getMarkt() != null) {
             sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID, getMarkt().getId());
-        }
-
-        if (getKoopman() != null) {
-            sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KOOPMAN_ID, getKoopman().getId());
         }
 
         return sollicitatieValues;

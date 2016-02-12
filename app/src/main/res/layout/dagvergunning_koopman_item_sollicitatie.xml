@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sollicitatie_markten_list"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingRight="@dimen/micro_margin"
+    android:paddingEnd="@dimen/micro_margin"
+    android:gravity="right"
+    >
+
+    <!-- Markt afkorting -->
+    <TextView
+        android:id="@+id/sollicitatie_markt_afkorting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:textColor="@color/primary_text"
+        />
+
+    <!-- Sollicitatie nummer -->
+    <TextView
+        android:id="@+id/sollicitatie_sollicitatie_nummer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/sollicitatie_markt_afkorting"
+        android:layout_toEndOf="@+id/sollicitatie_markt_afkorting"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:textColor="@color/primary_text"
+        />
+
+    <!-- Sollicitatie status -->
+    <TextView
+        android:id="@+id/sollicitatie_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/sollicitatie_sollicitatie_nummer"
+        android:layout_toEndOf="@+id/sollicitatie_sollicitatie_nummer"
+        android:layout_marginTop="@dimen/micro_margin"
+        android:layout_marginBottom="@dimen/micro_margin"
+        android:paddingTop="@dimen/micro_margin"
+        android:paddingRight="@dimen/mini_margin"
+        android:paddingBottom="@dimen/micro_margin"
+        android:paddingLeft="@dimen/mini_margin"
+        android:textColor="@android:color/white"
+        />
+
+</RelativeLayout>

@@ -96,12 +96,13 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
                     ApiKoopman koopman = dagvergunning.getKoopman();
                     if (koopman != null) {
                         koopmanValues.add(koopman.toContentValues());
-                    }
 
-                    // add sollicitatie values to list for bulkinsert later
-                    ApiSollicitatie sollicitatie = dagvergunning.getSollicitatie();
-                    if (sollicitatie != null) {
-                        sollicitatieValues.add(sollicitatie.toContentValues());
+                        // add sollicitatie values to list for bulkinsert later
+                        ApiSollicitatie sollicitatie = dagvergunning.getSollicitatie();
+                        if (sollicitatie != null) {
+                            sollicitatie.setKoopmanId(koopman.getId());
+                            sollicitatieValues.add(sollicitatie.toContentValues());
+                        }
                     }
                 }
             }

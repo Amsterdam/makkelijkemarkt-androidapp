@@ -38,6 +38,14 @@ public class DagvergunningFragmentProduct extends Fragment {
         void onProductFragmentReady();
     }
 
+    // TODO: Load the markt with the available products
+    // - create a loader that will load the markt details containing the products
+    // - create a layout for the products (listview containing an item for each product type?)
+    // - populate the local member vars onloadfinished
+    // - let the dagvergunning fragment know we are done loading, so we can receive the previously
+    //      selected products (for an existing dagvergunning and/or previously entered data)
+    // - populate the layout onloadfinished
+
     /**
      *
      * @param inflater
