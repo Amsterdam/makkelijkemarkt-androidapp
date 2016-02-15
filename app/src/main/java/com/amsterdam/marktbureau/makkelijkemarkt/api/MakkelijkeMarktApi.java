@@ -7,6 +7,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiAccount;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -69,4 +70,14 @@ public interface MakkelijkeMarktApi {
      */
     @GET("koopman/erkenningsnummer/{erkenningsnummer}")
     Call<ApiKoopman> getKoopman(@Path("erkenningsnummer") String erkenningsnummer);
+
+    /**
+     * Get a list of sollicitaties for a given marktid from the Api
+     * @param marktId the id of the marktet we want the sollicitaties for
+     * @param listOffset the offset of from which position we want to query the total list
+     * @param listLength the length of the response list
+     * @return a list of ApiSollicitatie objects
+     */
+    @GET("sollicitaties/markt/{marktId}")
+    Call<List<ApiSollicitatie>> getSollicitaties(@Path("marktId") String marktId, @Query("listOffset") String listOffset, @Query("listLength") String listLength);
 }

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetDagvergunningen;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import java.text.SimpleDateFormat;
@@ -86,11 +87,26 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
         // @todo remove api call here and only call on interval basis in the service?
         // @todo or keep it here, so we can show a zandloper and start calling it on interval basis in the service once this call is finished?
+        // @todo best way would be to call it here one time, so we use the progressbar, and on interval basis call it in the service
+        // @todo in the service we need to see what the interval for eacht type of call should be:
+        // @todo: dagvergunningen: 1x per minute?
+        // @todo: keep the api session allive: 30sec? (is this even necceserry? or we can do this also by asking for something small?)
+
         if (savedInstanceState == null) {
             ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
             getDagvergunningen.setMarktId(String.valueOf(mMarktId));
             getDagvergunningen.setDag(mDag);
             getDagvergunningen.enqueue();
+
+
+
+            // TODO: prevent multiple times downloading the sollicitaties for the same markt id in the same session/day (shared prefs?)
+            ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
+            getSollicitaties.setMarktId(mMarktId);
+            getSollicitaties.enqueue();
+
+
+
         }
 
         // create an adapter for the dagvergunningen listview

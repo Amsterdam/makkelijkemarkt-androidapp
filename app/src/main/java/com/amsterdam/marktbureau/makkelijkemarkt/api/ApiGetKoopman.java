@@ -49,12 +49,17 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
     @Override
     public void enqueue() {
         super.enqueue();
+        if (mErkenningsnummer != null) {
 
-        // set the api function to call for loading the accounts
-        Call<ApiKoopman> call = mMakkelijkeMarktApi.getKoopman(mErkenningsnummer);
+            // set the api function to call for loading the accounts
+            Call<ApiKoopman> call = mMakkelijkeMarktApi.getKoopman(mErkenningsnummer);
 
-        // call the api asynchronously
-        call.enqueue(this);
+            // call the api asynchronously
+            call.enqueue(this);
+
+        } else {
+            Utility.log(mContext, LOG_TAG, "Call failed, erkenningsnummer not set");
+        }
     }
 
     /**

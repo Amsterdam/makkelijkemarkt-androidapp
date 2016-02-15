@@ -30,6 +30,7 @@ public class ApiSollicitatie {
     private String doorgehaaldReden;
     private int koopmanId;
     private ApiMarkt markt;
+    private ApiKoopman koopman;
 
     /**
      * @return
@@ -221,6 +222,20 @@ public class ApiSollicitatie {
     }
 
     /**
+     * @return
+     */
+    public ApiKoopman getKoopman() {
+        return koopman;
+    }
+
+    /**
+     * @param koopman
+     */
+    public void setKoopman(ApiKoopman koopman) {
+        this.koopman = koopman;
+    }
+
+    /**
      * Convert sollicitatie object to type contentvalues object
      * @return contentvalues object containing the objects name value pairs
      */
@@ -243,6 +258,8 @@ public class ApiSollicitatie {
         if (getMarkt() != null) {
             sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID, getMarkt().getId());
         }
+
+        // koopman object is not added to the contentvalues object
 
         return sollicitatieValues;
     }
