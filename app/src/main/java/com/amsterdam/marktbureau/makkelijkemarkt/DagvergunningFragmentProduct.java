@@ -3,12 +3,20 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,13 +25,13 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningFragmentProduct extends Fragment {
+public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragmentProduct.class.getSimpleName();
 
     // bind layout elements
-    @Bind(R.id.product_test) TextView mProductTest;
+    @Bind(R.id.notitie) EditText mNotitie;
 
     /**
      * Constructor
@@ -38,14 +46,6 @@ public class DagvergunningFragmentProduct extends Fragment {
         void onProductFragmentReady();
     }
 
-    // TODO: Load the markt with the available products
-    // - create a loader that will load the markt details containing the products
-    // - create a layout for the products (listview containing an item for each product type?)
-    // - populate the local member vars onloadfinished
-    // - let the dagvergunning fragment know we are done loading, so we can receive the previously
-    //      selected products (for an existing dagvergunning and/or previously entered data)
-    // - populate the layout onloadfinished
-
     /**
      *
      * @param inflater
@@ -59,6 +59,73 @@ public class DagvergunningFragmentProduct extends Fragment {
 
         // bind the elements to the view
         ButterKnife.bind(this, view);
+
+        // get the producten from the sharedprefs and create the product selectors
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String producten = settings.getString(getContext().getString(R.string.sharedpreferences_key_markt_producten), null);
+        if (producten != null) {
+
+            // split comma-separated string into list with product strings
+            List<String> productList = Arrays.asList(producten.split(","));
+            if (productList.size() > 0) {
+
+                String[] productValues = getResources().getStringArray(R.array.array_product_value);
+                String[] productTitles = getResources().getStringArray(R.array.array_product_title);
+
+                // inflate the producten placeholder view
+                LinearLayout placeholderLayout = (LinearLayout) view.findViewById(R.id.producten_placeholder);
+                if (placeholderLayout != null) {
+                    placeholderLayout.removeAllViews();
+                    LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                    // add multiple product item views to the placeholder view
+                    for (int i = 0; i < productList.size(); i++) {
+
+                        // get a resource id for the product
+                        int id = Utility.getResId("product_" + productList.get(i), R.id.class);
+                        if (id != -1) {
+
+                            // get the product item layout
+                            View childLayout = layoutInflater.inflate(R.layout.dagvergunning_product_item, null);
+                            childLayout.setId(id);
+
+                            // get the corresponding product title based on the productlist item value
+                            String productTitle = "";
+                            for (int j = 0; j < productValues.length; j++) {
+                                if (productValues[j].equals(productList.get(i))) {
+                                    productTitle = productTitles[j];
+                                }
+                            }
+
+                            // set product name
+                            TextView productNameText = (TextView) childLayout.findViewById(R.id.product_name);
+                            productNameText.setText(productTitle);
+
+                            // set onclickhandler on the - buttons to decrease the value of the product_count textview
+                            Button countDownButton = (Button) childLayout.findViewById(R.id.product_count_down);
+                            countDownButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    changeProductCountText(v, false);
+                                }
+                            });
+
+                            // set onclickhandler on the + buttons to increase the value of the product_count textview
+                            Button countUpButton = (Button) childLayout.findViewById(R.id.product_count_up);
+                            countUpButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    changeProductCountText(v, true);
+                                }
+                            });
+
+                            // add view and move cursor to next product
+                            placeholderLayout.addView(childLayout, i);
+                        }
+                    }
+                }
+            }
+        }
 
         return view;
     }
@@ -76,5 +143,31 @@ public class DagvergunningFragmentProduct extends Fragment {
 
         // call the activity
         ((Callback) getActivity()).onProductFragmentReady();
+    }
+
+    /**
+     * In/decrease the value of the product count textview
+     * @param button the button that was clicked
+     * @param up in- or decrease
+     */
+    private void changeProductCountText(View button, boolean up) {
+
+        // get the parent view so we can reach the textview of this productrow only
+        View clickedProductView = (View) button.getParent();
+        if (clickedProductView != null) {
+
+            // get the productcount textview
+            TextView clickedProductText = (TextView) clickedProductView.findViewById(R.id.product_count);
+            if (clickedProductText != null) {
+                int clickedCount = Integer.valueOf(clickedProductText.getText().toString());
+                if (!up && clickedCount > 0) {
+                    // descrease value, if larger then 0
+                    clickedProductText.setText(String.valueOf(clickedCount - 1));
+                } else if (up && clickedCount < 99) {
+                    // increase value, if smaller then 99
+                    clickedProductText.setText(String.valueOf(clickedCount + 1));
+                }
+            }
+        }
     }
 }

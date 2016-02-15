@@ -37,7 +37,7 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
     @Bind(R.id.listview_markten) ListView mMarktenListView;
 
     // unique id for the markten loader
-    private static final int MARKTEN_LOADER = 1;
+    private static final int MARKTEN_LOADER = 2;
 
     // cursoradapter for populating the markten litsview with markten from the database
     private SimpleCursorAdapter mMarktenAdapter;
@@ -90,16 +90,18 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
     @OnItemClick(R.id.listview_markten)
     public void onItemClick(int position) {
 
-        // get the markt id and naam from the selected item
+        // get the markt id, naam and producten from the selected item
         Cursor selectedMarkt = (Cursor) mMarktenAdapter.getItem(position);
         int id = selectedMarkt.getInt(selectedMarkt.getColumnIndex(MakkelijkeMarktProvider.Markt.COL_ID));
         String naam = selectedMarkt.getString(selectedMarkt.getColumnIndex(MakkelijkeMarktProvider.Markt.COL_NAAM));
+        String producten = selectedMarkt.getString(selectedMarkt.getColumnIndex(MakkelijkeMarktProvider.Markt.COL_AANWEZIGE_OPTIES));
 
-        // add markt id and naam to the shared preferences
+        // add markt id, naam and producten to the shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(getString(R.string.sharedpreferences_key_markt_id), id);
         editor.putString(getString(R.string.sharedpreferences_key_markt_naam), naam);
+        editor.putString(getString(R.string.sharedpreferences_key_markt_producten), producten);
         editor.apply();
 
         // open the dagvergunningen activity
@@ -119,12 +121,13 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
         // create the loader
         CursorLoader loader = new CursorLoader(getActivity());
         loader.setUri(MakkelijkeMarktProvider.mUriMarkt);
-        loader.setProjection(new String[]{
-                MakkelijkeMarktProvider.Account.COL_ID,
-                MakkelijkeMarktProvider.Account.COL_NAAM
+        loader.setProjection(new String[] {
+                MakkelijkeMarktProvider.Markt.COL_ID,
+                MakkelijkeMarktProvider.Markt.COL_NAAM,
+                MakkelijkeMarktProvider.Markt.COL_AANWEZIGE_OPTIES
         });
         loader.setSortOrder(
-                MakkelijkeMarktProvider.Account.COL_NAAM +" ASC"
+                MakkelijkeMarktProvider.Markt.COL_NAAM +" ASC"
         );
 
         return loader;

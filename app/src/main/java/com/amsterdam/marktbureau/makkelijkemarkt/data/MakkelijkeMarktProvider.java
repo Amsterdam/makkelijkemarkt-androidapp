@@ -58,7 +58,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
     /**
      * Get the content provider authority name
-     *
      * @return String containing the authority name
      */
     @Override
@@ -68,7 +67,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
     /**
      * Get the version number of the table model definition
-     *
      * @return int containing the schema version
      */
     @Override
@@ -167,6 +165,58 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_PERFECTVIEWNUMMER = "perfectviewnummer";
+    }
+
+    /**
+     * /sollicitatie - Sollicitatie table columns definition
+     */
+    @Table(mTableSollicitatie)
+    public class Sollicitatie {
+
+        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
+        public static final String COL_ID = "_id";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_MARKT_ID = "markt_id";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_KOOPMAN_ID = "koopman_id";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_SOLLICITATIE_NUMMER = "sollicitatie_nummer";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_STATUS = "status";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_INSCHRIJF_DATUM = "inschrijf_datum";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_DOORGEHAALD = "doorgehaald";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_DOORGEHAALD_REDEN = "doorgehaald_reden";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_PERFECT_VIEW_NUMMER = "perfect_view_nummer";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_VASTE_PLAATSEN = "vaste_plaatsen";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_3METER_KRAMEN = "aantal_3meter_kramen";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_4METER_KRAMEN = "aantal_4meter_kramen";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_EXTRA_METERS = "aantal_extra_meters";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_ELEKTRA = "aantal_elektra";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_KRACHTSTROOM = "krachtstroom";
     }
 
     /**
@@ -301,58 +351,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
-    }
-
-    /**
-     * /sollicitatie - Sollicitatie table columns definition
-     */
-    @Table(mTableSollicitatie)
-    public class Sollicitatie {
-
-        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-        public static final String COL_ID = "_id";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_MARKT_ID = "markt_id";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_KOOPMAN_ID = "koopman_id";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_SOLLICITATIE_NUMMER = "sollicitatie_nummer";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_STATUS = "status";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_INSCHRIJF_DATUM = "inschrijf_datum";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_DOORGEHAALD = "doorgehaald";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_DOORGEHAALD_REDEN = "doorgehaald_reden";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_PERFECT_VIEW_NUMMER = "perfect_view_nummer";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_VASTE_PLAATSEN = "vaste_plaatsen";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_3METER_KRAMEN = "aantal_3meter_kramen";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_4METER_KRAMEN = "aantal_4meter_kramen";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_EXTRA_METERS = "aantal_extra_meters";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_ELEKTRA = "aantal_elektra";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_KRACHTSTROOM = "krachtstroom";
     }
 
     /**
@@ -491,12 +489,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
     /**
      * Query the dagvergunningen table joined with it's linked tables with the given arguments
-     * @param uri the given uri of the content
-     * @param projection the columns we need
-     * @param selection the columns in the WHERE clause
-     * @param selectionArgs the arguments in the WHERE clause
-     * @param sortOrder the sorting params
-     * @return a cursor containing the resultset
+     * @return a cursor containing the dagvergunning resultset
      */
     private Cursor queryDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder dagvergunningJoinedQueryBuilder = new SQLiteQueryBuilder();
@@ -508,7 +501,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
                         mTableKoopman + "." + Koopman.COL_ID + ")" +
                         " LEFT JOIN " + mTableAccount + " ON (" +
                         mTableDagvergunning + "." + Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID + " = " +
-                        mTableAccount + "." + Account.COL_ID + ")" +
+                        mTableAccount + "." + MakkelijkeMarktProvider.Account.COL_ID + ")" +
                         " LEFT JOIN " + mTableSollicitatie + " ON (" +
                         mTableDagvergunning + "." + Dagvergunning.COL_SOLLICITATIE_ID + " = " +
                         mTableSollicitatie + "." + Sollicitatie.COL_ID + ")";
@@ -558,6 +551,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
     /**
      * Query the koopman table joined with the sollicitatie and markt tables
+     * @return a cursor containing the koopman resultset
      */
     private Cursor queryKoopmanJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder koopmanJoinedQueryBuilder = new SQLiteQueryBuilder();
@@ -583,6 +577,11 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_DOORGEHAALD, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_STATUS, "sollicitatie_status"));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_MARKT_ID, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_3METER_KRAMEN, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_4METER_KRAMEN, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_EXTRA_METERS, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_ELEKTRA, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_KRACHTSTROOM, null));
         columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_ID, "markt_markt_id"));
         columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_AFKORTING, null));
         koopmanJoinedQueryBuilder.setProjectionMap(columnMap);
@@ -609,12 +608,10 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         // rename the column if we received a asColumnName
         if (asColumnName != null) {
-            map.put(tableName + "." + columnName,
-                    tableName + "." + columnName + " AS " + asColumnName);
+            map.put(tableName + "." + columnName, tableName + "." + columnName + " AS " + asColumnName);
         } else {
             // else just use the original column name
-            map.put(tableName + "." + columnName,
-                    columnName);
+            map.put(tableName + "." + columnName, columnName);
         }
 
         return map;

@@ -70,7 +70,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:gravity="center_vertical|center_horizontal"
-        android:background="@color/accent"
+        android:background="@drawable/button"
         android:textSize="@dimen/textsize_title_small"
         android:textColor="@color/primary_text"
         android:text="@string/login"

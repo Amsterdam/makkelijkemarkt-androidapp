@@ -157,5 +157,16 @@
                 />
 
         </RelativeLayout>
+
+        <!-- Notitie -->
+        <TextView
+            android:id="@+id/notitie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/totalelengte_accountnaam"
+            android:textColor="@color/primary_text"
+            android:textStyle="italic"
+            />
+
     </RelativeLayout>
 </LinearLayout>

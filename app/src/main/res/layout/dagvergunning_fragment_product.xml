@@ -9,13 +9,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingTop="@dimen/margin"
+        android:paddingRight="@dimen/margin"
+        android:paddingEnd="@dimen/margin"
+        android:paddingBottom="40dp"
+        android:paddingLeft="@dimen/margin"
+        android:paddingStart="@dimen/margin"
         >
 
-        <TextView
-            android:id="@+id/product_test"
+        <!-- Producten placeholder -->
+        <LinearLayout
+            android:id="@+id/producten_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:orientation="vertical"
+            />
+
+        <!-- Notitie -->
+        <EditText
+            android:id="@+id/notitie"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="@dimen/components_vertical_margin"
+            android:paddingTop="@dimen/small_margin"
+            android:paddingRight="@dimen/margin"
+            android:paddingEnd="@dimen/margin"
+            android:paddingLeft="@dimen/margin"
+            android:paddingStart="@dimen/margin"
+            android:gravity="top"
+            android:textSize="@dimen/textsize_content_medium"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/edittext_hint"
+            android:hint="@string/label_notitie"
+            android:background="@drawable/border_full_rounded"
             />
 
     </LinearLayout>

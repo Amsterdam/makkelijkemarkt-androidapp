@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        >
+
+        <!-- Product name -->
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/product_count_down"
+            android:layout_toStartOf="@id/product_count_down"
+            android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginRight="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:paddingBottom="@dimen/mini_margin"
+            android:singleLine="true"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/textsize_content_medium"
+            android:textStyle="bold"
+            android:background="@drawable/border_bottom"
+            />
+
+        <!-- - -->
+        <Button
+            android:id="@+id/product_count_down"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/product_count"
+            android:layout_toStartOf="@id/product_count"
+            android:layout_marginRight="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:gravity="center"
+            android:elevation="4dp"
+            android:textSize="@dimen/textsize_title_large"
+            android:text="-"
+            android:background="@drawable/button"
+            />
+
+        <!-- # -->
+        <TextView
+            android:id="@+id/product_count"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/product_count_up"
+            android:layout_toStartOf="@+id/product_count_up"
+            android:layout_marginRight="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="@dimen/textsize_title_medium"
+            android:textColor="@color/primary_text"
+            android:background="@drawable/border_full_rounded"
+            />
+
+        <!-- + -->
+        <Button
+            android:id="@+id/product_count_up"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:elevation="4dp"
+            android:textSize="@dimen/textsize_title_large"
+            android:text="+"
+            android:background="@drawable/button"
+            />
+
+    </RelativeLayout>
+</FrameLayout>

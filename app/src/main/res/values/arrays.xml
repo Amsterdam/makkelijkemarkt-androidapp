@@ -17,4 +17,27 @@
         <item>vervanger_met_ontheffing</item>
     </string-array>
 
+    <!--Product titles, values, and column names -->
+    <string-array name="array_product_title">
+        <item>3m kramen</item>
+        <item>4m kramen</item>
+        <item>Extra meters</item>
+        <item>Elektra</item>
+        <item>Krachtstroom</item>
+    </string-array>
+    <string-array name="array_product_value">
+        <item>3mKramen</item>
+        <item>4mKramen</item>
+        <item>extraMeters</item>
+        <item>elektra</item>
+        <item>krachtstroom</item>
+    </string-array>
+    <string-array name="array_product_column">
+        <item>aantal3meter_kramen</item>
+        <item>aantal4meter_kramen</item>
+        <item>extra_meters</item>
+        <item>aantal_elektra</item>
+        <item>krachtstroom</item>
+    </string-array>
+
 </resources>

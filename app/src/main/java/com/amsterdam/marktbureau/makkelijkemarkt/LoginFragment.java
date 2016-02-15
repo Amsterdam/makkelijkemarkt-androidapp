@@ -50,7 +50,7 @@ public class LoginFragment extends Fragment implements
     @Bind(R.id.login_button) Button mLoginButton;
 
     // unique id for the accounts loader
-    private static final int ACCOUNTS_LOADER = 0;
+    private static final int ACCOUNTS_LOADER = 1;
 
     // cursoradapter for populating the account spinner with accounts from the database
     private SimpleCursorAdapter mAccountsAdapter;

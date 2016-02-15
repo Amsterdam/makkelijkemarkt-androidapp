@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -35,7 +34,7 @@ import butterknife.OnItemSelected;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningFragmentKoopman extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragmentKoopman.class.getSimpleName();
@@ -55,6 +54,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
     @Bind(R.id.dagvergunning_registratie_datumtijd) TextView mRegistratieDatumtijdText;
     @Bind(R.id.erkenningsnummer) TextView mErkenningsnummerText;
+    @Bind(R.id.notitie) TextView mNotitieText;
     @Bind(R.id.dagvergunning_totale_lente) TextView mTotaleLengte;
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig_spinner) Spinner mAanwezigSpinner;
@@ -63,6 +63,13 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     private String[] mAanwezigValues;
     private ArrayAdapter<CharSequence> mAanwezigAdapter;
     String mAanwezigSelectedValue;
+
+    // sollicitatie default producten data
+    int mAantal3MeterKramenVast = -1;
+    int mAantal4MeterKramenVast = -1;
+    int mAantalExtraMetersVast = -1;
+    int mAantalElektraVast = -1;
+    int mKrachtstroomVast = -1;
 
     /**
      * Constructor
@@ -181,7 +188,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     }
 
     /**
-     * Populate the koopman fragment details item from the db call
+     * Populate the koopman fragment item details item when the loader has finished
      * @param loader the cursor loader
      * @param data data object containing one or more koopman rows with joined sollicitatie data
      */
@@ -219,8 +226,19 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 LinearLayout placeholderLayout = (LinearLayout) view.findViewById(R.id.sollicitaties_placeholder);
                 placeholderLayout.removeAllViews();
 
-                // add multiple markt sollicitatie views
+                // get vaste producten for selectd markt, and add multiple markt sollicitatie views to the koopman items
                 while (!data.isAfterLast()) {
+
+                    // get vaste producten for selected markt
+                    if (marktId > 0 && marktId == data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID))) {
+                        mAantal3MeterKramenVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_3METER_KRAMEN));
+                        mAantal4MeterKramenVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_4METER_KRAMEN));
+                        mAantalExtraMetersVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS));
+                        mAantalElektraVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA));
+                        mKrachtstroomVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM));
+                    }
+
+                    // inflate sollicitatie layout and populate its view items
                     View childLayout = layoutInflater.inflate(R.layout.dagvergunning_koopman_item_sollicitatie, null);
 
                     // highlight the sollicitatie for the current markt

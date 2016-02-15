@@ -118,6 +118,15 @@ public class DagvergunningenListAdapter extends CursorAdapter {
             viewHolder.sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(context, Utility.getSollicitatieStatusColor(context, sollicitatieStatus)));
         }
 
+        // notitie
+        String notitie = cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE));
+        if (notitie != null && !notitie.equals("")) {
+            viewHolder.notitieText.setText(context.getString(R.string.label_notitie) + ": " + notitie);
+            Utility.collapseView(viewHolder.notitieText, false);
+        } else {
+            Utility.collapseView(viewHolder.notitieText, true);
+        }
+
         // totale lengte
         String totaleLengte = cursor.getString(cursor.getColumnIndex(
                 MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE));
@@ -146,6 +155,8 @@ public class DagvergunningenListAdapter extends CursorAdapter {
         @Bind(R.id.sollicitatie_nummer_status) RelativeLayout sollicitatieNummerStatus;
         @Bind(R.id.sollicitatie_sollicitatie_nummer) TextView sollicitatieSollicitatieNummerText;
         @Bind(R.id.sollicitatie_status) TextView sollicitatieStatusText;
+
+        @Bind(R.id.notitie) TextView notitieText;
 
         @Bind(R.id.totalelengte_accountnaam) RelativeLayout totaleLengteAccountNaam;
         @Bind(R.id.dagvergunning_totale_lente) TextView dagvergunningTotaleLengteText;

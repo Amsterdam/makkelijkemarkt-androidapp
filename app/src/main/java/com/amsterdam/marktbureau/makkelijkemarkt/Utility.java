@@ -9,9 +9,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,5 +148,32 @@ public class Utility {
         }
 
         return sollicitatieStatusColor;
+    }
+
+    /**
+     * Open/close meldingen view
+     * @param view view that needs to collapse
+     * @param collapse collapse or open
+     */
+    public static void collapseView(View view, boolean collapse) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+
+        if (collapse) {
+            lp.height = 0;
+        } else {
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+
+        view.setLayoutParams(lp);
+    }
+
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 }
