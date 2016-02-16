@@ -16,8 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -43,8 +44,10 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     private static final int KOOPMAN_LOADER = 5;
 
     // bind layout elements
-    @Bind(R.id.search_erkenningsnummer) EditText mErkenningsnummerEditText;
-    @Bind(R.id.search_sollicitatienummer) TextView mSollicitatienummerEditText;
+    @Bind(R.id.search_erkenningsnummer) AutoCompleteTextView mErkenningsnummerEditText;
+    @Bind(R.id.search_erkenningsnummer_button) ImageButton mErkenningsnummerButton;
+    @Bind(R.id.search_sollicitatienummer) AutoCompleteTextView mSollicitatienummerEditText;
+    @Bind(R.id.search_sollicitatienummer_button) ImageButton mSollicitatienummerButton;
     @Bind(R.id.scan_barcode_button) Button mScanBarcodeButton;
     @Bind(R.id.scan_nfctag_button) Button mScanNfcTagButton;
     @Bind(R.id.koopman_detail) LinearLayout mKoopmanDetail;
@@ -58,6 +61,10 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     @Bind(R.id.dagvergunning_totale_lente) TextView mTotaleLengte;
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig_spinner) Spinner mAanwezigSpinner;
+
+    // adapter for querying for the erkenningsnummer autocomplete
+    private ErkenningsnummerAutoCompleteAdapter mSearchErkenningsnummerAdapter;
+//    private SollicitatienummerAutoCompleteAdapter mSearchSollicitatienummerAdapter;
 
     // string array and adapter for the aanwezig spinner
     private String[] mAanwezigValues;
@@ -85,7 +92,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     }
 
     /**
-     *
+     * Inflate the dagvergunning koopman fragment and initialize the view elements and its handlers
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -97,6 +104,14 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
 
         // bind the elements to the view
         ButterKnife.bind(this, mainView);
+
+        // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
+        mSearchErkenningsnummerAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
+        mErkenningsnummerEditText.setAdapter(mSearchErkenningsnummerAdapter);
+
+//        // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
+//        mSearchSollicitatienummerAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
+//        mSollicitatienummerEditText.setAdapter(mSearchSollicitatienummerAdapter);
 
         // disable uppercasing of the button text
         mScanBarcodeButton.setTransformationMethod(null);

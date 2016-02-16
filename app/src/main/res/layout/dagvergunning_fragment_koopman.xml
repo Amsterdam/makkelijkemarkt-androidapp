@@ -21,7 +21,7 @@
             android:paddingRight="@dimen/margin"
             >
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/search_erkenningsnummer"
                 android:layout_toLeftOf="@+id/search_erkenningsnummer_button"
                 android:layout_toStartOf="@+id/search_erkenningsnummer_button"
@@ -36,6 +36,7 @@
                 android:textSize="@dimen/textsize_title_small"
                 android:maxLength="@integer/erkenningsnummer_maxlength"
                 android:maxLines="1"
+                android:completionThreshold="2"
                 android:hint="@string/erkenningsnummer_hint"
                 android:textColorHint="@color/edittext_hint"
                 android:imeOptions="actionDone"
@@ -64,7 +65,29 @@
             android:paddingRight="@dimen/margin"
             >
 
-            <EditText
+            <AutoCompleteTextView
+                android:id="@+id/search_sollicitatienummer"
+                android:layout_toLeftOf="@+id/search_sollicitatienummer_button"
+                android:layout_toStartOf="@+id/search_sollicitatienummer_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:paddingTop="@dimen/mini_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:inputType="numberDecimal"
+                android:textSize="@dimen/textsize_title_small"
+                android:maxLength="@integer/sollicitatienummer_maxlength"
+                android:maxLines="1"
+                android:completionThreshold="2"
+                android:hint="@string/sollicitatienummer_hint"
+                android:textColorHint="@color/edittext_hint"
+                android:imeOptions="actionDone"
+                android:background="@drawable/border_bottom"
+                />
+
+            <!--EditText
                 android:id="@+id/search_sollicitatienummer"
                 android:layout_toLeftOf="@+id/search_sollicitatienummer_button"
                 android:layout_toStartOf="@+id/search_sollicitatienummer_button"
@@ -83,7 +106,7 @@
                 android:textColorHint="@color/edittext_hint"
                 android:imeOptions="actionDone"
                 android:background="@drawable/border_bottom"
-                />
+                /-->
 
             <ImageButton
                 android:id="@+id/search_sollicitatienummer_button"

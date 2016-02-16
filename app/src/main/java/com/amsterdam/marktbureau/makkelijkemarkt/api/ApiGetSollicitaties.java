@@ -99,10 +99,6 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
             ContentValues[] koopmanValues = new ContentValues[response.body().size()];
             for (int i = 0; i < response.body().size(); i++) {
                 sollicitatieValues[i] = response.body().get(i).toContentValues();
-
-                // TODO: also get and store the koopmannen (they have the erkenningsnummer we need for the search on erkenningsnummer)
-                // TODO: add ApiKoopman var to ApiSollicitatie object?
-
                 koopmanValues[i] = response.body().get(i).getKoopman().toContentValues();
             }
 

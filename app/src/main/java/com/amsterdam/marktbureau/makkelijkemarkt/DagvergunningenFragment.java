@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetDagvergunningen;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import java.text.SimpleDateFormat;
@@ -100,10 +99,10 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
 
 
-            // TODO: prevent multiple times downloading the sollicitaties for the same markt id in the same session/day (shared prefs?)
-            ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
-            getSollicitaties.setMarktId(mMarktId);
-            getSollicitaties.enqueue();
+//            // TODO: prevent multiple times downloading the sollicitaties for the same markt id in the same session/day (shared prefs?)
+//            ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
+//            getSollicitaties.setMarktId(mMarktId);
+//            getSollicitaties.enqueue();
 
 
 
