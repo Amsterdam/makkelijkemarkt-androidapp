@@ -25,10 +25,10 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implements Filterable {
+public class SollicitatienummerAutoCompleteAdapter extends CursorAdapter implements Filterable {
 
     // use classname when logging
-    private static final String LOG_TAG = ErkenningsnummerAutoCompleteAdapter.class.getSimpleName();
+    private static final String LOG_TAG = SollicitatienummerAutoCompleteAdapter.class.getSimpleName();
 
     // keep a reference to the context for access to the contentresolver
     private Context mContext;
@@ -42,7 +42,7 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
      * @param c
      * @param flags
      */
-    public ErkenningsnummerAutoCompleteAdapter(Context context, Cursor c, int flags) {
+    public SollicitatienummerAutoCompleteAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
 
         mContext = context;
@@ -61,7 +61,7 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.erkenningsnummer_autocomplete_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.sollicitatienummer_autocomplete_list_item, parent, false);
 
         // map the views of the layout using a viewholder
         ViewHolder viewHolder = new ViewHolder(view);
@@ -88,10 +88,10 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
                 .error(R.drawable.no_koopman_image)
                 .into(viewHolder.foto);
 
-        // erkenningsnummer
-        String erkenningsnummer = cursor.getString(
-                cursor.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
-        viewHolder.erkenningsnummer.setText(erkenningsnummer);
+        // sollicitatienummer
+        String sollicitatienummer = cursor.getString(
+                cursor.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
+        viewHolder.sollicitatienummer.setText(sollicitatienummer);
 
         // koopman status
         String koopmanStatus = cursor.getString(cursor.getColumnIndex("koopman_status"));
@@ -120,11 +120,11 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
 
     /**
      *
-     * @param erkenningsnummer
+     * @param sollicitatienummer
      * @return
      */
     @Override
-    public Cursor runQueryOnBackgroundThread(CharSequence erkenningsnummer) {
+    public Cursor runQueryOnBackgroundThread(CharSequence sollicitatienummer) {
 
         // limit the result so we never send thousands of records to the adapter
         String limit = "10";
@@ -134,19 +134,19 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
                 MakkelijkeMarktProvider.mUriKoopmanJoined,
                 new String[] {
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID,
-                        MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER,
+                        MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER,
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS,
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM,
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_FOTO_URL,
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS
                 },
                 MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID + " = ? AND " +
-                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " LIKE ? ",
+                MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER + " LIKE ? ",
                 new String[] {
                         String.valueOf(mMarktId),
-                        "%" + erkenningsnummer + "%"
+                        "%" + sollicitatienummer + "%"
                 },
-                MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " ASC " +
+                MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER + " ASC " +
                         " LIMIT " + limit
         );
     }
@@ -158,7 +158,7 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
 
         // bind the elements
         @Bind(R.id.koopman_foto) ImageView foto;
-        @Bind(R.id.erkenningsnummer) TextView erkenningsnummer;
+        @Bind(R.id.sollicitatienummer) TextView sollicitatienummer;
         @Bind(R.id.koopman_status) TextView koopmanStatus;
         @Bind(R.id.naam) TextView naam;
 

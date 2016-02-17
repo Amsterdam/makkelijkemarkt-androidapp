@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
@@ -98,8 +99,11 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
             ContentValues[] sollicitatieValues = new ContentValues[response.body().size()];
             ContentValues[] koopmanValues = new ContentValues[response.body().size()];
             for (int i = 0; i < response.body().size(); i++) {
-                sollicitatieValues[i] = response.body().get(i).toContentValues();
-                koopmanValues[i] = response.body().get(i).getKoopman().toContentValues();
+                ApiSollicitatie sollicitatie = response.body().get(i);
+                ApiKoopman koopman = sollicitatie.getKoopman();
+                koopmanValues[i] = koopman.toContentValues();
+                sollicitatie.setKoopmanId(koopman.getId());
+                sollicitatieValues[i] = sollicitatie.toContentValues();
             }
 
             // insert downloaded sollicitaties into db

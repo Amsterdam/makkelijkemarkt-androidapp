@@ -46,7 +46,7 @@
         android:paddingRight="@dimen/mini_margin"
         android:paddingBottom="@dimen/micro_margin"
         android:paddingLeft="@dimen/mini_margin"
-        android:textColor="@android:color/white"
+        android:textColor="@color/primary_text"
         />
 
 </RelativeLayout>

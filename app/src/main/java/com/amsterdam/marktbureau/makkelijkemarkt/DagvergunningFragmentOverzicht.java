@@ -39,6 +39,7 @@ public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage im
 
     // bind layout elements
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
+    @Bind(R.id.koopman_status) TextView mKoopmanStatus;
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
     @Bind(R.id.dagvergunning_registratie_datumtijd) TextView mRegistratieDatumtijdText;
     @Bind(R.id.erkenningsnummer) TextView mErkenningsnummerText;
@@ -46,6 +47,9 @@ public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage im
     @Bind(R.id.dagvergunning_totale_lente) TextView mTotaleLengte;
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig) TextView mAanwezigText;
+
+    // koopman id
+    public int mKoopmanId = -1;
 
     /**
      * Constructor
@@ -97,9 +101,8 @@ public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage im
      * @param koopmanId id of the koopman
      */
     public void setKoopman(int koopmanId) {
-        Bundle args = new Bundle();
-        args.putInt(MakkelijkeMarktProvider.Koopman.COL_ID, koopmanId);
-        getLoaderManager().initLoader(KOOPMAN_LOADER, args, this);
+        mKoopmanId = koopmanId;
+        getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
     }
 
 
@@ -109,17 +112,15 @@ public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage im
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        // load the koopman with given id in the arguments bundle and where doorgehaald is false
-        if (args != null && args.getInt(MakkelijkeMarktProvider.Koopman.COL_ID, 0) != 0) {
+        // load the koopman with given id
+        if (mKoopmanId != -1) {
             CursorLoader loader = new CursorLoader(getActivity());
             loader.setUri(MakkelijkeMarktProvider.mUriKoopmanJoined);
             loader.setSelection(
-                    MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? AND " +
-                            MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_DOORGEHAALD + " = ? "
+                    MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? "
             );
-            loader.setSelectionArgs(new String[]{
-                    String.valueOf(args.getInt(MakkelijkeMarktProvider.Koopman.COL_ID, 0)),
-                    String.valueOf(0)
+            loader.setSelectionArgs(new String[] {
+                    String.valueOf(mKoopmanId),
             });
 
             return loader;
@@ -146,6 +147,15 @@ public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage im
                     .load(data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
                     .error(R.drawable.no_koopman_image)
                     .into(mKoopmanFotoImage);
+
+            // koopman status
+            String koopmanStatus = data.getString(data.getColumnIndex("koopman_status"));
+            if (koopmanStatus.equals(getString(R.string.koopman_status_verwijderd))) {
+                Utility.collapseView(mKoopmanStatus, false);
+                mKoopmanStatus.setText(getString(R.string.notice_koopman_verwijderd));
+            } else {
+                Utility.collapseView(mKoopmanStatus, true);
+            }
 
             // koopman naam
             String naam =
@@ -188,8 +198,9 @@ public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage im
                     // koopman sollicitatie status
                     String sollicitatieStatus = data.getString(data.getColumnIndex("sollicitatie_status"));
                     TextView sollicitatieStatusText = (TextView) childLayout.findViewById(R.id.sollicitatie_status);
+                    sollicitatieStatusText.setText(sollicitatieStatus);
                     if (sollicitatieStatus != null && !sollicitatieStatus.equals("?") && !sollicitatieStatus.equals("")) {
-                        sollicitatieStatusText.setText(sollicitatieStatus);
+                        sollicitatieStatusText.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                         sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
                                 getContext(),
                                 Utility.getSollicitatieStatusColor(getContext(), sollicitatieStatus)));

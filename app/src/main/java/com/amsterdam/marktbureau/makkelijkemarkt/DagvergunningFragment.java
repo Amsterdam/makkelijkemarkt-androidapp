@@ -79,7 +79,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private String mDag;
     private int mId = -1;
     private String mErkenningsnummer;
-    private String mRegistratieDatumtijd;
     private int mTotaleLengte = -1;
     private String mSollicitatieStatus;
     private String mKoopmanAanwezig;
@@ -87,11 +86,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private String mKoopmanVoorletters;
     private String mKoopmanAchternaam;
     private String mKoopmanFotoMedium;
-    private int mRegistratieAccountId = -1;
-    private String mRegistratieAccountNaam;
     private int mSollicitatieId = -1;
     private int mSollicitatieNummer = -1;
     private String mNotitie;
+    private int mRegistratieAccountId = -1;
+    private String mRegistratieAccountNaam;
+    private String mRegistratieDatumtijd;
 
     // dagvergunning product data
     private Map<String, Integer> mProducten = new HashMap<String, Integer>();
@@ -339,7 +339,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private void setKoopmanFragmentValues() {
         if (mKoopmanFragmentReady) {
 
-            // koopman details
+            // set the koopman details
             if (mKoopmanId > 0) {
                 mKoopmanFragment.setKoopman(mKoopmanId);
             }
@@ -356,6 +356,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 } catch (java.text.ParseException e) {
                     Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: " + e.getMessage());
                 }
+            } else {
+                mKoopmanFragment.mRegistratieDatumtijdText.setText("");
             }
 
             // dagvergunning notitie
@@ -374,6 +376,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // registratie account naam
             if (mRegistratieAccountNaam != null) {
                 mKoopmanFragment.mAccountNaam.setText(mRegistratieAccountNaam);
+            } else {
+                mKoopmanFragment.mAccountNaam.setText("");
             }
 
             // koopman aanwezig status
@@ -425,9 +429,34 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, mKoopmanFragment.mKrachtstroomVast);
             }
 
+            // get selected koopman id
+            if (mKoopmanFragment.mKoopmanId != -1) {
+
+                // if we are changing an existing dagvergunning, reset the registratie account and tijd
+                if (mKoopmanId != -1 && mKoopmanId != mKoopmanFragment.mKoopmanId) {
+                    mRegistratieAccountId = -1;
+                    mRegistratieAccountNaam = null;
+                    mRegistratieDatumtijd = null;
+
+                    Utility.log(getContext(), LOG_TAG, "Koopman id changed from: " + mKoopmanId + " to: " + mKoopmanFragment.mKoopmanId);
+                }
+
+                // get koopman id and update local member var
+                mKoopmanId = mKoopmanFragment.mKoopmanId;
+
+                Utility.log(getContext(), LOG_TAG, "Koopman id set: " + mKoopmanId);
+            }
+
             // get koopman aanwezig selection
             mKoopmanAanwezig = mKoopmanFragment.mAanwezigSelectedValue;
         }
+
+        Utility.log(getContext(), LOG_TAG, "getKoopmanFragmentValues called!");
+    }
+
+    public void getAndSetKoopmanFragmentValues() {
+        getKoopmanFragmentValues();
+        setKoopmanFragmentValues();
     }
 
     /**
@@ -471,7 +500,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                     productCount = 0;
                                 }
 
-                                Utility.log(getContext(), LOG_TAG, "Updating view=product_" + productList.get(i) + " with count = " + productCount.toString());
+                                Utility.log(getContext(), LOG_TAG, "Updating view=product_" + productList.get(i) + " with count=" + productCount.toString());
 
                                 // update the view text
                                 productCountView.setText(productCount.toString());
@@ -548,6 +577,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mNotitie = null;
             }
         }
+
+        Utility.log(getContext(), LOG_TAG, "getProductFragmentValues called!");
     }
 
     /**
@@ -573,6 +604,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 } catch (java.text.ParseException e) {
                     Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: " + e.getMessage());
                 }
+            } else {
+                mOverzichtFragment.mRegistratieDatumtijdText.setText("");
             }
 
             // dagvergunning notitie
@@ -591,6 +624,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // registratie account naam
             if (mRegistratieAccountNaam != null) {
                 mOverzichtFragment.mAccountNaam.setText(mRegistratieAccountNaam);
+            } else {
+                mOverzichtFragment.mAccountNaam.setText("");
             }
 
             // koopman aanwezig status
@@ -619,13 +654,16 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         }
     }
 
-//    /**
-//     * Get overzicht fragment values and update local member vars
-//     */
-//    private void getOverzichtFragmentValues() {
-//        if (mOverzichtFragmentReady) {
-//        }
-//    }
+    /**
+     * Get overzicht fragment values and update local member vars
+     */
+    private void getOverzichtFragmentValues() {
+        if (mOverzichtFragmentReady) {
+            // in overzicht fragment we cannot modify data
+        }
+
+        Utility.log(getContext(), LOG_TAG, "getOverzichtFragmentValues called!");
+    }
 
     /**
      * Helper switch to populate fragment elements by viewpager position
@@ -659,9 +697,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             case 1:
                 getProductFragmentValues();
                 break;
-//            case 2:
-//                getOverzichtFragmentValues();
-//                break;
+            case 2:
+                getOverzichtFragmentValues();
+                break;
             default:
                 break;
         }

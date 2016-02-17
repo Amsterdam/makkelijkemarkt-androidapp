@@ -87,27 +87,6 @@
                 android:background="@drawable/border_bottom"
                 />
 
-            <!--EditText
-                android:id="@+id/search_sollicitatienummer"
-                android:layout_toLeftOf="@+id/search_sollicitatienummer_button"
-                android:layout_toStartOf="@+id/search_sollicitatienummer_button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/large_margin"
-                android:layout_marginRight="4dp"
-                android:layout_marginEnd="4dp"
-                android:paddingTop="@dimen/mini_margin"
-                android:paddingBottom="@dimen/small_margin"
-                android:inputType="number"
-                android:textSize="@dimen/textsize_title_small"
-                android:maxLength="@integer/sollicitatienummer_maxlength"
-                android:maxLines="1"
-                android:hint="@string/sollicitatienummer_hint"
-                android:textColorHint="@color/edittext_hint"
-                android:imeOptions="actionDone"
-                android:background="@drawable/border_bottom"
-                /-->
-
             <ImageButton
                 android:id="@+id/search_sollicitatienummer_button"
                 android:layout_width="wrap_content"
@@ -136,11 +115,12 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
                 android:gravity="center"
                 android:elevation="4dp"
                 android:background="@drawable/button"
-                android:text="Barcode Scannen"
+                android:text="@string/label_barcode_scannen"
                 />
 
             <Button
@@ -148,10 +128,11 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
                 android:gravity="center"
                 android:background="@drawable/button"
-                android:text="NFC Scannen"
+                android:text="@string/label_nfc_scannen"
                 />
 
         </LinearLayout>

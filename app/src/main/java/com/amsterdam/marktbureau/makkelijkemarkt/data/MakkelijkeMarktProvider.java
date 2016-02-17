@@ -569,8 +569,10 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         HashMap<String, String> columnMap = new HashMap<>();
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "_id"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ERKENNINGSNUMMER, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_STATUS, "koopman_status"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_URL, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_ID, "sollicitatie_id"));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_SOLLICITATIE_NUMMER, null));

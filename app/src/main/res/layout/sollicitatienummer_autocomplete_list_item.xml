@@ -34,14 +34,14 @@
         >
 
         <RelativeLayout
-            android:id="@+id/erkenningsnummer_status"
+            android:id="@+id/sollicitatienummer_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
-            <!-- Erkenningsnummer -->
+            <!-- Sollicitatienummer -->
             <TextView
-                android:id="@+id/erkenningsnummer"
+                android:id="@+id/sollicitatienummer"
                 android:layout_width="wrap_content"
                 android:maxWidth="160dp"
                 android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             android:id="@+id/naam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/erkenningsnummer_status"
+            android:layout_below="@+id/sollicitatienummer_status"
             android:singleLine="true"
             android:textSize="@dimen/textsize_content_small"
             />

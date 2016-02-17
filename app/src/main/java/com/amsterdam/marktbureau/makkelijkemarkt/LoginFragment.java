@@ -162,7 +162,7 @@ public class LoginFragment extends Fragment implements
                 postLogin.enqueue(this);
 
             } else {
-                mToast = Utility.showToast(getActivity(), mToast, getString(R.string.network_required_notice));
+                mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_network_required));
             }
         }
     }

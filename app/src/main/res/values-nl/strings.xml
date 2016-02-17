@@ -16,6 +16,6 @@
 
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
     <string name="notice_login_password_invalid">Wachtwoord ongeldig</string>
-    <string name="network_required_notice">Internet verbinding vereist, controleer je netwerk instellingen</string>
+    <string name="notice_network_required">Internet verbinding vereist, controleer je netwerk instellingen</string>
 
 </resources>

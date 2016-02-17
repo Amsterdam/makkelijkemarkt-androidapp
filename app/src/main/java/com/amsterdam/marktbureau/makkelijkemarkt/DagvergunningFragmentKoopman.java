@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -54,6 +55,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
 
     // bind dagvergunning list item layout include elements
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
+    @Bind(R.id.koopman_status) TextView mKoopmanStatus;
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
     @Bind(R.id.dagvergunning_registratie_datumtijd) TextView mRegistratieDatumtijdText;
     @Bind(R.id.erkenningsnummer) TextView mErkenningsnummerText;
@@ -62,9 +64,12 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig_spinner) Spinner mAanwezigSpinner;
 
-    // adapter for querying for the erkenningsnummer autocomplete
+    // adapters for querying for the erkenningsnummer and sollicitatienummer autocomplete
     private ErkenningsnummerAutoCompleteAdapter mSearchErkenningsnummerAdapter;
-//    private SollicitatienummerAutoCompleteAdapter mSearchSollicitatienummerAdapter;
+    private SollicitatienummerAutoCompleteAdapter mSearchSollicitatienummerAdapter;
+
+    // koopman id
+    public int mKoopmanId = -1;
 
     // string array and adapter for the aanwezig spinner
     private String[] mAanwezigValues;
@@ -89,6 +94,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      */
     public interface Callback {
         void onKoopmanFragmentReady();
+        void onKoopmanFragmentUpdated();
     }
 
     /**
@@ -108,10 +114,68 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
         // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
         mSearchErkenningsnummerAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
         mErkenningsnummerEditText.setAdapter(mSearchErkenningsnummerAdapter);
+        mErkenningsnummerEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * Catch the clicked koopman from the autocomplete list (not using butterknife here because
+             * it does not support for @OnItemClick on AutoCompleteTextView:
+             * https://github.com/JakeWharton/butterknife/pull/242
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor koopman = (Cursor) parent.getAdapter().getItem(position);
+                mKoopmanId = koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID));
 
-//        // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
-//        mSearchSollicitatienummerAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
-//        mSollicitatienummerEditText.setAdapter(mSearchSollicitatienummerAdapter);
+                Utility.log(getContext(), LOG_TAG, "Koopman selected: " + String.valueOf(mKoopmanId));
+
+                // reset the default amount of products before loading the koopman
+                mAantal3MeterKramenVast = -1;
+                mAantal4MeterKramenVast = -1;
+                mAantalExtraMetersVast = -1;
+                mAantalElektraVast = -1;
+                mKrachtstroomVast = -1;
+
+                // inform the dagvergunningfragment that the koopman has changed and populate
+                // with the new koopman
+                ((Callback) getActivity()).onKoopmanFragmentUpdated();
+
+                // hide the keyboard on item selection
+                Utility.hideKeyboard(getActivity());
+            }
+        });
+
+        // TODO: change the onitemclick listeners to use one and the same method
+
+        // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
+        mSearchSollicitatienummerAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
+        mSollicitatienummerEditText.setAdapter(mSearchSollicitatienummerAdapter);
+        mSollicitatienummerEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * Catch the clicked koopman from the autocomplete list (not using butterknife here because
+             * it does not support for @OnItemClick on AutoCompleteTextView:
+             * https://github.com/JakeWharton/butterknife/pull/242
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor koopman = (Cursor) parent.getAdapter().getItem(position);
+                mKoopmanId = koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID));
+
+                Utility.log(getContext(), LOG_TAG, "Koopman selected: " + String.valueOf(mKoopmanId));
+
+                // reset the default amount of products before loading the koopman
+                mAantal3MeterKramenVast = -1;
+                mAantal4MeterKramenVast = -1;
+                mAantalExtraMetersVast = -1;
+                mAantalElektraVast = -1;
+                mKrachtstroomVast = -1;
+
+                // inform the dagvergunningfragment that the koopman has changed and populate
+                // with the new koopman
+                ((Callback) getActivity()).onKoopmanFragmentUpdated();
+
+                // hide the keyboard on item selection
+                Utility.hideKeyboard(getActivity());
+            }
+        });
 
         // disable uppercasing of the button text
         mScanBarcodeButton.setTransformationMethod(null);
@@ -150,18 +214,17 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      * @param position the selected position
      */
     @OnItemSelected(R.id.aanwezig_spinner)
-    public void onItemSelected(int position) {
+    public void onAanwezigItemSelected(int position) {
         mAanwezigSelectedValue = mAanwezigValues[position];
     }
 
     /**
-     * Initialize the loader with given koopman id
+     * Set the koopman id and init the loader
      * @param koopmanId id of the koopman
      */
     public void setKoopman(int koopmanId) {
-        Bundle args = new Bundle();
-        args.putInt(MakkelijkeMarktProvider.Koopman.COL_ID, koopmanId);
-        getLoaderManager().initLoader(KOOPMAN_LOADER, args, this);
+        mKoopmanId = koopmanId;
+        getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
     }
 
     /**
@@ -183,17 +246,20 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        Utility.log(getContext(), LOG_TAG, "onCreateLoader called..");
+
         // load the koopman with given id in the arguments bundle and where doorgehaald is false
-        if (args != null && args.getInt(MakkelijkeMarktProvider.Koopman.COL_ID, 0) != 0) {
+        if (mKoopmanId != -1) {
+
+            Utility.log(getContext(), LOG_TAG, "and mKoopmanId IS set!");
+
             CursorLoader loader = new CursorLoader(getActivity());
             loader.setUri(MakkelijkeMarktProvider.mUriKoopmanJoined);
             loader.setSelection(
-                    MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? AND " +
-                    MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_DOORGEHAALD + " = ? "
+                    MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? "
             );
-            loader.setSelectionArgs(new String[]{
-                    String.valueOf(args.getInt(MakkelijkeMarktProvider.Koopman.COL_ID, 0)),
-                    String.valueOf(0)
+            loader.setSelectionArgs(new String[] {
+                    String.valueOf(mKoopmanId)
             });
 
             return loader;
@@ -209,7 +275,12 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        Utility.log(getContext(), LOG_TAG, "onLoadFinished called..");
+
         if (data != null && data.moveToFirst()) {
+
+            Utility.log(getContext(), LOG_TAG, "and data NOT empty!");
 
             // get the markt id from the sharedprefs
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -223,6 +294,15 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                     .load(data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
                     .error(R.drawable.no_koopman_image)
                     .into(mKoopmanFotoImage);
+
+            // koopman status
+            String koopmanStatus = data.getString(data.getColumnIndex("koopman_status"));
+            if (koopmanStatus.equals(getString(R.string.koopman_status_verwijderd))) {
+                Utility.collapseView(mKoopmanStatus, false);
+                mKoopmanStatus.setText(getString(R.string.notice_koopman_verwijderd));
+            } else {
+                Utility.collapseView(mKoopmanStatus, true);
+            }
 
             // koopman naam
             String naam =
@@ -274,8 +354,9 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                     // koopman sollicitatie status
                     String sollicitatieStatus = data.getString(data.getColumnIndex("sollicitatie_status"));
                     TextView sollicitatieStatusText = (TextView) childLayout.findViewById(R.id.sollicitatie_status);
+                    sollicitatieStatusText.setText(sollicitatieStatus);
                     if (sollicitatieStatus != null && !sollicitatieStatus.equals("?") && !sollicitatieStatus.equals("")) {
-                        sollicitatieStatusText.setText(sollicitatieStatus);
+                        sollicitatieStatusText.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
                         sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
                                 getContext(),
                                 Utility.getSollicitatieStatusColor(getContext(), sollicitatieStatus)));

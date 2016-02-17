@@ -63,6 +63,14 @@ public class DagvergunningActivity extends BaseActivity implements
     }
 
     /**
+     * DagvergunningFragmentKoopman callback to retrieve the changed koopman fragment data and
+     * populate it again based on the new data
+     */
+    public void onKoopmanFragmentUpdated() {
+        mDagvergunningFragment.getAndSetKoopmanFragmentValues();
+    }
+
+    /**
      * DagvergunningFragmentProduct callback to inform the dagvergunningfragment that it's ready
      */
     public void onProductFragmentReady() {
