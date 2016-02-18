@@ -12,9 +12,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -24,12 +26,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import butterknife.OnItemSelected;
 
 /**
@@ -72,7 +77,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     public int mKoopmanId = -1;
 
     // string array and adapter for the aanwezig spinner
-    private String[] mAanwezigValues;
+    private String[] mAanwezigKeys;
     private ArrayAdapter<CharSequence> mAanwezigAdapter;
     String mAanwezigSelectedValue;
 
@@ -82,6 +87,9 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     int mAantalExtraMetersVast = -1;
     int mAantalElektraVast = -1;
     int mKrachtstroomVast = -1;
+
+    // common toast object
+    protected Toast mToast;
 
     /**
      * Constructor
@@ -111,15 +119,10 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
         // bind the elements to the view
         ButterKnife.bind(this, mainView);
 
-        // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
-        mSearchErkenningsnummerAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
-        mErkenningsnummerEditText.setAdapter(mSearchErkenningsnummerAdapter);
-        mErkenningsnummerEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /**
-             * Catch the clicked koopman from the autocomplete list (not using butterknife here because
-             * it does not support for @OnItemClick on AutoCompleteTextView:
-             * https://github.com/JakeWharton/butterknife/pull/242
-             */
+        // Create an onitemclick listener that will catch the clicked koopman from the autocomplete
+        // lists (not using butterknife here because it does not support for @OnItemClick on
+        // AutoCompleteTextView: https://github.com/JakeWharton/butterknife/pull/242
+        AdapterView.OnItemClickListener autoCompleteItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor koopman = (Cursor) parent.getAdapter().getItem(position);
@@ -141,48 +144,24 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                 // hide the keyboard on item selection
                 Utility.hideKeyboard(getActivity());
             }
-        });
+        };
 
-        // TODO: change the onitemclick listeners to use one and the same method
+        // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
+        mSearchErkenningsnummerAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
+        mErkenningsnummerEditText.setAdapter(mSearchErkenningsnummerAdapter);
+        mErkenningsnummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
         // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
         mSearchSollicitatienummerAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
         mSollicitatienummerEditText.setAdapter(mSearchSollicitatienummerAdapter);
-        mSollicitatienummerEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /**
-             * Catch the clicked koopman from the autocomplete list (not using butterknife here because
-             * it does not support for @OnItemClick on AutoCompleteTextView:
-             * https://github.com/JakeWharton/butterknife/pull/242
-             */
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor koopman = (Cursor) parent.getAdapter().getItem(position);
-                mKoopmanId = koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID));
-
-                Utility.log(getContext(), LOG_TAG, "Koopman selected: " + String.valueOf(mKoopmanId));
-
-                // reset the default amount of products before loading the koopman
-                mAantal3MeterKramenVast = -1;
-                mAantal4MeterKramenVast = -1;
-                mAantalExtraMetersVast = -1;
-                mAantalElektraVast = -1;
-                mKrachtstroomVast = -1;
-
-                // inform the dagvergunningfragment that the koopman has changed and populate
-                // with the new koopman
-                ((Callback) getActivity()).onKoopmanFragmentUpdated();
-
-                // hide the keyboard on item selection
-                Utility.hideKeyboard(getActivity());
-            }
-        });
+        mSollicitatienummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
         // disable uppercasing of the button text
         mScanBarcodeButton.setTransformationMethod(null);
         mScanNfcTagButton.setTransformationMethod(null);
 
         // get the aanwezig values from a resource array with aanwezig values
-        mAanwezigValues = getResources().getStringArray(R.array.array_aanwezig_value);
+        mAanwezigKeys = getResources().getStringArray(R.array.array_aanwezig_key);
 
         // populate the aanwezig spinner from a resource array with aanwezig titles
         mAanwezigAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -210,12 +189,54 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     }
 
     /**
+     * Trigger the autocomplete onclick on the erkennings- en sollicitatenummer search buttons
+     * @param view the clicked button
+     */
+    @OnClick({ R.id.search_erkenningsnummer_button, R.id.search_sollicitatienummer_button })
+    public void onClick(ImageButton view) {
+        if (view.getId() == R.id.search_erkenningsnummer_button) {
+            showDropdown(mErkenningsnummerEditText);
+        } else if (view.getId() == R.id.search_sollicitatienummer_button) {
+            showDropdown(mSollicitatienummerEditText);
+        }
+    }
+
+    /**
+     * Trigger the autocomplete on enter on the erkennings- en sollicitatenummer search textviews
+     * @param view the autocomplete textview
+     * @param actionId the type of action
+     * @param event the type of keyevent
+     */
+    @OnEditorAction({ R.id.search_erkenningsnummer, R.id.search_sollicitatienummer })
+    public boolean onAutoCompleteEnter(AutoCompleteTextView view, int actionId, KeyEvent event) {
+        if ((   (event != null) &&
+                (event.getAction() == KeyEvent.ACTION_DOWN) &&
+                (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
+                (actionId == EditorInfo.IME_ACTION_DONE)) {
+            showDropdown(view);
+        }
+        return true;
+    }
+
+    /**
      * On selecting an item from the spinner update the member var with the value
      * @param position the selected position
      */
     @OnItemSelected(R.id.aanwezig_spinner)
     public void onAanwezigItemSelected(int position) {
-        mAanwezigSelectedValue = mAanwezigValues[position];
+        mAanwezigSelectedValue = mAanwezigKeys[position];
+    }
+
+    /**
+     * Show the autocomplete dropdown or a notice when the entered text is smaller then the threshold
+     * @param view autocomplete textview
+     */
+    private void showDropdown(AutoCompleteTextView view) {
+        if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() < view.getThreshold()) {
+            view.showDropDown();
+        } else {
+            Utility.showToast(getContext(), mToast, getString(R.string.notice_autocomplete_minimum));
+        }
     }
 
     /**
@@ -232,8 +253,8 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      * @param value the aanwezig value
      */
     public void setAanwezig(CharSequence value) {
-        for(int i=0 ; i<mAanwezigValues.length; i++) {
-            if (mAanwezigValues[i].equals(value)) {
+        for(int i=0 ; i< mAanwezigKeys.length; i++) {
+            if (mAanwezigKeys[i].equals(value)) {
                 mAanwezigSpinner.setSelection(i);
                 break;
             }

@@ -112,10 +112,10 @@ public class SollicitatienummerAutoCompleteAdapter extends CursorAdapter impleme
      */
     @Override
     public CharSequence convertToString(Cursor cursor) {
-//        String erkenningsnummer = cursor.getString(
-//                cursor.getColumnIndexOrThrow(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
-//        return erkenningsnummer;
-        return "";
+        String sollicitatienummer = cursor.getString(
+                cursor.getColumnIndexOrThrow(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
+        return sollicitatienummer;
+//        return "";
     }
 
     /**

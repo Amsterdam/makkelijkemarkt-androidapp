@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Aanwezig titles and values -->
+    <!-- Aanwezig keys and titles -->
+    <string-array name="array_aanwezig_key">
+        <item>zelf</item>
+        <item>partner</item>
+        <item>vervanger_met_toestemming</item>
+        <item>vervanger_zonder_toestemming</item>
+        <item>vervanger_met_ontheffing</item>
+    </string-array>
     <string-array name="array_aanwezig_title">
         <item>Zelf aanwezig</item>
         <item>Partner aanwezig</item>
@@ -9,28 +16,21 @@
         <item>Vervanger zonder toestemming aanwezig</item>
         <item>Vervanger met ontheffing aanwezig</item>
     </string-array>
-    <string-array name="array_aanwezig_value">
-        <item>zelf</item>
-        <item>partner</item>
-        <item>vervanger_met_toestemming</item>
-        <item>vervanger_zonder_toestemming</item>
-        <item>vervanger_met_ontheffing</item>
-    </string-array>
 
-    <!--Product titles, values, and column names -->
-    <string-array name="array_product_title">
-        <item>3m kramen</item>
-        <item>4m kramen</item>
-        <item>Extra meters</item>
-        <item>Elektra</item>
-        <item>Krachtstroom</item>
-    </string-array>
-    <string-array name="array_product_value">
+    <!--Product keys, titles, and column names -->
+    <string-array name="array_product_key">
         <item>3mKramen</item>
         <item>4mKramen</item>
         <item>extraMeters</item>
         <item>elektra</item>
         <item>krachtstroom</item>
+    </string-array>
+    <string-array name="array_product_title">
+        <item>3m plaatsen</item>
+        <item>4m plaatsen</item>
+        <item>Extra meters</item>
+        <item>Elektra</item>
+        <item>Krachtstroom</item>
     </string-array>
     <string-array name="array_product_column">
         <item>aantal3meter_kramen</item>

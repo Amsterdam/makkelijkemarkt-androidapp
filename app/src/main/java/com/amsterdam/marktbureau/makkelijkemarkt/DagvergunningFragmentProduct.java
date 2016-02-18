@@ -69,7 +69,7 @@ public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
             List<String> productList = Arrays.asList(producten.split(","));
             if (productList.size() > 0) {
 
-                String[] productValues = getResources().getStringArray(R.array.array_product_value);
+                String[] productKeys = getResources().getStringArray(R.array.array_product_key);
                 String[] productTitles = getResources().getStringArray(R.array.array_product_title);
 
                 // inflate the producten placeholder view
@@ -91,8 +91,8 @@ public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
 
                             // get the corresponding product title based on the productlist item value
                             String productTitle = "";
-                            for (int j = 0; j < productValues.length; j++) {
-                                if (productValues[j].equals(productList.get(i))) {
+                            for (int j = 0; j < productKeys.length; j++) {
+                                if (productKeys[j].equals(productList.get(i))) {
                                     productTitle = productTitles[j];
                                 }
                             }

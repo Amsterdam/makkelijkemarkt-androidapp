@@ -395,22 +395,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public void getKoopmanFragmentValues() {
         if (mKoopmanFragmentReady) {
 
-            // if the vaste producten have not been set based on an existing dagvergunning, get the vaste producten for selected markt
-            if (mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST) == -1) {
-                mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, mKoopmanFragment.mAantal3MeterKramenVast);
-            }
-            if (mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST) == -1) {
-                mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, mKoopmanFragment.mAantal4MeterKramenVast);
-            }
-            if (mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST) == -1) {
-                mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, mKoopmanFragment.mAantalExtraMetersVast);
-            }
-            if (mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST) == -1) {
-                mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, mKoopmanFragment.mAantalElektraVast);
-            }
-            if (mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST) == -1) {
-                mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, mKoopmanFragment.mKrachtstroomVast);
-            }
+            // get the vaste producten for selected koopman sollicitatie
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, mKoopmanFragment.mAantal3MeterKramenVast);
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, mKoopmanFragment.mAantal4MeterKramenVast);
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, mKoopmanFragment.mAantalExtraMetersVast);
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, mKoopmanFragment.mAantalElektraVast);
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, mKoopmanFragment.mKrachtstroomVast);
 
             // if the producten have not been manually set, set them from the vaste producten
             if (mProducten.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN) == -1) {
@@ -429,14 +419,28 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, mKoopmanFragment.mKrachtstroomVast);
             }
 
-            // get selected koopman id
+            // get koopman aanwezig selection
+            mKoopmanAanwezig = mKoopmanFragment.mAanwezigSelectedValue;
+
+            // get selected koopman
             if (mKoopmanFragment.mKoopmanId != -1) {
 
-                // if we are changing an existing dagvergunning, reset the registratie account and tijd
+                // if we are changing an previously selected koopman, reset the dagvergunning data
                 if (mKoopmanId != -1 && mKoopmanId != mKoopmanFragment.mKoopmanId) {
+
                     mRegistratieAccountId = -1;
                     mRegistratieAccountNaam = null;
                     mRegistratieDatumtijd = null;
+                    mTotaleLengte = -1;
+
+                    mKoopmanAanwezig = null;
+                    mKoopmanFragment.mAanwezigSpinner.setSelection(0);
+
+                    mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN, mKoopmanFragment.mAantal3MeterKramenVast);
+                    mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN, mKoopmanFragment.mAantal4MeterKramenVast);
+                    mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, mKoopmanFragment.mAantalExtraMetersVast);
+                    mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, mKoopmanFragment.mAantalElektraVast);
+                    mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, mKoopmanFragment.mKrachtstroomVast);
 
                     Utility.log(getContext(), LOG_TAG, "Koopman id changed from: " + mKoopmanId + " to: " + mKoopmanFragment.mKoopmanId);
                 }
@@ -446,14 +450,16 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                 Utility.log(getContext(), LOG_TAG, "Koopman id set: " + mKoopmanId);
             }
-
-            // get koopman aanwezig selection
-            mKoopmanAanwezig = mKoopmanFragment.mAanwezigSelectedValue;
         }
 
         Utility.log(getContext(), LOG_TAG, "getKoopmanFragmentValues called!");
     }
 
+    /**
+     * Get the values from the selected koopman in the koopman fragment, and populate the view with
+     * selected values. This is called using a activity callback when a(nother) koopman is selected
+     * in the koopman fragment
+     */
     public void getAndSetKoopmanFragmentValues() {
         getKoopmanFragmentValues();
         setKoopmanFragmentValues();
@@ -474,7 +480,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 List<String> productList = Arrays.asList(producten.split(","));
                 if (productList.size() > 0) {
 
-                    String[] productValues = getResources().getStringArray(R.array.array_product_value);
+                    String[] productKeys = getResources().getStringArray(R.array.array_product_key);
                     String[] productColumns = getResources().getStringArray(R.array.array_product_column);
 
                     // get the product fragment view, find the product count views, and set their text
@@ -485,10 +491,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             if (productView != null) {
                                 TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
 
-                                // map the productvalue to the productcolumn and get the value from the producten hashmap
+                                // map the productkey to the productcolumn and get the value from the producten hashmap
                                 String productColumn = "";
-                                for (int j = 0; j < productValues.length; j++) {
-                                    if (productValues[j].equals(productList.get(i))) {
+                                for (int j = 0; j < productKeys.length; j++) {
+                                    if (productKeys[j].equals(productList.get(i))) {
                                         productColumn = productColumns[j];
                                     }
                                 }
@@ -534,7 +540,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 List<String> productList = Arrays.asList(producten.split(","));
                 if (productList.size() > 0) {
 
-                    String[] productValues = getResources().getStringArray(R.array.array_product_value);
+                    String[] productKeys = getResources().getStringArray(R.array.array_product_key);
                     String[] productColumns = getResources().getStringArray(R.array.array_product_column);
 
                     // get the product fragment view, find the product count views, and get their values
@@ -548,8 +554,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                 Utility.log(getContext(), LOG_TAG, "Product count = " + productCount);
 
                                 String productColumn = "";
-                                for (int j = 0; j < productValues.length; j++) {
-                                    if (productValues[j].equals(productList.get(i))) {
+                                for (int j = 0; j < productKeys.length; j++) {
+                                    if (productKeys[j].equals(productList.get(i))) {
                                         productColumn = productColumns[j];
                                     }
                                 }
@@ -631,12 +637,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // koopman aanwezig status
             if (mKoopmanAanwezig != null) {
 
-                // get the corresponding aanwezig title from the resource array based on the aanwezig value
-                String[] aanwezigValues = getResources().getStringArray(R.array.array_aanwezig_value);
+                // get the corresponding aanwezig title from the resource array based on the aanwezig key
+                String[] aanwezigKeys = getResources().getStringArray(R.array.array_aanwezig_key);
                 String[] aanwezigTitles = getResources().getStringArray(R.array.array_aanwezig_title);
                 String aanwezigTitle = "";
-                for (int i = 0; i < aanwezigValues.length; i++) {
-                    if (aanwezigValues[i].equals(mKoopmanAanwezig)) {
+                for (int i = 0; i < aanwezigKeys.length; i++) {
+                    if (aanwezigKeys[i].equals(mKoopmanAanwezig)) {
                         aanwezigTitle = aanwezigTitles[i];
                     }
                 }
