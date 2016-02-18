@@ -115,7 +115,6 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
         String erkenningsnummer = cursor.getString(
                 cursor.getColumnIndexOrThrow(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
         return erkenningsnummer;
-//        return "";
     }
 
     /**

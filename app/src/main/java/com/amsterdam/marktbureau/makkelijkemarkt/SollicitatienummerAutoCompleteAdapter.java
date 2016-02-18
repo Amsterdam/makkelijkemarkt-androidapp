@@ -115,7 +115,6 @@ public class SollicitatienummerAutoCompleteAdapter extends CursorAdapter impleme
         String sollicitatienummer = cursor.getString(
                 cursor.getColumnIndexOrThrow(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
         return sollicitatienummer;
-//        return "";
     }
 
     /**

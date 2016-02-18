@@ -69,16 +69,11 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig_spinner) Spinner mAanwezigSpinner;
 
-    // adapters for querying for the erkenningsnummer and sollicitatienummer autocomplete
-    private ErkenningsnummerAutoCompleteAdapter mSearchErkenningsnummerAdapter;
-    private SollicitatienummerAutoCompleteAdapter mSearchSollicitatienummerAdapter;
-
     // koopman id
     public int mKoopmanId = -1;
 
     // string array and adapter for the aanwezig spinner
     private String[] mAanwezigKeys;
-    private ArrayAdapter<CharSequence> mAanwezigAdapter;
     String mAanwezigSelectedValue;
 
     // sollicitatie default producten data
@@ -147,13 +142,13 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
         };
 
         // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
-        mSearchErkenningsnummerAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
-        mErkenningsnummerEditText.setAdapter(mSearchErkenningsnummerAdapter);
+        ErkenningsnummerAutoCompleteAdapter searchErkenningAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
+        mErkenningsnummerEditText.setAdapter(searchErkenningAdapter);
         mErkenningsnummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
         // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
-        mSearchSollicitatienummerAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
-        mSollicitatienummerEditText.setAdapter(mSearchSollicitatienummerAdapter);
+        SollicitatienummerAutoCompleteAdapter searchSollicitatieAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
+        mSollicitatienummerEditText.setAdapter(searchSollicitatieAdapter);
         mSollicitatienummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
         // disable uppercasing of the button text
@@ -164,11 +159,11 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
         mAanwezigKeys = getResources().getStringArray(R.array.array_aanwezig_key);
 
         // populate the aanwezig spinner from a resource array with aanwezig titles
-        mAanwezigAdapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> aanwezigAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.array_aanwezig_title,
                 android.R.layout.simple_spinner_dropdown_item);
-        mAanwezigAdapter.setDropDownViewResource(android.R.layout.simple_list_item_activated_1);
-        mAanwezigSpinner.setAdapter(mAanwezigAdapter);
+        aanwezigAdapter.setDropDownViewResource(android.R.layout.simple_list_item_activated_1);
+        mAanwezigSpinner.setAdapter(aanwezigAdapter);
 
         return mainView;
     }
@@ -232,7 +227,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      * @param view autocomplete textview
      */
     private void showDropdown(AutoCompleteTextView view) {
-        if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() < view.getThreshold()) {
+        if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() >= view.getThreshold()) {
             view.showDropDown();
         } else {
             Utility.showToast(getContext(), mToast, getString(R.string.notice_autocomplete_minimum));
@@ -267,13 +262,8 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        Utility.log(getContext(), LOG_TAG, "onCreateLoader called..");
-
         // load the koopman with given id in the arguments bundle and where doorgehaald is false
         if (mKoopmanId != -1) {
-
-            Utility.log(getContext(), LOG_TAG, "and mKoopmanId IS set!");
-
             CursorLoader loader = new CursorLoader(getActivity());
             loader.setUri(MakkelijkeMarktProvider.mUriKoopmanJoined);
             loader.setSelection(
@@ -296,12 +286,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        Utility.log(getContext(), LOG_TAG, "onLoadFinished called..");
-
         if (data != null && data.moveToFirst()) {
-
-            Utility.log(getContext(), LOG_TAG, "and data NOT empty!");
 
             // get the markt id from the sharedprefs
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
