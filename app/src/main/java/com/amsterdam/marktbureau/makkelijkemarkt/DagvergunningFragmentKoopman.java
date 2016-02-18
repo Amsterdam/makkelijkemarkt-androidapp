@@ -49,11 +49,13 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     // unique id for the koopman loader
     private static final int KOOPMAN_LOADER = 5;
 
+    private static final String KOOPMAN_SELECTION_METHOD_HANDMATIG = "handmatig";
+    private static final String KOOPMAN_SELECTION_METHOD_SCAN_BARCODE = "scan-barcode";
+    private static final String KOOPMAN_SELECTION_METHOD_SCAN_NFC = "scan-nfc";
+
     // bind layout elements
     @Bind(R.id.search_erkenningsnummer) AutoCompleteTextView mErkenningsnummerEditText;
-    @Bind(R.id.search_erkenningsnummer_button) ImageButton mErkenningsnummerButton;
     @Bind(R.id.search_sollicitatienummer) AutoCompleteTextView mSollicitatienummerEditText;
-    @Bind(R.id.search_sollicitatienummer_button) ImageButton mSollicitatienummerButton;
     @Bind(R.id.scan_barcode_button) Button mScanBarcodeButton;
     @Bind(R.id.scan_nfctag_button) Button mScanNfcTagButton;
     @Bind(R.id.koopman_detail) LinearLayout mKoopmanDetail;
@@ -71,6 +73,12 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
 
     // koopman id
     public int mKoopmanId = -1;
+
+    // koopman erkenningsnummer
+    public String mErkenningsnummer;
+
+    // keep track of how we selected the koopman
+    public String mKoopmanSelectionMethod;
 
     // string array and adapter for the aanwezig spinner
     private String[] mAanwezigKeys;
@@ -123,7 +131,8 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                 Cursor koopman = (Cursor) parent.getAdapter().getItem(position);
                 mKoopmanId = koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID));
 
-                Utility.log(getContext(), LOG_TAG, "Koopman selected: " + String.valueOf(mKoopmanId));
+                // set the koopman selection method to handmatig
+                mKoopmanSelectionMethod = KOOPMAN_SELECTION_METHOD_HANDMATIG;
 
                 // reset the default amount of products before loading the koopman
                 mAantal3MeterKramenVast = -1;
@@ -132,8 +141,8 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                 mAantalElektraVast = -1;
                 mKrachtstroomVast = -1;
 
-                // inform the dagvergunningfragment that the koopman has changed and populate
-                // with the new koopman
+                // inform the dagvergunningfragment that the koopman has changed, get the new values,
+                // and populate our layout with the new koopman
                 ((Callback) getActivity()).onKoopmanFragmentUpdated();
 
                 // hide the keyboard on item selection
@@ -317,8 +326,8 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
             mKoopmanVoorlettersAchternaamText.setText(naam);
 
             // koopman erkenningsnummer
-            String erkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
-            mErkenningsnummerText.setText(erkenningsnummer);
+            mErkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
+            mErkenningsnummerText.setText(mErkenningsnummer);
 
             // koopman sollicitaties
             View view = getView();

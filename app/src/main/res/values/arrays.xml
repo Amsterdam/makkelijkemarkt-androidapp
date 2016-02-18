@@ -17,7 +17,7 @@
         <item>Vervanger met ontheffing aanwezig</item>
     </string-array>
 
-    <!--Product keys, titles, and column names -->
+    <!--Product keys, titles, db column, and payload param names -->
     <string-array name="array_product_key">
         <item>3mKramen</item>
         <item>4mKramen</item>
@@ -37,6 +37,13 @@
         <item>aantal4meter_kramen</item>
         <item>extra_meters</item>
         <item>aantal_elektra</item>
+        <item>krachtstroom</item>
+    </string-array>
+    <string-array name="array_product_param">
+        <item>aantal3MeterKramen</item>
+        <item>aantal4MeterKramen</item>
+        <item>extraMeters</item>
+        <item>aantalElektra</item>
         <item>krachtstroom</item>
     </string-array>
 

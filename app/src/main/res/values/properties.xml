@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
-    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
-
     <string name="date_format_datumtijd" translatable="false">"yyyy-MM-dd HH:mm:ss"</string>
     <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
     <string name="date_format_tijd" translatable="false">HH:mm</string>
@@ -15,5 +10,49 @@
 
     <integer name="erkenningsnummer_maxlength">10</integer>
     <integer name="sollicitatienummer_maxlength">5</integer>
+
+    <string name="sharedpreferences_key_uuid" translatable="false">uuid</string>
+    <string name="sharedpreferences_key_account_id" translatable="false">accountId</string>
+    <string name="sharedpreferences_key_account_naam" translatable="false">accountNaam</string>
+    <string name="sharedpreferences_key_markt_id" translatable="false">marktId</string>
+    <string name="sharedpreferences_key_markt_naam" translatable="false">marktNaam</string>
+    <string name="sharedpreferences_key_markt_producten" translatable="false">marktProducten</string>
+    <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
+
+    <string name="sollicitatie_status_soll" translatable="false">soll</string>
+    <string name="sollicitatie_status_lot" translatable="false">lot</string>
+    <string name="sollicitatie_status_vpl" translatable="false">vpl</string>
+    <string name="sollicitatie_status_vkk" translatable="false">vkk</string>
+
+    <string name="koopman_status_verwijderd" translatable="false">Verwijderd</string>
+
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
+    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/</string>
+
+    <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
+    <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
+    <string name="makkelijkemarkt_api_authorization_header_name" translatable="false">Authorization</string>
+    <string name="makkelijkemarkt_api_authorization_header_prefix" translatable="false">Bearer</string>
+
+    <string name="makkelijkemarkt_api_login_payload_accound_id_name" translatable="false">accountId</string>
+    <string name="makkelijkemarkt_api_login_payload_password_name" translatable="false">password</string>
+    <string name="makkelijkemarkt_api_login_payload_device_uuid_name" translatable="false">deviceUuid</string>
+    <string name="makkelijkemarkt_api_login_payload_client_app_name" translatable="false">clientApp</string>
+    <string name="makkelijkemarkt_api_login_payload_client_version_name" translatable="false">clientVersion</string>
+
+    <string name="makkelijkemarkt_api_dagvergunning_query_param_markt_id" translatable="false">marktId</string>
+    <string name="makkelijkemarkt_api_dagvergunning_query_param_dag" translatable="false">dag</string>
+
+    <string name="makkelijkemarkt_api_dagvergunning_payload_markt_id" translatable="false">marktId</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_dag" translatable="false">dag</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer" translatable="false">erkenningsnummer</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer_invoer_methode" translatable="false">erkenningsnummerInvoerMethode</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_aanwezig" translatable="false">aanwezig</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_notitie" translatable="false">notitie</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd" translatable="false">registratieDatumtijd</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie" translatable="false">registratieGeolocatie</string>
+
 
 </resources>

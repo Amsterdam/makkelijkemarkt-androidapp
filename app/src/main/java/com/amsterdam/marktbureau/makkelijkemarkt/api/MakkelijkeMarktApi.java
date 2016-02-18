@@ -64,6 +64,14 @@ public interface MakkelijkeMarktApi {
     Call<List<ApiDagvergunning>> getDagvergunningen(@Query("marktId") String marktId, @Query("dag") String dag);
 
     /**
+     * Post a new dagvergunning
+     * @param dagvergunning a gson object containing the dagvergunning values
+     * @return a gson object containing the result
+     */
+    @POST("dagvergunning/")
+    Call<JsonObject> postDagvergunning(@Body JsonObject dagvergunning);
+
+    /**
      * Get a koopman object, including sollicitaties, from the api
      * @param erkenningsnummer the erkenningsnummer as a path segment parameter
      * @return an ApiKoopman object

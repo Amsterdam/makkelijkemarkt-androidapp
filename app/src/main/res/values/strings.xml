@@ -25,17 +25,8 @@
     <string name="label_notitie">Opmerking</string>
     <string name="label_barcode_scannen">Barcode Scannen</string>
     <string name="label_nfc_scannen">NFC Scannen</string>
-    <string name="sollicitatie_status_soll" translatable="false">soll</string>
-    <string name="sollicitatie_status_lot" translatable="false">lot</string>
-    <string name="sollicitatie_status_vpl" translatable="false">vpl</string>
-    <string name="sollicitatie_status_vkk" translatable="false">vkk</string>
-    <string name="koopman_status_verwijderd" translatable="false">Verwijderd</string>
-    <string name="erkenningsnummer_hint">Erkenningsnummer</string>
-    <string name="sollicitatienummer_hint">Sollicitatienummer</string>
-
-
-    <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
-
+    <string name="hint_erkenningsnummer">Erkenningsnummer</string>
+    <string name="hint_sollicitatienummer">Sollicitatienummer</string>
 
     <string name="notice_login_enter_password">Please enter your password</string>
     <string name="notice_login_password_invalid">Invalid password</string>
@@ -44,28 +35,6 @@
     <string name="notice_koopman_verwijderd">Let op: Koopman Verwijderd!</string>
     <string name="notice_autocomplete_minimum">Enter a query of at least 2 digits</string>
 
-
-    <string name="sharedpreferences_key_uuid" translatable="false">uuid</string>
-    <string name="sharedpreferences_key_account_id" translatable="false">accountId</string>
-    <string name="sharedpreferences_key_account_naam" translatable="false">accountNaam</string>
-    <string name="sharedpreferences_key_markt_id" translatable="false">marktId</string>
-    <string name="sharedpreferences_key_markt_naam" translatable="false">marktNaam</string>
-    <string name="sharedpreferences_key_markt_producten" translatable="false">marktProducten</string>
-    <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
-
-
-    <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
-    <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
-    <string name="makkelijkemarkt_api_authorization_header_name" translatable="false">Authorization</string>
-    <string name="makkelijkemarkt_api_authorization_header_prefix" translatable="false">Bearer</string>
-
-    <string name="makkelijkemarkt_api_login_payload_accound_id_name" translatable="false">accountId</string>
-    <string name="makkelijkemarkt_api_login_payload_password_name" translatable="false">password</string>
-    <string name="makkelijkemarkt_api_login_payload_device_uuid_name" translatable="false">deviceUuid</string>
-    <string name="makkelijkemarkt_api_login_payload_client_app_name" translatable="false">clientApp</string>
-    <string name="makkelijkemarkt_api_login_payload_client_version_name" translatable="false">clientVersion</string>
-
-    <string name="makkelijkemarkt_api_dagvergunning_query_param_markt_id" translatable="false">marktId</string>
-    <string name="makkelijkemarkt_api_dagvergunning_query_param_dag" translatable="false">dag</string>
+    <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 
 </resources>

@@ -513,6 +513,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         HashMap<String, String> columnMap = new HashMap<>();
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ID, "_id"));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REGISTRATIE_DATUMTIJD, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_TOTALE_LENGTE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_STATUS_SOLLICITATIE, null));
