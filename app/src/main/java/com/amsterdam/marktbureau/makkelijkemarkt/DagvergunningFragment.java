@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.text.DateFormat;
@@ -102,6 +104,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private int mRegistratieAccountId = -1;
     private String mRegistratieAccountNaam;
     private String mRegistratieDatumtijd;
+    private double mRegistratieGeolocatieLatitude = -1;
+    private double mRegistratieGeolocatieLongitude = -1;
 
     // environment data
     private int mActiveAccountId = -1;
@@ -109,10 +113,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private String mDagToday;
 
     // dagvergunning product data
-    private Map<String, Integer> mProducten = new HashMap<String, Integer>();
+    private Map<String, Integer> mProducten = new HashMap<>();
 
     // sollicitatie default product data
-    private Map<String, Integer> mProductenVast = new HashMap<String, Integer>();
+    private Map<String, Integer> mProductenVast = new HashMap<>();
 
     // common toast object
     protected Toast mToast;
@@ -268,6 +272,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mErkenningsnummer = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE);
             mErkenningsnummerInvoerMethode = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE);
             mRegistratieDatumtijd = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD);
+            mRegistratieGeolocatieLatitude = savedInstanceState.getDouble(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT);
+            mRegistratieGeolocatieLongitude = savedInstanceState.getDouble(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LONG);
             mTotaleLengte = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE);
             mSollicitatieStatus = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE);
             mKoopmanAanwezig = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG);
@@ -326,6 +332,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, mErkenningsnummer);
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE, mErkenningsnummerInvoerMethode);
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD, mRegistratieDatumtijd);
+        outState.putDouble(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT, mRegistratieGeolocatieLatitude);
+        outState.putDouble(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LONG, mRegistratieGeolocatieLongitude);
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE, mTotaleLengte);
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE, mSollicitatieStatus);
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG, mKoopmanAanwezig);
@@ -535,7 +543,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             if (productView != null) {
                                 TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
 
-                                // TODO: populate on/off switch instead in/decrease field for krachtstroom and reiniging
+                                // TODO: populate on/off switch instead in/decrease field for krachtstroom and reiniging products
 
                                 // map the productkey to the productcolumn and get the value from the producten hashmap
                                 String productColumn = "";
@@ -721,7 +729,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             String[] productParams = getResources().getStringArray(R.array.array_product_param);
             String[] productColumns = getResources().getStringArray(R.array.array_product_column);
             for (int i = 0; i < productParams.length; i++) {
-                if (mProducten.get(productColumns[i]) > -1) {
+                if (mProducten.get(productColumns[i]) > 0) {
                     productSelected = true;
                     dagvergunningPayload.addProperty(productParams[i], mProducten.get(productColumns[i]));
                 }
@@ -731,16 +739,18 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             if (mErkenningsnummer == null) {
 
                 // geen koopman geselecteerd
-                Utility.showToast(getContext(), mToast, "Selecteer een koopman");
+                switchTab(0);
+                Utility.showToast(getContext(), mToast, "Selecteer eerst een koopman");
 
             } else if (!productSelected) {
 
                 // geen product geselecteerd
+                switchTab(1);
                 Utility.showToast(getContext(), mToast, "Selecteer minimaal 1 product");
 
             } else {
 
-                // complete json payload
+                // complete the json payload for the post request
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_markt_id), mMarktId);
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_dag), mDagToday);
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer), mErkenningsnummer);
@@ -757,8 +767,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 DateFormat datumtijdFormat = new SimpleDateFormat(getString(R.string.date_format_datumtijd));
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd), String.valueOf(datumtijdFormat.format(new Date())));
 
-                // TODO: get the location from gps
-//                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), );
+                // add the location from gps
+                if (mRegistratieGeolocatieLatitude != -1 && mRegistratieGeolocatieLongitude != -1) {
+                    JsonArray geolocation = new JsonArray();
+                    geolocation.add(mRegistratieGeolocatieLatitude);
+                    geolocation.add(mRegistratieGeolocatieLongitude);
+                    dagvergunningPayload.add(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), geolocation);
+                }
 
                 // create a post request and add the dagvergunning details as json
                 ApiPostDagvergunning postDagvergunning = new ApiPostDagvergunning(getContext());
@@ -769,13 +784,11 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         if (response.isSuccess() && response.body() != null) {
                             Utility.log(getContext(), LOG_TAG, "Response: " + response.body().toString());
 
-                            // TODO: get resulting dagvergunning from response and save it to the database
+                            // TODO: get resulting dagvergunning as Apifrom response and save it to the database
                             // TODO: Redirect back to dagvergunningen activity
 
                         } else {
-
                             Utility.showToast(getContext(), mToast, "Er is iets mis gegaan bij het opslaan, probeer het nog een keer");
-
                         }
                     }
                     @Override
@@ -870,6 +883,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         populateOverzichtFragment();
     }
 
+    public void setRegistratieGeoLocatie(Location location) {
+        if (location != null) {
+            mRegistratieGeolocatieLatitude = location.getLatitude();
+            mRegistratieGeolocatieLongitude = location.getLongitude();
+        }
+    }
+
     /**
      * When switching tabs get (current tab) and set (new tab) fragment values and update the
      * tabmenu and wizardmenu to the new state
@@ -930,6 +950,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mWizardNextButton.setVisibility(View.VISIBLE);
                 mWizardNextButton.setBackgroundColor(activeBackgroundColor);
                 mWizardNextButton.setText(getString(R.string.overzicht));
+                if (rightDrawable != null) {
+                    rightDrawable.setBounds(nextButtonRightDrawable.getBounds());
+                    mWizardNextButton.setCompoundDrawables(null, null, rightDrawable, null);
+                }
                 break;
 
             // overzicht tab
@@ -1016,6 +1040,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mErkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE));
             mErkenningsnummerInvoerMethode = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE));
             mRegistratieDatumtijd = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD));
+            mRegistratieGeolocatieLatitude = data.getDouble(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT));
+            mRegistratieGeolocatieLongitude = data.getDouble(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LONG));
             mTotaleLengte = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE));
             mSollicitatieStatus = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE));
             mKoopmanAanwezig = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG));
