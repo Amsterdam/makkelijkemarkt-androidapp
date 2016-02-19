@@ -24,6 +24,7 @@
         <item>extraMeters</item>
         <item>elektra</item>
         <item>krachtstroom</item>
+        <item>reiniging</item>
     </string-array>
     <string-array name="array_product_title">
         <item>3m plaatsen</item>
@@ -31,6 +32,7 @@
         <item>Extra meters</item>
         <item>Elektra</item>
         <item>Krachtstroom</item>
+        <item>Reiniging</item>
     </string-array>
     <string-array name="array_product_column">
         <item>aantal3meter_kramen</item>
@@ -38,6 +40,7 @@
         <item>extra_meters</item>
         <item>aantal_elektra</item>
         <item>krachtstroom</item>
+        <item>reiniging</item>
     </string-array>
     <string-array name="array_product_param">
         <item>aantal3MeterKramen</item>
@@ -45,6 +48,7 @@
         <item>extraMeters</item>
         <item>aantalElektra</item>
         <item>krachtstroom</item>
+        <item>reiniging</item>
     </string-array>
 
 </resources>

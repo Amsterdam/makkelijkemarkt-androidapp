@@ -35,6 +35,7 @@ public class ApiDagvergunning {
     private int totaleLengteVast;
     private int aantalElektraVast;
     private boolean krachtstroomVast;
+    private boolean reinigingVast;
     private String status;
     private String registratieDatumtijd;
     private List<Float> registratieGeolocatie = new ArrayList<Float>();
@@ -314,6 +315,20 @@ public class ApiDagvergunning {
     /**
      * @return
      */
+    public boolean isReinigingVast() {
+        return reinigingVast;
+    }
+
+    /**
+     * @param reinigingVast
+     */
+    public void setReinigingVast(boolean reinigingVast) {
+        this.reinigingVast = reinigingVast;
+    }
+
+    /**
+     * @return
+     */
     public String getStatus() {
         return status;
     }
@@ -463,6 +478,7 @@ public class ApiDagvergunning {
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE_VAST, getTotaleLengteVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, getAantalElektraVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, isKrachtstroomVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, isReinigingVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE, getStatus());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD, getRegistratieDatumtijd());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD, getAanmaakDatumtijd());

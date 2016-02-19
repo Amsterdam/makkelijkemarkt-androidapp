@@ -90,6 +90,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     int mAantalExtraMetersVast = -1;
     int mAantalElektraVast = -1;
     int mKrachtstroomVast = -1;
+    int mReinigingVast = -1;
 
     // common toast object
     protected Toast mToast;
@@ -140,6 +141,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                 mAantalExtraMetersVast = -1;
                 mAantalElektraVast = -1;
                 mKrachtstroomVast = -1;
+                mReinigingVast = -1;
 
                 // inform the dagvergunningfragment that the koopman has changed, get the new values,
                 // and populate our layout with the new koopman
@@ -346,6 +348,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
                         mAantalExtraMetersVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS));
                         mAantalElektraVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA));
                         mKrachtstroomVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM));
+                        mReinigingVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_REINIGING));
                     }
 
                     // inflate sollicitatie layout and populate its view items

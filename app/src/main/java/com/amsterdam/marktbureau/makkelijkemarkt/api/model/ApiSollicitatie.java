@@ -26,6 +26,7 @@ public class ApiSollicitatie {
     private int aantalExtraMeters;
     private int aantalElektra;
     private boolean krachtstroom;
+    private boolean reiniging;
     private boolean doorgehaald;
     private String doorgehaaldReden;
     private int koopmanId;
@@ -168,6 +169,20 @@ public class ApiSollicitatie {
     /**
      * @return
      */
+    public boolean isReiniging() {
+        return reiniging;
+    }
+
+    /**
+     * @param reiniging
+     */
+    public void setReiniging(boolean reiniging) {
+        this.reiniging = reiniging;
+    }
+
+    /**
+     * @return
+     */
     public boolean isDoorgehaald() {
         return doorgehaald;
     }
@@ -253,6 +268,7 @@ public class ApiSollicitatie {
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS, getAantalExtraMeters());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA, getAantalElektra());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM, isKrachtstroom());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_REINIGING, isReiniging());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KOOPMAN_ID, getKoopmanId());
 
         if (getMarkt() != null) {

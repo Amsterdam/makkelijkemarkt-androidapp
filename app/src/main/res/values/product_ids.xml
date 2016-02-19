@@ -7,5 +7,6 @@
     <item name="product_extraMeters" type="id"/>
     <item name="product_elektra" type="id"/>
     <item name="product_krachtstroom" type="id"/>
+    <item name="product_reiniging" type="id"/>
 
 </resources>

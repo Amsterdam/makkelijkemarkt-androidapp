@@ -85,6 +85,8 @@ public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
                         int id = Utility.getResId("product_" + productList.get(i), R.id.class);
                         if (id != -1) {
 
+                            // TODO: create on/off switch instead in/decrease field for krachtstroom and reiniging
+
                             // get the product item layout
                             View childLayout = layoutInflater.inflate(R.layout.dagvergunning_product_item, null);
                             childLayout.setId(id);

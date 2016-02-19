@@ -217,6 +217,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KRACHTSTROOM = "krachtstroom";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_REINIGING = "reiniging";
     }
 
     /**
@@ -305,6 +308,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KRACHTSTROOM_VAST = "krachtstroom_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_REINIGING_VAST = "reiniging_vast";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AANTAL3METER_KRAMEN = "aantal3meter_kramen";
@@ -529,7 +535,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_KRACHTSTROOM, "dagvergunning_krachtstroom"));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_KRACHTSTROOM_VAST, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_NOTITIE, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REINIGING, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REINIGING, "dagvergunning_reiniging"));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REINIGING_VAST, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "koopman_koopman_id"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
@@ -585,6 +592,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_EXTRA_METERS, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_ELEKTRA, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_KRACHTSTROOM, null));
+        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_REINIGING, null));
         columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_ID, "markt_markt_id"));
         columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_AFKORTING, null));
         koopmanJoinedQueryBuilder.setProjectionMap(columnMap);

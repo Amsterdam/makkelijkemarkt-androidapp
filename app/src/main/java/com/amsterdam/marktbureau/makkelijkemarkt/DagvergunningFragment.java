@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
@@ -112,6 +113,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
     // sollicitatie default product data
     private Map<String, Integer> mProductenVast = new HashMap<String, Integer>();
+
+    // common toast object
+    protected Toast mToast;
 
     /**
      * Constructor
@@ -220,6 +224,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, -1);
         mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, -1);
         mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, -1);
+        mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, -1);
 
         // get settings from the shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -285,6 +290,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST));
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST));
             mNotitie = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE);
 
             // select tab of viewpager from saved fragment state
@@ -342,6 +348,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST));
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST));
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST));
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, mProductenVast.get(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST));
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE, mNotitie);
 
         // save viewpager state
@@ -421,6 +428,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, mKoopmanFragment.mAantalExtraMetersVast);
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, mKoopmanFragment.mAantalElektraVast);
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, mKoopmanFragment.mKrachtstroomVast);
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, mKoopmanFragment.mReinigingVast);
 
             // if the producten have not been manually set, set them from the vaste producten
             if (mProducten.get(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN) == -1) {
@@ -437,6 +445,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             }
             if (mProducten.get(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM) == -1) {
                 mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, mKoopmanFragment.mKrachtstroomVast);
+            }
+            if (mProducten.get(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING) == -1) {
+                mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, mKoopmanFragment.mReinigingVast);
             }
 
             // get koopman aanwezig selection
@@ -464,6 +475,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, mKoopmanFragment.mAantalExtraMetersVast);
                         mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, mKoopmanFragment.mAantalElektraVast);
                         mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, mKoopmanFragment.mKrachtstroomVast);
+                        mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, mKoopmanFragment.mReinigingVast);
                     }
 
                     Utility.log(getContext(), LOG_TAG, "Koopman id changed from: " + mKoopmanId + " to: " + mKoopmanFragment.mKoopmanId);
@@ -522,6 +534,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             View productView = fragmentView.findViewById(Utility.getResId("product_" + productList.get(i), R.id.class));
                             if (productView != null) {
                                 TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
+
+                                // TODO: populate on/off switch instead in/decrease field for krachtstroom and reiniging
 
                                 // map the productkey to the productcolumn and get the value from the producten hashmap
                                 String productColumn = "";
@@ -700,46 +714,41 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         // save new dagvergunning
         if (mId == -1) {
 
-            // TODO: Check if all required data is available, and show a toast if not
+            boolean productSelected = false;
+            JsonObject dagvergunningPayload = new JsonObject();
 
-            // TODO: POST save new dagvergunning:
-            // marktId: 16
-            // dag: "2016-02-18"
-            // aantal3MeterKramen: "1"
-            // aantal4MeterKramen: "2"
-            // aantalElektra: "3"
-            // extraMeters: 0
-            // krachtstroom: false
-            // reiniging: false TODO: add the reiniging product (find krachtstroom and and copy)
-            // erkenningsnummer: "1993030301"
-            // erkenningsnummerInvoerMethode: "handmatig"
-            // aanwezig: "partner"
-            // notitie: "mijn opmerking"
-            // registratieDatumtijd: "2016-02-18 13:56:52"
-            // registratieGeolocatie:
+            // get product values (and check if at least one product is selected)
+            String[] productParams = getResources().getStringArray(R.array.array_product_param);
+            String[] productColumns = getResources().getStringArray(R.array.array_product_column);
+            for (int i = 0; i < productParams.length; i++) {
+                if (mProducten.get(productColumns[i]) > -1) {
+                    productSelected = true;
+                    dagvergunningPayload.addProperty(productParams[i], mProducten.get(productColumns[i]));
+                }
+            }
 
-            // prepare the json payload for the post request
-            if (mErkenningsnummer != null) {
-                JsonObject dagvergunningPayload = new JsonObject();
+            // check if all required data is available, and show a toast if not
+            if (mErkenningsnummer == null) {
+
+                // geen koopman geselecteerd
+                Utility.showToast(getContext(), mToast, "Selecteer een koopman");
+
+            } else if (!productSelected) {
+
+                // geen product geselecteerd
+                Utility.showToast(getContext(), mToast, "Selecteer minimaal 1 product");
+
+            } else {
+
+                // complete json payload
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_markt_id), mMarktId);
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_dag), mDagToday);
-
-                // TODO: convert certain products to type boolean (if needed)
-                String[] productParams = getResources().getStringArray(R.array.array_product_param);
-                String[] productColumns = getResources().getStringArray(R.array.array_product_column);
-                for (int i = 0; i < productParams.length; i++) {
-                    if (mProducten.get(productColumns[i]) != -1) {
-                        dagvergunningPayload.addProperty(productParams[i], mProducten.get(productColumns[i]));
-                    }
-                }
-
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer), mErkenningsnummer);
+                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_aanwezig), mKoopmanAanwezig);
 
                 if (mErkenningsnummerInvoerMethode != null) {
                     dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer_invoer_methode), mErkenningsnummerInvoerMethode);
                 }
-
-                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_aanwezig), mKoopmanAanwezig);
 
                 if (mNotitie != null && !mNotitie.equals("")) {
                     dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_notitie), mNotitie);
@@ -747,8 +756,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                 DateFormat datumtijdFormat = new SimpleDateFormat(getString(R.string.date_format_datumtijd));
                 dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd), String.valueOf(datumtijdFormat.format(new Date())));
-
-//                Utility.log(getContext(), LOG_TAG, dagvergunningPayload.toString());
 
                 // TODO: get the location from gps
 //                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), );
@@ -767,15 +774,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                         } else {
 
-                            // TODO: Show a toast if response is not success
+                            Utility.showToast(getContext(), mToast, "Er is iets mis gegaan bij het opslaan, probeer het nog een keer");
 
                         }
                     }
                     @Override
                     public void onFailure(Throwable t) {
-                        Utility.log(getContext(), LOG_TAG, "onFailure message: "+ t.getMessage());
-
-                        // TODO: Show a toast if something went wrong
+                        Utility.showToast(getContext(), mToast, "Er is iets mis gegaan bij het opslaan, probeer het nog een keer");
                     }
                 });
             }
@@ -1027,12 +1032,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS)));
             mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, data.getInt(data.getColumnIndex("dagvergunning_aantal_elektra")));
             mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, data.getInt(data.getColumnIndex("dagvergunning_krachtstroom")));
-            mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING)));
+            mProducten.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, data.getInt(data.getColumnIndex("dagvergunning_reiniging")));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST)));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST)));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST)));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST)));
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST)));
+            mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST)));
             mNotitie = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE));
 
             // update the view elements of the currently selected tab
