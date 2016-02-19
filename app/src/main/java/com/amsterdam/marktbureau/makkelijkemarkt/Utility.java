@@ -167,10 +167,15 @@ public class Utility {
         view.setLayoutParams(lp);
     }
 
-    public static int getResId(String resName, Class<?> c) {
-
+    /**
+     * Get a resource id from a resource name and type
+     * @param name The name of the resource as a string
+     * @param type the type of resource (R.id.class, etc.)
+     * @return a unique id as an int
+     */
+    public static int getResId(String name, Class<?> type) {
         try {
-            Field idField = c.getDeclaredField(resName);
+            Field idField = type.getDeclaredField(name);
             return idField.getInt(idField);
         } catch (Exception e) {
             return -1;

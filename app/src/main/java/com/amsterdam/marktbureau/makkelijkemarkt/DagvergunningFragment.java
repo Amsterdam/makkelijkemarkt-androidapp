@@ -6,17 +6,20 @@ package com.amsterdam.marktbureau.makkelijkemarkt;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +39,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -59,6 +63,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     @Bind(R.id.dagvergunning_meldingen_container) LinearLayout mMeldingenContainer;
     @Bind(R.id.dagvergunning_meldingen) LinearLayout mMeldingenPlaceholder;
     @Bind(R.id.dagvergunning_pager) ViewPager mViewPager;
+    @Bind(R.id.wizard_previous) Button mWizardPreviousButton;
+    @Bind(R.id.wizard_next) Button mWizardNextButton;
 
     // unique id for the dagvergunning loader
     private static final int DAGVERGUNNING_LOADER = 4;
@@ -138,13 +144,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                // get the possibly changed values from the currently active pager fragment before switching pages
-                getFragmentValuesByPosition(mCurrentTab);
-
-                // get new tab position and switch to new fragment in viewpager and populate it
-                mCurrentTab = tab.getPosition();
-                mViewPager.setCurrentItem(mCurrentTab);
-                setFragmentValuesByPosition(mCurrentTab);
+                // switch to the new tab
+                switchTab(tab.getPosition());
 
                 // prevent the keyboard from popping up on pager fragment load
                 Utility.hideKeyboard(getActivity());
@@ -189,6 +190,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mViewPager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+        // disable upper-casing the wizard menu buttons
+        mWizardPreviousButton.setTransformationMethod(null);
+        mWizardNextButton.setTransformationMethod(null);
 
         return view;
     }
@@ -289,6 +294,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             Utility.log(getContext(), LOG_TAG, "State restored!");
         }
+
+        // set the right wizard menu depending on the current tab position
+        setWizardMenu(mCurrentTab);
 
         // prevent the keyboard from popping up on first pager fragment load
         Utility.hideKeyboard(getActivity());
@@ -680,25 +688,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // TODO: from the response, populate the product section of the overzicht fragment
 
 
-
-
-
-
-
-
-            saveDagvergunning();
-
-
-
-
-
-
-
-
-
-
-
-
             Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
         }
     }
@@ -708,10 +697,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      */
     private void saveDagvergunning() {
 
-        // TODO: Check if all required data is available, and show a toast if not
-
         // save new dagvergunning
         if (mId == -1) {
+
+            // TODO: Check if all required data is available, and show a toast if not
 
             // TODO: POST save new dagvergunning:
             // marktId: 16
@@ -772,17 +761,29 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     public void onResponse(Response response) {
                         if (response.isSuccess() && response.body() != null) {
                             Utility.log(getContext(), LOG_TAG, "Response: " + response.body().toString());
+
+                            // TODO: get resulting dagvergunning from response and save it to the database
+                            // TODO: Redirect back to dagvergunningen activity
+
+                        } else {
+
+                            // TODO: Show a toast if response is not success
+
                         }
                     }
                     @Override
                     public void onFailure(Throwable t) {
                         Utility.log(getContext(), LOG_TAG, "onFailure message: "+ t.getMessage());
+
+                        // TODO: Show a toast if something went wrong
                     }
                 });
             }
 
         } else {
-            
+
+            // TODO: Check if all required data is available, and show a toast if not
+
             // update existing dagvergunning
             // TODO: PUT existing dagvergunning:
 
@@ -862,6 +863,110 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public void overzichtFragmentReady() {
         mOverzichtFragmentReady = true;
         populateOverzichtFragment();
+    }
+
+    /**
+     * When switching tabs get (current tab) and set (new tab) fragment values and update the
+     * tabmenu and wizardmenu to the new state
+     * @param newTabPosition the new tab position
+     */
+    public void switchTab(int newTabPosition) {
+
+        // get the possibly changed values from the currently active pager fragment before switching pages
+        getFragmentValuesByPosition(mCurrentTab);
+
+        // get new tab position and switch to new fragment in viewpager and populate it
+        mCurrentTab = newTabPosition;
+        mViewPager.setCurrentItem(mCurrentTab);
+        setFragmentValuesByPosition(mCurrentTab);
+
+        setWizardMenu(newTabPosition);
+    }
+
+    /**
+     * Set the state of the buttons of the wizard menu depending on the selected tab
+     * @param tabPosition position of the tab
+     */
+    public void setWizardMenu(int tabPosition) {
+
+        // button background colors
+        int activeBackgroundColor = ContextCompat.getColor(getContext(), R.color.accent);
+        int inActiveBackgroundColor = ContextCompat.getColor(getContext(), android.R.color.white);
+
+        // button icons
+        Drawable rightDrawable = ContextCompat.getDrawable(getContext(), R.drawable.chevron_right_primary_dark);
+        Drawable checkDrawable = ContextCompat.getDrawable(getContext(), R.drawable.check_primary_dark);
+
+        // get next button right drawable bounds
+        Drawable[] nextButtonDrawables = mWizardNextButton.getCompoundDrawables();
+        Drawable nextButtonRightDrawable = nextButtonDrawables[2];
+
+        switch (tabPosition) {
+
+            // koopman tab
+            case 0:
+                mWizardPreviousButton.setVisibility(View.INVISIBLE);
+                mWizardPreviousButton.setBackgroundColor(inActiveBackgroundColor);
+                mWizardPreviousButton.setText("");
+                mWizardNextButton.setVisibility(View.VISIBLE);
+                mWizardNextButton.setBackgroundColor(activeBackgroundColor);
+                mWizardNextButton.setText(getString(R.string.product));
+                if (rightDrawable != null) {
+                    rightDrawable.setBounds(nextButtonRightDrawable.getBounds());
+                    mWizardNextButton.setCompoundDrawables(null, null, rightDrawable, null);
+                }
+                break;
+
+            // product tab
+            case 1:
+                mWizardPreviousButton.setVisibility(View.VISIBLE);
+                mWizardPreviousButton.setBackgroundColor(inActiveBackgroundColor);
+                mWizardPreviousButton.setText(getString(R.string.koopman));
+                mWizardNextButton.setVisibility(View.VISIBLE);
+                mWizardNextButton.setBackgroundColor(activeBackgroundColor);
+                mWizardNextButton.setText(getString(R.string.overzicht));
+                break;
+
+            // overzicht tab
+            case 2:
+                mWizardPreviousButton.setVisibility(View.VISIBLE);
+                mWizardPreviousButton.setBackgroundColor(inActiveBackgroundColor);
+                mWizardPreviousButton.setText(getString(R.string.product));
+                mWizardNextButton.setVisibility(View.VISIBLE);
+                mWizardNextButton.setBackgroundColor(activeBackgroundColor);
+                mWizardNextButton.setText(getString(R.string.label_opslaan));
+                if (checkDrawable != null) {
+                    checkDrawable.setBounds(nextButtonRightDrawable.getBounds());
+                    mWizardNextButton.setCompoundDrawables(null, null, checkDrawable, null);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * On click on the previous-button, switch to the previous step
+     */
+    @OnClick(R.id.wizard_previous)
+    public void goToPrevious() {
+        if (mCurrentTab > 0) {
+            switchTab(mCurrentTab - 1);
+        }
+    }
+
+    /**
+     * On click on the next-button, either switch to the next step, or if it's the last step,
+     * add/update a dagvergunning
+     */
+    @OnClick(R.id.wizard_next)
+    public void goToNext() {
+        if (mCurrentTab < 2) {
+            switchTab(mCurrentTab + 1);
+        } else if (mCurrentTab == 2) {
+            saveDagvergunning();
+        }
     }
 
     /**

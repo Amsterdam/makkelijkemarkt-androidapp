@@ -21,5 +21,6 @@
 
     <dimen name="components_height">44dp</dimen>
     <dimen name="components_vertical_margin">26dp</dimen>
+    <dimen name="button_label_margin">40dp</dimen>
 
 </resources>

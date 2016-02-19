@@ -61,24 +61,33 @@
         >
 
         <Button
-            android:id="@+id/dagvergunning_navigation_previous"
+            android:id="@+id/wizard_previous"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/primary_light"
-            android:text="Vorige"
-            android:visibility="invisible"
+            android:paddingLeft="@dimen/button_label_margin"
+            android:paddingStart="@dimen/button_label_margin"
+            android:gravity="start|center_vertical"
+            android:textSize="@dimen/textsize_content_small"
+            android:textColor="@color/primary_dark"
+            android:background="@android:color/white"
+            android:drawableLeft="@drawable/chevron_left_primary_dark"
+            android:drawableStart="@drawable/chevron_left_primary_dark"
             />
 
         <Button
-            android:id="@+id/dagvergunning_navigation_next"
+            android:id="@+id/wizard_next"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/accent"
-            android:text="Volgende"
+            android:paddingRight="@dimen/button_label_margin"
+            android:paddingEnd="@dimen/button_label_margin"
+            android:gravity="end|center_vertical"
+            android:textSize="@dimen/textsize_content_small"
+            android:textColor="@color/primary_dark"
+            android:background="@android:color/white"
+            android:drawableRight="@drawable/chevron_right_primary_dark"
+            android:drawableEnd="@drawable/chevron_right_primary_dark"
             />
 
     </LinearLayout>

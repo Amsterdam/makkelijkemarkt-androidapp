@@ -25,6 +25,7 @@
     <string name="label_notitie">Opmerking</string>
     <string name="label_barcode_scannen">Barcode Scannen</string>
     <string name="label_nfc_scannen">NFC Scannen</string>
+    <string name="label_opslaan">Opslaan</string>
     <string name="hint_erkenningsnummer">Erkenningsnummer</string>
     <string name="hint_sollicitatienummer">Sollicitatienummer</string>
 
