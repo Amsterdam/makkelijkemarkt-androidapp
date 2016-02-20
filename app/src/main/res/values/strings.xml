@@ -35,6 +35,10 @@
     <string name="notice_network_required">Network connectivity required, please check your internet connection</string>
     <string name="notice_koopman_verwijderd">Let op: Koopman Verwijderd!</string>
     <string name="notice_autocomplete_minimum">Enter a query of at least 2 digits</string>
+    <string name="notice_select_koopman">Selecteer eerst een koopman</string>
+    <string name="notice_select_product">Selecteer minimaal één product</string>
+    <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
+    <string name="notice_dagvergunning_save_success">Nieuwe dagvergunning opgeslagen</string>
 
     <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 

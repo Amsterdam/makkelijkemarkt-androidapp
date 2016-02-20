@@ -5,7 +5,7 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.Context;
 
-import com.google.gson.JsonObject;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +37,7 @@ public class ApiPostDagvergunning extends ApiCall {
 
         // if we have a payload we set the function to call and enqueue the async request
         if (callback != null && mPayload != null) {
-            Call<JsonObject> call = mMakkelijkeMarktApi.postDagvergunning(mPayload);
+            Call<ApiDagvergunning> call = mMakkelijkeMarktApi.postDagvergunning(mPayload);
 
             // call the api asynchronously
             call.enqueue(callback);

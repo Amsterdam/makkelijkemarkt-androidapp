@@ -66,10 +66,11 @@ public interface MakkelijkeMarktApi {
     /**
      * Post a new dagvergunning
      * @param dagvergunning a gson object containing the dagvergunning values
-     * @return a gson object containing the result
+     * @return a apidagvergunning object containing the result
      */
     @POST("dagvergunning/")
-    Call<JsonObject> postDagvergunning(@Body JsonObject dagvergunning);
+    Call<ApiDagvergunning> postDagvergunning(@Body JsonObject dagvergunning);
+//    Call<JsonObject> postDagvergunning(@Body JsonObject dagvergunning);
 
     /**
      * Get a koopman object, including sollicitaties, from the api

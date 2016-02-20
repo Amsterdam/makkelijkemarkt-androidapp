@@ -70,6 +70,8 @@ public class DagvergunningActivity extends BaseActivity implements
                     DAGVERGUNNING_FRAGMENT_TAG);
         }
 
+        // TODO: Implement functionality that disables the location scanning when app in background (to save battery life)
+
         // build the google play services client
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)

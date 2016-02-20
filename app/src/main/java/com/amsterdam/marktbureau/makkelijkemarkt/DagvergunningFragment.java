@@ -3,11 +3,14 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -738,15 +742,15 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // check if all required data is available, and show a toast if not
             if (mErkenningsnummer == null) {
 
-                // geen koopman geselecteerd
+                // geen koopman geselecteerd: inform the user and select the koopman tab
                 switchTab(0);
-                Utility.showToast(getContext(), mToast, "Selecteer eerst een koopman");
+                Utility.showToast(getContext(), mToast, getString(R.string.notice_select_koopman));
 
             } else if (!productSelected) {
 
-                // geen product geselecteerd
+                // geen product geselecteerd: inform the user and select the product tab
                 switchTab(1);
-                Utility.showToast(getContext(), mToast, "Selecteer minimaal 1 product");
+                Utility.showToast(getContext(), mToast, getString(R.string.notice_select_product));
 
             } else {
 
@@ -775,25 +779,47 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     dagvergunningPayload.add(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), geolocation);
                 }
 
+                // TODO: start progress bar
+
                 // create a post request and add the dagvergunning details as json
                 ApiPostDagvergunning postDagvergunning = new ApiPostDagvergunning(getContext());
                 postDagvergunning.setPayload(dagvergunningPayload);
                 postDagvergunning.enqueue(new Callback() {
                     @Override
                     public void onResponse(Response response) {
+
+                        // TODO: end progress bar
+
                         if (response.isSuccess() && response.body() != null) {
-                            Utility.log(getContext(), LOG_TAG, "Response: " + response.body().toString());
 
-                            // TODO: get resulting dagvergunning as Apifrom response and save it to the database
-                            // TODO: Redirect back to dagvergunningen activity
+                            // get resulting dagvergunning as ApiDagvergunning object from response and save it to the database
+                            ApiDagvergunning dagvergunning = (ApiDagvergunning) response.body();
+                            ContentValues dagvergunningValues = dagvergunning.toContentValues();
+                            Uri dagvergunningUri = getContext().getContentResolver().insert(MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues);
 
+                            // on success close current activity and go back to dagvergunningen activity
+                            if (dagvergunningUri != null) {
+
+                                Utility.log(getContext(), LOG_TAG, "New dagvergunning uri: " + dagvergunningUri.toString());
+                                Intent returnIntent = new Intent();
+                                returnIntent.putExtra("result", dagvergunningUri.toString());
+                                getActivity().setResult(Activity.RESULT_OK, returnIntent);
+                                getActivity().finish();
+                                Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_success));
+
+                            } else {
+                                Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
+                            }
                         } else {
-                            Utility.showToast(getContext(), mToast, "Er is iets mis gegaan bij het opslaan, probeer het nog een keer");
+                            Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                         }
                     }
                     @Override
                     public void onFailure(Throwable t) {
-                        Utility.showToast(getContext(), mToast, "Er is iets mis gegaan bij het opslaan, probeer het nog een keer");
+
+                        // TODO: end progress bar
+
+                        Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                     }
                 });
             }

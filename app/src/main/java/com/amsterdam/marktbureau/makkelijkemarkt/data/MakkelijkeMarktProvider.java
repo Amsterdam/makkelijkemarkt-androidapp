@@ -385,22 +385,26 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
                     null,
                     values,
                     SQLiteDatabase.CONFLICT_REPLACE);
+
+            // commit the transaction
+            mDatabase.setTransactionSuccessful();
+
+            // if no exception was thrown and we received an id, the row was inserted succesfully
+            if (rowId > -1) {
+
+                // send notification to loader
+                if (getContext() != null) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
+                // return the uri where the inserted row can be found
+                return ContentUris.withAppendedId(uri, rowId);
+            }
+
         } catch (SQLiteException e) {
             Utility.log(getContext(), LOG_TAG, e.getMessage());
         } finally {
             mDatabase.endTransaction();
-        }
-
-        // if no exception was thrown and we received an id, the row was inserted succesfully
-        if (rowId > -1) {
-
-            // send notification to loader
-            if (getContext() != null) {
-                getContext().getContentResolver().notifyChange(uri, null);
-            }
-
-            // return the uri where the inserted row can be found
-            return ContentUris.withAppendedId(uri, rowId);
         }
 
         return null;

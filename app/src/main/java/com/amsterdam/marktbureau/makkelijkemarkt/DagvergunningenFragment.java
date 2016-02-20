@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -37,6 +38,8 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningenFragment.class.getSimpleName();
+
+    static final int ADD_DAGVERGUNNING_REQUEST = 1;
 
     // bind layout elements
     @Bind(R.id.listview_dagvergunningen) ListView mDagvergunningenListView;
@@ -148,7 +151,25 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     @OnClick(R.id.fab_add_dagvergunning)
     public void addDagvergunningClick() {
         Intent intent = new Intent(getActivity(), DagvergunningActivity.class);
-        startActivity(intent);
+//        startActivity(intent);
+        startActivityForResult(intent, ADD_DAGVERGUNNING_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // were we adding a new dagvergunning?
+        if (requestCode == ADD_DAGVERGUNNING_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                Utility.log(getContext(), LOG_TAG, "RESULT_OK");
+
+                Bundle args = new Bundle();
+                args.putString(getString(R.string.sharedpreferences_key_markt_id), String.valueOf(mMarktId));
+                args.putString(getString(R.string.sharedpreferences_key_date_today), mDag);
+                getLoaderManager().restartLoader(DAGVERGUNNINGEN_LOADER, args, this);
+            }
+        }
     }
 
     /**
