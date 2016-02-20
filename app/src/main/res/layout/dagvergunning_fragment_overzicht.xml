@@ -81,6 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="7"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:paddingLeft="@dimen/margin"
                 android:paddingStart="@dimen/margin"
                 android:paddingRight="0dp"
@@ -96,10 +97,21 @@
                     android:text="@string/product"
                     />
 
+                <!-- Producten placeholder -->
+                <LinearLayout
+                    android:id="@+id/producten_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    />
 
-
-
-
+                <!-- totaal -->
+                <TextView
+                    android:id="@+id/producten_totaal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_text"
+                    />
 
             </LinearLayout>
         </LinearLayout>

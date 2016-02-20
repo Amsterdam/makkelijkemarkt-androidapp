@@ -70,7 +70,14 @@ public interface MakkelijkeMarktApi {
      */
     @POST("dagvergunning/")
     Call<ApiDagvergunning> postDagvergunning(@Body JsonObject dagvergunning);
-//    Call<JsonObject> postDagvergunning(@Body JsonObject dagvergunning);
+
+    /**
+     * Post a new dagvergunning concept to get a factuur with pricing
+     * @param dagvergunning a gson object containing the dagvergunning values
+     * @return a json object containing the factuur details
+     */
+    @POST("dagvergunning_concept/")
+    Call<JsonObject> postDagvergunningConcept(@Body JsonObject dagvergunning);
 
     /**
      * Get a koopman object, including sollicitaties, from the api

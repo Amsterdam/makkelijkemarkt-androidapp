@@ -4,6 +4,7 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.gson.JsonArray;
@@ -703,15 +705,86 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         aanwezigTitle = aanwezigTitles[i];
                     }
                 }
-
                 mOverzichtFragment.mAanwezigText.setText(aanwezigTitle);
             }
 
+            // call /dagvergunning_concept method with collected details to get the 'factuur'
+            if (mErkenningsnummer != null && isProductSelected()) {
+                Utility.log(getContext(), LOG_TAG, "Calling dagvergunning concept..");
 
-            // TODO: if all data required for saving a dagvergunning is complete:
-            // TODO: call /dagvergunning_concept method with collected details to get the 'factuur'
-            // TODO: from the response, populate the product section of the overzicht fragment
+                // TODO: start progress bar
 
+                //
+                ApiPostDagvergunningConcept postDagvergunningConcept = new ApiPostDagvergunningConcept(getContext());
+                postDagvergunningConcept.setPayload(dagvergunningToJson());
+                postDagvergunningConcept.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Response<JsonObject> response) {
+
+                        // TODO: end progress bar
+
+                        // TODO: waarom krijg ik 2 keer een response?
+
+                        if (response.isSuccess() && response.body() != null) {
+                            Utility.log(getContext(), LOG_TAG, "Dagvergunning factuur: " + response.body().toString());
+
+                            // from the response, populate the product section of the overzicht fragment
+                            View overzichtView = mOverzichtFragment.getView();
+                            if (overzichtView != null) {
+
+                                // TODO: product tabel mooi opmaken
+
+                                // totaal
+                                String totaal = response.body().get("totaal").getAsString();
+                                TextView totaalText = (TextView) overzichtView.findViewById(R.id.producten_totaal);
+                                totaalText.setText(totaal);
+
+                                LinearLayout placeholderLayout = (LinearLayout) overzichtView.findViewById(R.id.producten_placeholder);
+                                if (placeholderLayout != null) {
+                                    placeholderLayout.removeAllViews();
+                                    LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                                    // get the producten array
+                                    JsonArray producten = response.body().getAsJsonArray(getString(R.string.makkelijkemarkt_api_dagvergunning_concept_producten));
+
+                                    for (int i = 0; i < producten.size(); i++) {
+                                        JsonObject product = producten.get(i).getAsJsonObject();
+
+                                        // get the product item layout
+                                        View childLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
+
+                                        // aantal
+                                        String aantal = product.get("aantal").getAsString();
+                                        TextView aantalText = (TextView) childLayout.findViewById(R.id.product_aantal);
+                                        aantalText.setText(aantal + " x ");
+
+                                        // naam
+                                        String naam = product.get("naam").getAsString();
+                                        TextView naamText = (TextView) childLayout.findViewById(R.id.product_naam);
+                                        naamText.setText(naam);
+
+                                        // bedrag
+                                        String bedrag = product.get("bedrag").getAsString();
+                                        TextView bedragText = (TextView) childLayout.findViewById(R.id.product_bedrag);
+                                        bedragText.setText(bedrag);
+
+                                        // add child view
+                                        placeholderLayout.addView(childLayout, i);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                        // TODO: end progress bar
+
+                        Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
+                    }
+                });
+
+            }
 
             Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
         }
@@ -725,19 +798,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         // save new dagvergunning
         if (mId == -1) {
 
-            boolean productSelected = false;
-            JsonObject dagvergunningPayload = new JsonObject();
-
-            // get product values (and check if at least one product is selected)
-            String[] productParams = getResources().getStringArray(R.array.array_product_param);
-            String[] productColumns = getResources().getStringArray(R.array.array_product_column);
-            for (int i = 0; i < productParams.length; i++) {
-                if (mProducten.get(productColumns[i]) > 0) {
-                    productSelected = true;
-                    dagvergunningPayload.addProperty(productParams[i], mProducten.get(productColumns[i]));
-                }
-            }
-
             // check if all required data is available, and show a toast if not
             if (mErkenningsnummer == null) {
 
@@ -745,7 +805,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 switchTab(0);
                 Utility.showToast(getContext(), mToast, getString(R.string.notice_select_koopman));
 
-            } else if (!productSelected) {
+            } else if (!isProductSelected()) {
 
                 // geen product geselecteerd: inform the user and select the product tab
                 switchTab(1);
@@ -753,39 +813,14 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             } else {
 
-                // complete the json payload for the post request
-                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_markt_id), mMarktId);
-                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_dag), mDagToday);
-                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer), mErkenningsnummer);
-                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_aanwezig), mKoopmanAanwezig);
-
-                if (mErkenningsnummerInvoerMethode != null) {
-                    dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer_invoer_methode), mErkenningsnummerInvoerMethode);
-                }
-
-                if (mNotitie != null && !mNotitie.equals("")) {
-                    dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_notitie), mNotitie);
-                }
-
-                DateFormat datumtijdFormat = new SimpleDateFormat(getString(R.string.date_format_datumtijd));
-                dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd), String.valueOf(datumtijdFormat.format(new Date())));
-
-                // add the location from gps
-                if (mRegistratieGeolocatieLatitude != -1 && mRegistratieGeolocatieLongitude != -1) {
-                    JsonArray geolocation = new JsonArray();
-                    geolocation.add(mRegistratieGeolocatieLatitude);
-                    geolocation.add(mRegistratieGeolocatieLongitude);
-                    dagvergunningPayload.add(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), geolocation);
-                }
-
                 // TODO: start progress bar
 
                 // create a post request and add the dagvergunning details as json
                 ApiPostDagvergunning postDagvergunning = new ApiPostDagvergunning(getContext());
-                postDagvergunning.setPayload(dagvergunningPayload);
-                postDagvergunning.enqueue(new Callback() {
+                postDagvergunning.setPayload(dagvergunningToJson());
+                postDagvergunning.enqueue(new Callback<ApiDagvergunning>() {
                     @Override
-                    public void onResponse(Response response) {
+                    public void onResponse(Response<ApiDagvergunning> response) {
 
                         // TODO: end progress bar
 
@@ -825,6 +860,63 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // TODO: PUT existing dagvergunning:
 
         }
+    }
+
+    /**
+     * Check if at least one product has been selected
+     * @return true if a product has been selected, false if not
+     */
+    public boolean isProductSelected() {
+        String[] productColumns = getResources().getStringArray(R.array.array_product_column);
+        for (int i = 0; i < productColumns.length; i++) {
+            if (mProducten.get(productColumns[i]) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Create a json object from the dagvergunning values
+     * @return json object
+     */
+    public JsonObject dagvergunningToJson() {
+
+        JsonObject dagvergunningPayload = new JsonObject();
+        dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer), mErkenningsnummer);
+        dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_markt_id), mMarktId);
+        dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_dag), mDagToday);
+        dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_aanwezig), mKoopmanAanwezig);
+
+        // get product values
+        String[] productParams = getResources().getStringArray(R.array.array_product_param);
+        String[] productColumns = getResources().getStringArray(R.array.array_product_column);
+        for (int i = 0; i < productParams.length; i++) {
+            if (mProducten.get(productColumns[i]) > 0) {
+                dagvergunningPayload.addProperty(productParams[i], mProducten.get(productColumns[i]));
+            }
+        }
+
+        if (mErkenningsnummerInvoerMethode != null) {
+            dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer_invoer_methode), mErkenningsnummerInvoerMethode);
+        }
+
+        if (mNotitie != null) {
+            dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_notitie), mNotitie);
+        }
+
+        DateFormat datumtijdFormat = new SimpleDateFormat(getString(R.string.date_format_datumtijd));
+        dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd), String.valueOf(datumtijdFormat.format(new Date())));
+
+        // add the location from gps
+        if (mRegistratieGeolocatieLatitude != -1 && mRegistratieGeolocatieLongitude != -1) {
+            JsonArray geolocation = new JsonArray();
+            geolocation.add(mRegistratieGeolocatieLatitude);
+            geolocation.add(mRegistratieGeolocatieLongitude);
+            dagvergunningPayload.add(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), geolocation);
+        }
+
+        return dagvergunningPayload;
     }
 
     /**
