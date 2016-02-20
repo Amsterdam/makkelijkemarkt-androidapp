@@ -3,7 +3,6 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -799,14 +798,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                             // on success close current activity and go back to dagvergunningen activity
                             if (dagvergunningUri != null) {
-
-                                Utility.log(getContext(), LOG_TAG, "New dagvergunning uri: " + dagvergunningUri.toString());
-                                Intent returnIntent = new Intent();
-                                returnIntent.putExtra("result", dagvergunningUri.toString());
-                                getActivity().setResult(Activity.RESULT_OK, returnIntent);
                                 getActivity().finish();
                                 Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_success));
-
                             } else {
                                 Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                             }
