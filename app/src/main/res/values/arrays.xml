@@ -26,6 +26,14 @@
         <item>krachtstroom</item>
         <item>reiniging</item>
     </string-array>
+    <string-array name="array_product_type">
+        <item>integer</item>
+        <item>integer</item>
+        <item>integer</item>
+        <item>integer</item>
+        <item>boolean</item>
+        <item>boolean</item>
+    </string-array>
     <string-array name="array_product_title">
         <item>3m plaatsen</item>
         <item>4m plaatsen</item>

@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.CallSuper;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
-import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -110,7 +109,7 @@ public class ApiCall {
         String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
 
         if (apiKey != null) {
-            Utility.log(mContext, LOG_TAG, "Stored api-key found: " + apiKey);
+//            Utility.log(mContext, LOG_TAG, "Stored api-key found: " + apiKey);
 
             final String authHeaderValue = mContext.getString(R.string.makkelijkemarkt_api_authorization_header_prefix) +" "+ apiKey;
 

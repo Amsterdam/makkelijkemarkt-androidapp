@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -173,7 +174,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             }
         });
 
-        // create new view components or restore them from saved state
+        // create new viewpager fragments or restore them from saved state
         if (savedInstanceState == null) {
             mKoopmanFragment = new DagvergunningFragmentKoopman();
             mProductFragment = new DagvergunningFragmentProduct();
@@ -304,7 +305,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mProductenVast.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST));
             mNotitie = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE);
 
-            // select tab of viewpager from saved fragment state
+            // select tab of viewpager from saved fragment state (if it's different)
             if (mViewPager.getCurrentItem() != mCurrentTab) {
                 mViewPager.setCurrentItem(mCurrentTab);
             }
@@ -538,6 +539,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 if (productList.size() > 0) {
 
                     String[] productKeys = getResources().getStringArray(R.array.array_product_key);
+                    String[] productTypes = getResources().getStringArray(R.array.array_product_type);
                     String[] productColumns = getResources().getStringArray(R.array.array_product_column);
 
                     // get the product fragment view, find the product count views, and set their text
@@ -546,29 +548,31 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         if (fragmentView != null) {
                             View productView = fragmentView.findViewById(Utility.getResId("product_" + productList.get(i), R.id.class));
                             if (productView != null) {
-                                TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
-
-                                // TODO: populate on/off switch instead in/decrease field for krachtstroom and reiniging products
 
                                 // map the productkey to the productcolumn and get the value from the producten hashmap
                                 String productColumn = "";
+                                String productType = "";
                                 for (int j = 0; j < productKeys.length; j++) {
                                     if (productKeys[j].equals(productList.get(i))) {
                                         productColumn = productColumns[j];
+                                        productType = productTypes[j];
                                     }
                                 }
 
                                 // get the productcount from the local membervar producten hashmap
                                 Integer productCount = mProducten.get(productColumn);
-
                                 if (productCount == -1) {
                                     productCount = 0;
                                 }
 
-                                Utility.log(getContext(), LOG_TAG, "Updating view=product_" + productList.get(i) + " with count=" + productCount.toString());
-
-                                // update the view text
-                                productCountView.setText(productCount.toString());
+                                // set value depening on product type
+                                if (productType.equals("integer")) {
+                                    TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
+                                    productCountView.setText(productCount.toString());
+                                } else if (productType.equals("boolean") && productCount == 1) {
+                                    Switch productCountView = (Switch) productView.findViewById(R.id.product_switch);
+                                    productCountView.setChecked(true);
+                                }
                             }
                         }
                     }
@@ -600,6 +604,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 if (productList.size() > 0) {
 
                     String[] productKeys = getResources().getStringArray(R.array.array_product_key);
+                    String[] productTypes = getResources().getStringArray(R.array.array_product_type);
                     String[] productColumns = getResources().getStringArray(R.array.array_product_column);
 
                     // get the product fragment view, find the product count views, and get their values
@@ -608,14 +613,26 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         if (fragmentView != null) {
                             View productView = fragmentView.findViewById(Utility.getResId("product_" + productList.get(i), R.id.class));
                             if (productView != null) {
-                                TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
-                                String productCount = productCountView.getText().toString();
-                                Utility.log(getContext(), LOG_TAG, "Product count = " + productCount);
 
+                                // get the corresponding product type and column based on the productlist item value
+                                String productType = "";
                                 String productColumn = "";
                                 for (int j = 0; j < productKeys.length; j++) {
                                     if (productKeys[j].equals(productList.get(i))) {
+                                        productType = productTypes[j];
                                         productColumn = productColumns[j];
+                                    }
+                                }
+
+                                // get value depending on product type
+                                String productCount = "0";
+                                if (productType.equals("integer")) {
+                                    TextView productCountView = (TextView) productView.findViewById(R.id.product_count);
+                                    productCount = productCountView.getText().toString();
+                                } else if (productType.equals("boolean")) {
+                                    Switch productCountView = (Switch) productView.findViewById(R.id.product_switch);
+                                    if (productCountView.isChecked()) {
+                                        productCount = "1";
                                     }
                                 }
 
@@ -624,8 +641,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                                     // only set the local member var if the view value not is 0, or if it is 0 and the existing member is not -1
                                     if (!productCount.equals("0") || (productCount.equals("0") && mProducten.get(productColumn) != -1)) {
-
-                                        Utility.log(getContext(), LOG_TAG, "Updating column=" + productColumn + " with count = " + productCount);
                                         mProducten.put(productColumn, Integer.valueOf(productCount));
                                     }
                                 }
@@ -723,10 +738,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                         // TODO: end progress bar
 
-                        // TODO: waarom krijg ik 2 keer een response?
-
                         if (response.isSuccess() && response.body() != null) {
-                            Utility.log(getContext(), LOG_TAG, "Dagvergunning factuur: " + response.body().toString());
+
+                            Utility.log(getContext(), LOG_TAG, "Dagvergunning concept Response: " + response.body().toString());
 
                             // from the response, populate the product section of the overzicht fragment
                             View overzichtView = mOverzichtFragment.getView();
@@ -778,7 +792,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                         // TODO: end progress bar
 
-                        Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
+                        Utility.log(getContext(), LOG_TAG, "Failed to load dagvergunning concept!");
                     }
                 });
 
@@ -789,12 +803,25 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
+     * Get overzicht fragment values and update local member vars
+     */
+    private void getOverzichtFragmentValues() {
+        if (mOverzichtFragmentReady) {
+            // in overzicht fragment we cannot modify data so no cheched to get
+        }
+
+        Utility.log(getContext(), LOG_TAG, "getOverzichtFragmentValues called!");
+    }
+
+    /**
      * Post a new, or Put an existing, dagvergunning to the api
      */
     private void saveDagvergunning() {
 
         // save new dagvergunning
         if (mId == -1) {
+
+            Utility.log(getContext(), LOG_TAG, "Save NEW dagvergunning...");
 
             // check if all required data is available, and show a toast if not
             if (mErkenningsnummer == null) {
@@ -851,6 +878,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             }
 
         } else {
+
+            Utility.log(getContext(), LOG_TAG, "Save EXISTING dagvergunning...");
 
             // TODO: Check if all required data is available, and show a toast if not
 
@@ -918,17 +947,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
-     * Get overzicht fragment values and update local member vars
-     */
-    private void getOverzichtFragmentValues() {
-        if (mOverzichtFragmentReady) {
-            // in overzicht fragment we cannot modify data so no cheched to get
-        }
-
-        Utility.log(getContext(), LOG_TAG, "getOverzichtFragmentValues called!");
-    }
-
-    /**
      * Helper switch to populate fragment elements by viewpager position
      * @param position the position of the fragment in the viewpager
      */
@@ -973,7 +991,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      */
     public void koopmanFragmentReady() {
         mKoopmanFragmentReady = true;
-        populateKoopmanFragment();
+        if (mCurrentTab == 0) {
+            populateKoopmanFragment();
+        }
     }
 
     /**
@@ -981,7 +1001,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      */
     public void productFragmentReady() {
         mProductFragmentReady = true;
-        populateProductFragment();
+        if (mCurrentTab == 1) {
+            populateProductFragment();
+        }
     }
 
     /**
@@ -989,9 +1011,15 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      */
     public void overzichtFragmentReady() {
         mOverzichtFragmentReady = true;
-        populateOverzichtFragment();
+        if (mCurrentTab == 2) {
+            populateOverzichtFragment();
+        }
     }
 
+    /**
+     * Set the location values, called from the activity
+     * @param location Location object containing the lat and long values
+     */
     public void setRegistratieGeoLocatie(Location location) {
         if (location != null) {
             mRegistratieGeolocatieLatitude = location.getLatitude();
@@ -1005,16 +1033,18 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * @param newTabPosition the new tab position
      */
     public void switchTab(int newTabPosition) {
+        if (newTabPosition != mCurrentTab) {
 
-        // get the possibly changed values from the currently active pager fragment before switching pages
-        getFragmentValuesByPosition(mCurrentTab);
+            // get the possibly changed values from the currently active pager fragment before switching pages
+            getFragmentValuesByPosition(mCurrentTab);
 
-        // get new tab position and switch to new fragment in viewpager and populate it
-        mCurrentTab = newTabPosition;
-        mViewPager.setCurrentItem(mCurrentTab);
-        setFragmentValuesByPosition(mCurrentTab);
+            // get new tab position and switch to new fragment in viewpager and populate it
+            mCurrentTab = newTabPosition;
+            mViewPager.setCurrentItem(mCurrentTab);
+            setFragmentValuesByPosition(mCurrentTab);
 
-        setWizardMenu(newTabPosition);
+            setWizardMenu(newTabPosition);
+        }
     }
 
     /**
@@ -1185,6 +1215,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 getKoopman.setErkenningsnummer(mErkenningsnummer);
                 getKoopman.enqueue();
             }
+
+            // destroy the loader when we are done (this only to prevent it from being called when
+            // exiting the activity by navigating back to the dagvergunningen activity)
+            getLoaderManager().destroyLoader(DAGVERGUNNING_LOADER);
         }
     }
 

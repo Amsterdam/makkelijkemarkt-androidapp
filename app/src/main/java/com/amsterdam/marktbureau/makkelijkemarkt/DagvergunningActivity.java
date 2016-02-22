@@ -108,14 +108,14 @@ public class DagvergunningActivity extends BaseActivity implements
     @Override
     public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Utility.log(this, LOG_TAG, "Geen toestemming!");
+//            Utility.log(this, LOG_TAG, "Geen toestemming!");
 
 //            // check permissions
 //            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_LOCATION);
 
         } else {
 
-            Utility.log(this, LOG_TAG, "Wel toestemming!");
+//            Utility.log(this, LOG_TAG, "Wel toestemming!");
 
             // get the last location
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);

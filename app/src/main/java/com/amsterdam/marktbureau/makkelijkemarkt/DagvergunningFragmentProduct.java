@@ -70,6 +70,7 @@ public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
             if (productList.size() > 0) {
 
                 String[] productKeys = getResources().getStringArray(R.array.array_product_key);
+                String[] productTypes = getResources().getStringArray(R.array.array_product_type);
                 String[] productTitles = getResources().getStringArray(R.array.array_product_title);
 
                 // inflate the producten placeholder view
@@ -85,44 +86,62 @@ public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
                         int id = Utility.getResId("product_" + productList.get(i), R.id.class);
                         if (id != -1) {
 
-                            // TODO: create on/off switch instead in/decrease field for krachtstroom and reiniging
-
-                            // get the product item layout
-                            View childLayout = layoutInflater.inflate(R.layout.dagvergunning_product_item, null);
-                            childLayout.setId(id);
-
-                            // get the corresponding product title based on the productlist item value
-                            String productTitle = "";
+                            // get the corresponding product type based on the productlist item value
+                            String productType = "";
                             for (int j = 0; j < productKeys.length; j++) {
                                 if (productKeys[j].equals(productList.get(i))) {
-                                    productTitle = productTitles[j];
+                                    productType = productTypes[j];
                                 }
                             }
 
-                            // set product name
-                            TextView productNameText = (TextView) childLayout.findViewById(R.id.product_name);
-                            productNameText.setText(productTitle);
+                            // get the product item layout depending on the product type
+                            View childLayout = null;
+                            if (productType.equals("integer")) {
+                                childLayout = layoutInflater.inflate(R.layout.dagvergunning_product_item_count, null);
+                            } else if (productType.equals("boolean")) {
+                                childLayout = layoutInflater.inflate(R.layout.dagvergunning_product_item_toggle, null);
+                            }
 
-                            // set onclickhandler on the - buttons to decrease the value of the product_count textview
-                            Button countDownButton = (Button) childLayout.findViewById(R.id.product_count_down);
-                            countDownButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    changeProductCountText(v, false);
+                            if (childLayout != null) {
+                                childLayout.setId(id);
+
+                                // get the corresponding product title based on the productlist item value
+                                String productTitle = "";
+                                for (int j = 0; j < productKeys.length; j++) {
+                                    if (productKeys[j].equals(productList.get(i))) {
+                                        productTitle = productTitles[j];
+                                    }
                                 }
-                            });
 
-                            // set onclickhandler on the + buttons to increase the value of the product_count textview
-                            Button countUpButton = (Button) childLayout.findViewById(R.id.product_count_up);
-                            countUpButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    changeProductCountText(v, true);
+                                // set product name
+                                TextView productNameText = (TextView) childLayout.findViewById(R.id.product_name);
+                                productNameText.setText(productTitle);
+
+                                // if product type is integer add click handlers to +- buttons
+                                if (productType.equals("integer")) {
+
+                                    // set onclickhandler on the - buttons to decrease the value of the product_count textview
+                                    Button countDownButton = (Button) childLayout.findViewById(R.id.product_count_down);
+                                    countDownButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            changeProductCountText(v, false);
+                                        }
+                                    });
+
+                                    // set onclickhandler on the + buttons to increase the value of the product_count textview
+                                    Button countUpButton = (Button) childLayout.findViewById(R.id.product_count_up);
+                                    countUpButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            changeProductCountText(v, true);
+                                        }
+                                    });
                                 }
-                            });
 
-                            // add view and move cursor to next product
-                            placeholderLayout.addView(childLayout, i);
+                                // add view and move cursor to next product
+                                placeholderLayout.addView(childLayout, i);
+                            }
                         }
                     }
                 }

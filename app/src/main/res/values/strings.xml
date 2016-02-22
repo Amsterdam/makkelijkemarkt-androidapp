@@ -19,6 +19,8 @@
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>
 
+    <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
+
     <string name="length_meter">meter</string>
     <string name="label_erkenningsnummer">Erkenningsnummer</string>
     <string name="label_sollicitatienummer">Sollicitatienummer</string>
@@ -37,9 +39,8 @@
     <string name="notice_autocomplete_minimum">Enter a query of at least 2 digits</string>
     <string name="notice_select_koopman">Selecteer eerst een koopman</string>
     <string name="notice_select_product">Selecteer minimaal één product</string>
+    <string name="notice_dagvergunning_concept_loading">Producten worden geladen...</string>
     <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
     <string name="notice_dagvergunning_save_success">Nieuwe dagvergunning opgeslagen</string>
-
-    <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 
 </resources>

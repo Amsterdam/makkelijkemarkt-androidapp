@@ -10,7 +10,7 @@
         android:layout_height="55dp"
         >
 
-        <!-- Product name -->
+        <!-- Name -->
         <TextView
             android:id="@+id/product_name"
             android:layout_width="fill_parent"
@@ -44,7 +44,7 @@
             android:background="@drawable/button"
             />
 
-        <!-- # -->
+        <!-- Count -->
         <TextView
             android:id="@+id/product_count"
             android:layout_width="40dp"
