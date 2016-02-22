@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -7,27 +7,24 @@
     <!-- aantal -->
     <TextView
         android:id="@+id/product_aantal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textColor="@color/primary_text"
         />
 
     <!-- naam -->
     <TextView
         android:id="@+id/product_naam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/product_aantal"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/primary_text"
         />
 
     <!-- bedrag -->
     <TextView
         android:id="@+id/product_bedrag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/product_naam"
+        android:gravity="end"
         android:textColor="@color/primary_text"
         />
 
-</RelativeLayout>
+</TableRow>

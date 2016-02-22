@@ -732,12 +732,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             View overzichtView = mOverzichtFragment.getView();
                             if (overzichtView != null) {
 
-                                // TODO: product tabel mooi opmaken
-
                                 // totaal
                                 String totaal = response.body().get("totaal").getAsString();
                                 TextView totaalText = (TextView) overzichtView.findViewById(R.id.producten_totaal);
-                                totaalText.setText(totaal);
+                                totaalText.setText("Totaal € " + totaal);
 
                                 LinearLayout placeholderLayout = (LinearLayout) overzichtView.findViewById(R.id.producten_placeholder);
                                 if (placeholderLayout != null) {
@@ -766,7 +764,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                         // bedrag
                                         String bedrag = product.get("bedrag").getAsString();
                                         TextView bedragText = (TextView) childLayout.findViewById(R.id.product_bedrag);
-                                        bedragText.setText(bedrag);
+                                        bedragText.setText("€ " + bedrag);
 
                                         // add child view
                                         placeholderLayout.addView(childLayout, i);

@@ -98,19 +98,23 @@
                     />
 
                 <!-- Producten placeholder -->
-                <LinearLayout
+                <TableLayout
                     android:id="@+id/producten_placeholder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/margin"
+                    android:stretchColumns="1"
                     />
 
-                <!-- totaal -->
+                <!-- Totaal -->
                 <TextView
                     android:id="@+id/producten_totaal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin"
+                    android:gravity="end"
                     android:textColor="@color/primary_text"
+                    android:textStyle="bold"
                     />
 
             </LinearLayout>

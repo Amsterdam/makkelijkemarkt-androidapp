@@ -38,6 +38,9 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     // use classname when logging
     private static final String LOG_TAG = DagvergunningenFragment.class.getSimpleName();
 
+    // unique id for the markten loader
+    private static final int DAGVERGUNNINGEN_LOADER = 3;
+
     // bind layout elements
     @Bind(R.id.listview_dagvergunningen) ListView mDagvergunningenListView;
     @Bind(R.id.fab_add_dagvergunning) FloatingActionButton mFabAddDagvergunning;
@@ -47,9 +50,6 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
     // the date of today in a formatted string
     private String mDag;
-
-    // unique id for the markten loader
-    private static final int DAGVERGUNNINGEN_LOADER = 3;
 
     // cursoradapter for populating the dagvergunningen litsview with dagvergunningen from the database
     private DagvergunningenListAdapter mDagvergunningenAdapter;
@@ -103,9 +103,6 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 //            ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
 //            getSollicitaties.setMarktId(mMarktId);
 //            getSollicitaties.enqueue();
-
-
-
         }
 
         // create an adapter for the dagvergunningen listview
