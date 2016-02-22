@@ -45,4 +45,8 @@ dependencies {
 
     // Google Play Services - location
     compile 'com.google.android.gms:play-services-location:8.4.0'
+
+    // ZXing Android Embedded
+    compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    compile 'com.google.zxing:core:3.2.1'
 }

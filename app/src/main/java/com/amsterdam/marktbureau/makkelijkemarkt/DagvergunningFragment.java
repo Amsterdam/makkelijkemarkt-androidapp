@@ -36,6 +36,8 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -993,6 +995,77 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mKoopmanFragmentReady = true;
         if (mCurrentTab == 0) {
             populateKoopmanFragment();
+
+            // attach an onclick listener to the barcode scan button in the koopman fragment here
+            // because from the koopman fragment inside the viewpager it seems impossible to get
+            // the scan result using the onActivityResult method
+            final Fragment dagvergunningFragment = this;
+            View view = mKoopmanFragment.getView();
+            if (view != null) {
+                final Button scanButton = (Button) view.findViewById(R.id.scan_barcode_button);
+                if (!scanButton.hasOnClickListeners()) {
+                    scanButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            scanBarcode(dagvergunningFragment);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * Initiate the barcode scanner
+     * @param fragment
+     */
+    private void scanBarcode(Fragment fragment) {
+
+        // create the intent integrator to scan in the current fragment
+        IntentIntegrator integrator = IntentIntegrator.forSupportFragment(fragment);
+
+        // use a custom scanactivity that can be rotated
+        integrator.setCaptureActivity(BarcodeScanActivity.class);
+        integrator.setOrientationLocked(false);
+
+        // limit scanning to only one-dimensional barcodes
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+
+        // set the prompt message
+        integrator.setPrompt(getString(R.string.hint_scan_barcode));
+
+        // launch the scanner
+        integrator.initiateScan();
+    }
+
+    /**
+     * Catch the result of a scanned barcode
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Utility.log(getContext(), LOG_TAG, "Scan resultaat ontvangen");
+
+        // parse the result in a intentresult object
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if(result != null) {
+            if(result.getContents() == null) {
+                mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_scan_barcode_cancelled));
+            } else {
+
+                // get the scanned code and code format
+                String barcode = result.getContents();
+
+                // inform the user about the ean number
+                mToast = Utility.showToast(getActivity(), mToast, "Scanned barcode: "+ barcode);
+
+                // TODO: search koopman by scanned barcode
+                mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
+            }
         }
     }
 
