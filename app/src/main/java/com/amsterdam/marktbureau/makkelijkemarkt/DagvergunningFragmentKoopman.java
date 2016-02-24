@@ -153,12 +153,12 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
         };
 
         // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
-        ErkenningsnummerAutoCompleteAdapter searchErkenningAdapter = new ErkenningsnummerAutoCompleteAdapter(getContext(), null, 0);
+        ErkenningsnummerAdapter searchErkenningAdapter = new ErkenningsnummerAdapter(getContext(), null, 0);
         mErkenningsnummerEditText.setAdapter(searchErkenningAdapter);
         mErkenningsnummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
         // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
-        SollicitatienummerAutoCompleteAdapter searchSollicitatieAdapter = new SollicitatienummerAutoCompleteAdapter(getContext(), null, 0);
+        SollicitatienummerAdapter searchSollicitatieAdapter = new SollicitatienummerAdapter(getContext(), null, 0);
         mSollicitatienummerEditText.setAdapter(searchSollicitatieAdapter);
         mSollicitatienummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
@@ -237,7 +237,7 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
      * Show the autocomplete dropdown or a notice when the entered text is smaller then the threshold
      * @param view autocomplete textview
      */
-    private void showDropdown(AutoCompleteTextView view) {
+    public void showDropdown(AutoCompleteTextView view) {
         if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() >= view.getThreshold()) {
             view.showDropDown();
         } else {

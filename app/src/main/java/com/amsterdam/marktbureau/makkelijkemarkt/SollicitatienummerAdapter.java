@@ -25,10 +25,10 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class SollicitatienummerAutoCompleteAdapter extends CursorAdapter implements Filterable {
+public class SollicitatienummerAdapter extends CursorAdapter implements Filterable {
 
     // use classname when logging
-    private static final String LOG_TAG = SollicitatienummerAutoCompleteAdapter.class.getSimpleName();
+    private static final String LOG_TAG = SollicitatienummerAdapter.class.getSimpleName();
 
     // keep a reference to the context for access to the contentresolver
     private Context mContext;
@@ -42,7 +42,7 @@ public class SollicitatienummerAutoCompleteAdapter extends CursorAdapter impleme
      * @param c
      * @param flags
      */
-    public SollicitatienummerAutoCompleteAdapter(Context context, Cursor c, int flags) {
+    public SollicitatienummerAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
 
         mContext = context;

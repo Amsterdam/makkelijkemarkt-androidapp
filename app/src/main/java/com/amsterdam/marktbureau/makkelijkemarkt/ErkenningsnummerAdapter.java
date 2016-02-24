@@ -25,10 +25,10 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implements Filterable {
+public class ErkenningsnummerAdapter extends CursorAdapter implements Filterable {
 
     // use classname when logging
-    private static final String LOG_TAG = ErkenningsnummerAutoCompleteAdapter.class.getSimpleName();
+    private static final String LOG_TAG = ErkenningsnummerAdapter.class.getSimpleName();
 
     // keep a reference to the context for access to the contentresolver
     private Context mContext;
@@ -42,7 +42,7 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
      * @param c
      * @param flags
      */
-    public ErkenningsnummerAutoCompleteAdapter(Context context, Cursor c, int flags) {
+    public ErkenningsnummerAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
 
         mContext = context;
@@ -128,7 +128,7 @@ public class ErkenningsnummerAutoCompleteAdapter extends CursorAdapter implement
         // limit the result so we never send thousands of records to the adapter
         String limit = "10";
 
-        // select only koopmannen with actieve sollicitaties voor geselecteerde markt
+        // search by erkenningsnummer and only select koopmannen with sollicitaties voor geselecteerde markt
         return mContext.getContentResolver().query(
                 MakkelijkeMarktProvider.mUriKoopmanJoined,
                 new String[] {

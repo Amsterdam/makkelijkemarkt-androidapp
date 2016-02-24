@@ -1016,8 +1016,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
-     * Initiate the barcode scanner
-     * @param fragment
+     * Launch the barcode scanner
+     * @param fragment the fragment we are launching from, and which its' activity will receive
+     *                 the callback on result
      */
     private void scanBarcode(Fragment fragment) {
 
@@ -1047,24 +1048,24 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Utility.log(getContext(), LOG_TAG, "Scan resultaat ontvangen");
+        // check if we received a result callback from the zxing barcode scanner activity
+        if (requestCode == IntentIntegrator.REQUEST_CODE) {
 
-        // parse the result in a intentresult object
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            // parse the result in a intentresult object
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-        if(result != null) {
-            if(result.getContents() == null) {
-                mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_scan_barcode_cancelled));
-            } else {
+            if (result != null) {
+                if (result.getContents() == null) {
+                    mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_scan_barcode_cancelled));
+                } else {
 
-                // get the scanned code and code format
-                String barcode = result.getContents();
+                    // get the scanned code and code format
+                    String barcode = result.getContents();
 
-                // inform the user about the ean number
-                mToast = Utility.showToast(getActivity(), mToast, "Scanned barcode: "+ barcode);
-
-                // TODO: search koopman by scanned barcode
-                mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
+                    // search koopman by scanned barcode
+                    mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
+                    mKoopmanFragment.showDropdown(mKoopmanFragment.mErkenningsnummerEditText);
+                }
             }
         }
     }
@@ -1116,6 +1117,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mViewPager.setCurrentItem(mCurrentTab);
             setFragmentValuesByPosition(mCurrentTab);
 
+            // update wizard menu buttons
             setWizardMenu(newTabPosition);
         }
     }
