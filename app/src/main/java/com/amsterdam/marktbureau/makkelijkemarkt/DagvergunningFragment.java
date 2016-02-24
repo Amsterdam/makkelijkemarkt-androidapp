@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -69,6 +70,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private static final String OVERZICHT_FRAGMENT_TAG = LOG_TAG + DagvergunningFragmentOverzicht.class.getSimpleName() + "_TAG";
     private static final String CURRENT_TAB = "current_tab";
 
+    // unique id for the dagvergunning loader
+    private static final int DAGVERGUNNING_LOADER = 4;
+
+    // unique id to recognize the callback when receiving the result from the scan nfc activity
+    private static final int NFC_SCAN_REQUEST_CODE = 0x00008888;
+
     // bind layout elements
     @Bind(R.id.dagvergunning_tablayout) TabLayout mTabLayout;
     @Bind(R.id.dagvergunning_meldingen_container) LinearLayout mMeldingenContainer;
@@ -76,9 +83,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     @Bind(R.id.dagvergunning_pager) ViewPager mViewPager;
     @Bind(R.id.wizard_previous) Button mWizardPreviousButton;
     @Bind(R.id.wizard_next) Button mWizardNextButton;
-
-    // unique id for the dagvergunning loader
-    private static final int DAGVERGUNNING_LOADER = 4;
 
     // viewpager fragment references
     private DagvergunningFragmentKoopman mKoopmanFragment;
@@ -725,13 +729,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mOverzichtFragment.mAanwezigText.setText(aanwezigTitle);
             }
 
-            // call /dagvergunning_concept method with collected details to get the 'factuur'
+            // if we have all required dagvergunning details available
             if (mErkenningsnummer != null && isProductSelected()) {
                 Utility.log(getContext(), LOG_TAG, "Calling dagvergunning concept..");
 
                 // TODO: start progress bar
 
-                //
+                // post the dagvergunning details to the api and retrieve a concept 'factuur'
                 ApiPostDagvergunningConcept postDagvergunningConcept = new ApiPostDagvergunningConcept(getContext());
                 postDagvergunningConcept.setPayload(dagvergunningToJson());
                 postDagvergunningConcept.enqueue(new Callback<JsonObject>() {
@@ -1002,12 +1006,26 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             final Fragment dagvergunningFragment = this;
             View view = mKoopmanFragment.getView();
             if (view != null) {
-                final Button scanButton = (Button) view.findViewById(R.id.scan_barcode_button);
-                if (!scanButton.hasOnClickListeners()) {
-                    scanButton.setOnClickListener(new View.OnClickListener() {
+
+                // barcode scan button
+                final Button scanBarcodeButton = (Button) view.findViewById(R.id.scan_barcode_button);
+                if (!scanBarcodeButton.hasOnClickListeners()) {
+                    scanBarcodeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             scanBarcode(dagvergunningFragment);
+                        }
+                    });
+                }
+
+                // nfctag scan button
+                final Button scanNfcTagButton = (Button) view.findViewById(R.id.scan_nfctag_button);
+                if (!scanNfcTagButton.hasOnClickListeners()) {
+                    scanNfcTagButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(), NfcScanActivity.class);
+                            startActivityForResult(intent, NFC_SCAN_REQUEST_CODE);
                         }
                     });
                 }
@@ -1048,8 +1066,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        // check if we received a result callback from the zxing barcode scanner activity
+        // check if from whom we received a callback
         if (requestCode == IntentIntegrator.REQUEST_CODE) {
+            // from the zxing barcode scanner activity:
 
             // parse the result in a intentresult object
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -1066,6 +1085,23 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
                     mKoopmanFragment.showDropdown(mKoopmanFragment.mErkenningsnummerEditText);
                 }
+            }
+        } else if (requestCode == NFC_SCAN_REQUEST_CODE) {
+            // from the nfc scan activity
+
+            if (resultCode == Activity.RESULT_OK) {
+                String uid = data.getStringExtra(getString(R.string.scan_nfc_result_uid));
+                if (uid != null) {
+
+                    // show a toast saying that we detected an nfc tag. this will come right after the toast
+                    // saying 'NFC tag type not supported.' which can unfortunately not be suppressed
+                    mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID: " + uid);
+
+                    // TODO: find the koopman by nfc uid and populate erkenningsnummer auto-complete (or maybe already select koopman?)
+
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_scan_nfc_cancelled));
             }
         }
     }

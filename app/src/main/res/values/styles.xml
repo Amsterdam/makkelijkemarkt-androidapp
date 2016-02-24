@@ -31,4 +31,10 @@
     <style name="AboutTheme" parent="AppTheme">
     </style>
 
+    <!-- App dialog theme (nfc scanactivity) -->
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>

@@ -10,6 +10,7 @@
     <string name="koopman">Koopman</string>
     <string name="product">Product</string>
     <string name="overzicht">Overzicht</string>
+    <string name="cancel">Annuleren</string>
 
     <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
@@ -18,6 +19,9 @@
 
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>
+
+    <string name="scan_nfc_text">Houdt een Markt koopman pas tegen de achterkant van het toestel</string>
+    <string name="scan_nfc_result_uid">nfctag-uid</string>
 
     <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
 
@@ -43,6 +47,7 @@
     <string name="notice_dagvergunning_concept_loading">Producten worden geladen...</string>
     <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
     <string name="notice_dagvergunning_save_success">Nieuwe dagvergunning opgeslagen</string>
-    <string name="notice_scan_barcode_cancelled">Scan cancelled</string>
+    <string name="notice_scan_barcode_cancelled">Barcode scan geannuleerd</string>
+    <string name="notice_scan_nfc_cancelled">NFC scan geannuleerd</string>
 
 </resources>

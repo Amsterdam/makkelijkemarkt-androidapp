@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/large_margin"
+    >
+
+    <ImageView
+        android:id="@+id/nfc_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:src="@drawable/scan_card"
+        android:scaleType="fitCenter"
+        />
+
+    <TextView
+        android:id="@+id/nfc_uid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_margin"
+        android:gravity="center"
+        android:text="@string/scan_nfc_text"
+        />
+
+    <Button
+        android:id="@+id/scan_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_margin"
+        android:gravity="center"
+        android:background="@drawable/button"
+        android:elevation="4dp"
+        android:textSize="@dimen/textsize_content_medium"
+        android:text="@string/cancel"
+        />
+
+</LinearLayout>

@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,5 +181,14 @@ public class Utility {
         } catch (Exception e) {
             return -1;
         }
+    }
+
+    /**
+     * Convert a binary number to a hexadecimal number
+     * @param data binary number
+     * @return hexadecimal number as string
+     */
+    public static String bin2hex(byte[] data) {
+        return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
     }
 }
