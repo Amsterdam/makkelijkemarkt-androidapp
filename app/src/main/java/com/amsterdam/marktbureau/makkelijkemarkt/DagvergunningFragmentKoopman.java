@@ -50,9 +50,9 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     // unique id for the koopman loader
     private static final int KOOPMAN_LOADER = 5;
 
-    private static final String KOOPMAN_SELECTION_METHOD_HANDMATIG = "handmatig";
-    private static final String KOOPMAN_SELECTION_METHOD_SCAN_BARCODE = "scan-barcode";
-    private static final String KOOPMAN_SELECTION_METHOD_SCAN_NFC = "scan-nfc";
+    public static final String KOOPMAN_SELECTION_METHOD_HANDMATIG = "handmatig";
+    public static final String KOOPMAN_SELECTION_METHOD_SCAN_BARCODE = "scan-barcode";
+    public static final String KOOPMAN_SELECTION_METHOD_SCAN_NFC = "scan-nfc";
 
     // bind layout elements
     @Bind(R.id.erkenningsnummer_layout) RelativeLayout mErkenningsnummerLayout;

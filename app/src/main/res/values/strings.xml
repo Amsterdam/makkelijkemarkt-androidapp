@@ -48,6 +48,7 @@
     <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
     <string name="notice_dagvergunning_save_success">Nieuwe dagvergunning opgeslagen</string>
     <string name="notice_scan_barcode_cancelled">Barcode Scan geannuleerd</string>
+    <string name="notice_koopman_not_found">Koopman niet gevonden</string>
     <string name="notice_scan_nfc_cancelled">NFC Scan geannuleerd</string>
 
 </resources>

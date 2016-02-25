@@ -1124,12 +1124,31 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_scan_barcode_cancelled));
                 } else {
 
-                    // get the scanned code and code format
+                    // get the scanned code
                     String barcode = result.getContents();
 
-                    // search koopman by scanned barcode TODO: already select koopman, instead of populate erkenningsnummer auto-complete?
-                    mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
-                    mKoopmanFragment.showDropdown(mKoopmanFragment.mErkenningsnummerEditText);
+                    // find the koopman by querying for scanned barcode (=erkenningsnummer)
+                    Cursor koopman = getContext().getContentResolver().query(
+                            MakkelijkeMarktProvider.mUriKoopman,
+                            new String[] { MakkelijkeMarktProvider.Koopman.COL_ID },
+                            MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " = ? ",
+                            new String[] { barcode },
+                            null);
+
+                    // set the koopman
+                    if (koopman != null && koopman.moveToFirst()) {
+                        mKoopmanFragment.setKoopman(koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)));
+                        mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
+                        mKoopmanFragment.mErkenningsnummerEditText.dismissDropDown();
+                        mKoopmanFragment.mKoopmanSelectionMethod = DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_BARCODE;
+                    } else {
+                        mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
+                    }
+
+                    // close the cursor
+                    if (koopman != null) {
+                        koopman.close();
+                    }
                 }
             }
         } else if (requestCode == NFC_SCAN_REQUEST_CODE) {
@@ -1143,7 +1162,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     // saying 'NFC tag type not supported.' which can unfortunately not be suppressed
                     mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID: " + uid);
 
-                    // TODO: find the koopman by nfc uid and populate erkenningsnummer auto-complete (or maybe already select koopman?)
+                    // set koopman selection method to scan-nfc
+                    mKoopmanFragment.mKoopmanSelectionMethod = DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
+
+                    // TODO: find the koopman by nfc uid and populate erkenningsnummer auto-complete and select koopman
 
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
