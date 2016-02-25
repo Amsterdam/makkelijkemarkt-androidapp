@@ -125,41 +125,28 @@ public class BaseActivity extends AppCompatActivity {
 
         Utility.log(this, LOG_TAG, "Logging out...");
 
-        // @todo start zandloper here
-
         // @todo stop running api service
 
-        // call api logout method
+        // call api logout method (without even waiting for the response)
         ApiGetLogout getLogout = new ApiGetLogout(this);
         getLogout.enqueue(new Callback() {
             @Override
-            public void onResponse(Response response) {
-
-                // no need to check the response from the api because:
-                // 200 = correct api-key
-                // 400 = without api-key
-                // 500 = incorrect api-key
-
-                // clear all shared preferences, accept for account id
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                int accountId = settings.getInt(getString(R.string.sharedpreferences_key_account_id), 0);
-                settings.edit().clear().apply();
-                if (accountId != 0) {
-                    settings.edit().putInt(getString(R.string.sharedpreferences_key_account_id), accountId).apply();
-                }
-
-                // @todo end zandloper
-
-                // clear active activities and history stack and open mainactivity home screen
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-
+            public void onResponse(Response response) {}
             @Override
-            public void onFailure(Throwable t) {
-                Utility.log(getApplicationContext(), LOG_TAG, "onFailure message: " + t.getMessage());
-            }
+            public void onFailure(Throwable t) {}
         });
+
+        // clear all shared preferences, accept for account id
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int accountId = settings.getInt(getString(R.string.sharedpreferences_key_account_id), 0);
+        settings.edit().clear().apply();
+        if (accountId != 0) {
+            settings.edit().putInt(getString(R.string.sharedpreferences_key_account_id), accountId).apply();
+        }
+
+        // clear active activities and history stack and open mainactivity home screen
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
