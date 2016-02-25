@@ -387,6 +387,17 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private void populateKoopmanFragment() {
         if (mKoopmanFragmentReady) {
 
+            // for an existing dagvergunning hide the koopman discovery options
+            if (mId > 0) {
+                Utility.collapseView(mKoopmanFragment.mErkenningsnummerLayout, true);
+                Utility.collapseView(mKoopmanFragment.mSollicitatienummerLayout, true);
+                Utility.collapseView(mKoopmanFragment.mScanbuttonsLayout, true);
+            } else {
+                Utility.collapseView(mKoopmanFragment.mErkenningsnummerLayout, false);
+                Utility.collapseView(mKoopmanFragment.mSollicitatienummerLayout, false);
+                Utility.collapseView(mKoopmanFragment.mScanbuttonsLayout, false);
+            }
+
             // set the koopman details
             if (mKoopmanId > 0) {
                 mKoopmanFragment.setKoopman(mKoopmanId);
@@ -813,11 +824,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * Get overzicht fragment values and update local member vars
      */
     private void getOverzichtFragmentValues() {
-        if (mOverzichtFragmentReady) {
-            // in overzicht fragment we cannot modify data so no cheched to get
-        }
-
-        Utility.log(getContext(), LOG_TAG, "getOverzichtFragmentValues called!");
+        if (mOverzichtFragmentReady) {}
     }
 
     /**
@@ -901,8 +908,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             ContentValues dagvergunningValues = dagvergunning.toContentValues();
 
                             // for some reason the api will create a dagvergunning with a new id, so
-                            // we first delete the existing and the insert the newlye created dagvergunning
-                            // that was returned from the api
+                            // we first delete the existing from the db and then insert the new
+                            // created dagvergunning that was returned from the api
                             int deleted = getContext().getContentResolver().delete(
                                     MakkelijkeMarktProvider.mUriDagvergunning,
                                     MakkelijkeMarktProvider.Dagvergunning.COL_ID + " = ? ",
@@ -940,8 +947,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      */
     public boolean isProductSelected() {
         String[] productColumns = getResources().getStringArray(R.array.array_product_column);
-        for (int i = 0; i < productColumns.length; i++) {
-            if (mProducten.get(productColumns[i]) > 0) {
+        for(String product: productColumns) {
+            if (mProducten.get(product) > 0) {
                 return true;
             }
         }

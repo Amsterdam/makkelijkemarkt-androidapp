@@ -53,10 +53,14 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public static Uri mUriSollicitatie = mBaseUri.buildUpon().appendPath(mTableSollicitatie).build();
 
     // other uris
-    public static Uri mUriDagvergunningJoined = mBaseUri.buildUpon().appendPath(mTableDagvergunning + "joined").build();
-    public static Uri mUriKoopmanJoined = mBaseUri.buildUpon().appendPath(mTableKoopman + "joined").build();
-    public static Uri mUriKoopmanJoinedGroupByErkenningsnummer = mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbyerkenningsnummer").build();
-    public static Uri mUriKoopmanJoinedGroupBySollicitatienummer = mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbysollicitatienummer").build();
+    public static Uri mUriDagvergunningJoined =
+            mBaseUri.buildUpon().appendPath(mTableDagvergunning + "joined").build();
+    public static Uri mUriKoopmanJoined =
+            mBaseUri.buildUpon().appendPath(mTableKoopman + "joined").build();
+    public static Uri mUriKoopmanJoinedGroupByErkenningsnummer =
+            mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbyerkenningsnummer").build();
+    public static Uri mUriKoopmanJoinedGroupBySollicitatienummer =
+            mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbysollicitatienummer").build();
 
     /**
      * Get the content provider authority name

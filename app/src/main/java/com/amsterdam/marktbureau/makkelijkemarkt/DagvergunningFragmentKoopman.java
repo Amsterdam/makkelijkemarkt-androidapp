@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,8 +55,11 @@ public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage impl
     private static final String KOOPMAN_SELECTION_METHOD_SCAN_NFC = "scan-nfc";
 
     // bind layout elements
+    @Bind(R.id.erkenningsnummer_layout) RelativeLayout mErkenningsnummerLayout;
     @Bind(R.id.search_erkenningsnummer) AutoCompleteTextView mErkenningsnummerEditText;
+    @Bind(R.id.sollicitatienummer_layout) RelativeLayout mSollicitatienummerLayout;
     @Bind(R.id.search_sollicitatienummer) AutoCompleteTextView mSollicitatienummerEditText;
+    @Bind(R.id.scanbuttons_layout) LinearLayout mScanbuttonsLayout;
     @Bind(R.id.scan_barcode_button) Button mScanBarcodeButton;
     @Bind(R.id.scan_nfctag_button) Button mScanNfcTagButton;
     @Bind(R.id.koopman_detail) LinearLayout mKoopmanDetail;

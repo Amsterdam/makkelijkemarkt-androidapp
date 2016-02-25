@@ -14,6 +14,7 @@
 
         <!-- Search erkenningsnummer -->
         <RelativeLayout
+            android:id="@+id/erkenningsnummer_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
@@ -59,6 +60,7 @@
 
         <!-- Search sollicitatienummer -->
         <RelativeLayout
+            android:id="@+id/sollicitatienummer_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/margin"
@@ -102,6 +104,7 @@
 
         <!-- Scan buttons -->
         <LinearLayout
+            android:id="@+id/scanbuttons_layout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:orientation="horizontal"
