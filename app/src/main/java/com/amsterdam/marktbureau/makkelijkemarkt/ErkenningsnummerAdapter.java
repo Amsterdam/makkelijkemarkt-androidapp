@@ -130,7 +130,7 @@ public class ErkenningsnummerAdapter extends CursorAdapter implements Filterable
 
         // search by erkenningsnummer and only select koopmannen with sollicitaties voor geselecteerde markt
         return mContext.getContentResolver().query(
-                MakkelijkeMarktProvider.mUriKoopmanJoined,
+                MakkelijkeMarktProvider.mUriKoopmanJoinedGroupByErkenningsnummer,
                 new String[] {
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID,
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER,
@@ -145,6 +145,7 @@ public class ErkenningsnummerAdapter extends CursorAdapter implements Filterable
                         String.valueOf(mMarktId),
                         "%" + erkenningsnummer + "%"
                 },
+                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS + " ASC, " +
                 MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " ASC " +
                         " LIMIT " + limit
         );

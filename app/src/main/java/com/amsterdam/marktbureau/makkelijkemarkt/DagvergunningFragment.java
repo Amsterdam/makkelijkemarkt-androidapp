@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPutDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.gson.JsonArray;
@@ -820,31 +821,29 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
-     * Post a new, or Put an existing, dagvergunning to the api
+     * Post a new, or Put an existing, dagvergunning to the api, and update the db
      */
     private void saveDagvergunning() {
 
-        // save new dagvergunning
-        if (mId == -1) {
+        // check if all required data is available, and show a toast if not
+        if (mErkenningsnummer == null) {
 
-            Utility.log(getContext(), LOG_TAG, "Save NEW dagvergunning...");
+            // geen koopman geselecteerd: inform the user and select the koopman tab
+            switchTab(0);
+            Utility.showToast(getContext(), mToast, getString(R.string.notice_select_koopman));
 
-            // check if all required data is available, and show a toast if not
-            if (mErkenningsnummer == null) {
+        } else if (!isProductSelected()) {
 
-                // geen koopman geselecteerd: inform the user and select the koopman tab
-                switchTab(0);
-                Utility.showToast(getContext(), mToast, getString(R.string.notice_select_koopman));
+            // geen product geselecteerd: inform the user and select the product tab
+            switchTab(1);
+            Utility.showToast(getContext(), mToast, getString(R.string.notice_select_product));
 
-            } else if (!isProductSelected()) {
+        } else {
 
-                // geen product geselecteerd: inform the user and select the product tab
-                switchTab(1);
-                Utility.showToast(getContext(), mToast, getString(R.string.notice_select_product));
+            // TODO: start progress bar
 
-            } else {
-
-                // TODO: start progress bar
+            if (mId == -1) {
+                // save new dagvergunning:
 
                 // create a post request and add the dagvergunning details as json
                 ApiPostDagvergunning postDagvergunning = new ApiPostDagvergunning(getContext());
@@ -858,9 +857,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         if (response.isSuccess() && response.body() != null) {
 
                             // get resulting dagvergunning as ApiDagvergunning object from response and save it to the database
-                            ApiDagvergunning dagvergunning = (ApiDagvergunning) response.body();
+                            ApiDagvergunning dagvergunning = response.body();
                             ContentValues dagvergunningValues = dagvergunning.toContentValues();
-                            Uri dagvergunningUri = getContext().getContentResolver().insert(MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues);
+                            Uri dagvergunningUri = getContext().getContentResolver().insert(
+                                    MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues);
 
                             // on success close current activity and go back to dagvergunningen activity
                             if (dagvergunningUri != null) {
@@ -881,17 +881,56 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                     }
                 });
+            } else {
+                // update existing dagvergunning:
+
+                // create put request and add the dagvergunning id as path and details as payload
+                ApiPutDagvergunning putDagvergunning = new ApiPutDagvergunning(getContext());
+                putDagvergunning.setId(mId);
+                putDagvergunning.setPayload(dagvergunningToJson());
+                putDagvergunning.enqueue(new Callback<ApiDagvergunning>() {
+                    @Override
+                    public void onResponse(Response<ApiDagvergunning> response) {
+
+                        // TODO: end progress bar
+
+                        if (response.isSuccess() && response.body() != null) {
+
+                            // get resulting dagvergunning as ApiDagvergunning object from response and update it in the database
+                            ApiDagvergunning dagvergunning = response.body();
+                            ContentValues dagvergunningValues = dagvergunning.toContentValues();
+
+                            // for some reason the api will create a dagvergunning with a new id, so
+                            // we first delete the existing and the insert the newlye created dagvergunning
+                            // that was returned from the api
+                            int deleted = getContext().getContentResolver().delete(
+                                    MakkelijkeMarktProvider.mUriDagvergunning,
+                                    MakkelijkeMarktProvider.Dagvergunning.COL_ID + " = ? ",
+                                    new String[] { String.valueOf(mId) }
+                            );
+                            Uri dagvergunningUri = getContext().getContentResolver().insert(
+                                    MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues);
+
+                            // on success close current activity and go back to dagvergunningen activity
+                            if (deleted == 1 && dagvergunningUri != null) {
+                                getActivity().finish();
+                                Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_success));
+                            } else {
+                                Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
+                            }
+                        } else {
+                            Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
+                        }
+                    }
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                        // TODO: end progress bar
+
+                        Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
+                    }
+                });
             }
-
-        } else {
-
-            Utility.log(getContext(), LOG_TAG, "Save EXISTING dagvergunning...");
-
-            // TODO: Check if all required data is available, and show a toast if not
-
-            // update existing dagvergunning
-            // TODO: PUT existing dagvergunning:
-
         }
     }
 
@@ -1059,9 +1098,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
     /**
      * Catch the result of a scanned barcode
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode a code to identity from whom we received the result
+     * @param resultCode the type of result
+     * @param data the data received with the result
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1081,7 +1120,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     // get the scanned code and code format
                     String barcode = result.getContents();
 
-                    // search koopman by scanned barcode
+                    // search koopman by scanned barcode TODO: already select koopman, instead of populate erkenningsnummer auto-complete?
                     mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
                     mKoopmanFragment.showDropdown(mKoopmanFragment.mErkenningsnummerEditText);
                 }

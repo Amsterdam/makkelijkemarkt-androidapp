@@ -43,7 +43,6 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
     // bind layout elements
     @Bind(R.id.listview_dagvergunningen) ListView mDagvergunningenListView;
-    @Bind(R.id.fab_add_dagvergunning) FloatingActionButton mFabAddDagvergunning;
 
     // the id of the selected markt
     private int mMarktId;

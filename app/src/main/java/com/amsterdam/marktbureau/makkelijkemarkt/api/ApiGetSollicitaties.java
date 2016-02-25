@@ -40,6 +40,10 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
         super(context);
     }
 
+    /**
+     * Set the id of the markt we want the sollicitaties for
+     * @param marktId id of the markt
+     */
     public void setMarktId(int marktId) {
         mMarktId = marktId;
     }

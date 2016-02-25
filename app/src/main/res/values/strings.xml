@@ -20,7 +20,7 @@
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>
 
-    <string name="scan_nfc_text">Houdt een Markt koopman pas tegen de achterkant van het toestel</string>
+    <string name="scan_nfc_text">Houdt een markt koopman pas tegen de achterkant van het toestel</string>
     <string name="scan_nfc_result_uid">nfctag-uid</string>
 
     <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
@@ -34,7 +34,7 @@
     <string name="label_opslaan">Opslaan</string>
     <string name="hint_erkenningsnummer">Erkenningsnummer</string>
     <string name="hint_sollicitatienummer">Sollicitatienummer</string>
-    <string name="hint_scan_barcode">Scan de barcode van een Markt koopman pas</string>
+    <string name="hint_scan_barcode">Scan de barcode van een markt koopman pas</string>
 
     <string name="notice_login_enter_password">Please enter your password</string>
     <string name="notice_login_password_invalid">Invalid password</string>
@@ -47,7 +47,7 @@
     <string name="notice_dagvergunning_concept_loading">Producten worden geladen...</string>
     <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
     <string name="notice_dagvergunning_save_success">Nieuwe dagvergunning opgeslagen</string>
-    <string name="notice_scan_barcode_cancelled">Barcode scan geannuleerd</string>
-    <string name="notice_scan_nfc_cancelled">NFC scan geannuleerd</string>
+    <string name="notice_scan_barcode_cancelled">Barcode Scan geannuleerd</string>
+    <string name="notice_scan_nfc_cancelled">NFC Scan geannuleerd</string>
 
 </resources>

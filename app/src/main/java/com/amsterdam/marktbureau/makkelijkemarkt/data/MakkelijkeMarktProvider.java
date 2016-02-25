@@ -55,6 +55,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     // other uris
     public static Uri mUriDagvergunningJoined = mBaseUri.buildUpon().appendPath(mTableDagvergunning + "joined").build();
     public static Uri mUriKoopmanJoined = mBaseUri.buildUpon().appendPath(mTableKoopman + "joined").build();
+    public static Uri mUriKoopmanJoinedGroupByErkenningsnummer = mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbyerkenningsnummer").build();
+    public static Uri mUriKoopmanJoinedGroupBySollicitatienummer = mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbysollicitatienummer").build();
 
     /**
      * Get the content provider authority name
@@ -470,7 +472,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         if (uri.getPath().equals(mUriDagvergunningJoined.getPath())) {
 
             // query the dagvergunningen table joined with it's linked tables with the given arguments
-            cursor = queryDagvergunningenJoined(uri, projection, selection, selectionArgs, sortOrder);
+            cursor = queryDagvergunningenJoined(uri, projection, selection, selectionArgs, sortOrder, null);
 
             // subscribe the cursor to a different notification uri
             notificationUri = MakkelijkeMarktProvider.mUriDagvergunning;
@@ -478,9 +480,19 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         } else if (uri.getPath().equals(mUriKoopmanJoined.getPath())) {
 
             // query the koopman table joined with the sollicitatie table
-            cursor = queryKoopmanJoined(uri, projection, selection, selectionArgs, sortOrder);
+            cursor = queryKoopmanJoined(uri, projection, selection, selectionArgs, sortOrder, null);
+            notificationUri = MakkelijkeMarktProvider.mUriKoopman;
 
-            // subscribe the cursor to a different notification uri
+        } else if (uri.getPath().equals(mUriKoopmanJoinedGroupByErkenningsnummer.getPath())) {
+
+            // query the koopman table joined with the sollicitatie table and grouped by erkennings nummer
+            cursor = queryKoopmanJoined(uri, projection, selection, selectionArgs, sortOrder, Koopman.COL_ERKENNINGSNUMMER);
+            notificationUri = MakkelijkeMarktProvider.mUriKoopman;
+
+        } else if (uri.getPath().equals(mUriKoopmanJoinedGroupBySollicitatienummer.getPath())) {
+
+            // query the koopman table joined with the sollicitatie table and grouped by sollicitatie nummer
+            cursor = queryKoopmanJoined(uri, projection, selection, selectionArgs, sortOrder, Sollicitatie.COL_SOLLICITATIE_NUMMER);
             notificationUri = MakkelijkeMarktProvider.mUriKoopman;
 
         } else {
@@ -501,7 +513,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      * Query the dagvergunningen table joined with it's linked tables with the given arguments
      * @return a cursor containing the dagvergunning resultset
      */
-    private Cursor queryDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    private Cursor queryDagvergunningenJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, String groupBy) {
         SQLiteQueryBuilder dagvergunningJoinedQueryBuilder = new SQLiteQueryBuilder();
 
         // left join the dagvergunning table with the linked koopman, account, and sollicitatie tables
@@ -558,7 +570,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
                 projection,
                 selection,
                 selectionArgs,
-                null,
+                groupBy,
                 null,
                 sortOrder);
     }
@@ -567,7 +579,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      * Query the koopman table joined with the sollicitatie and markt tables
      * @return a cursor containing the koopman resultset
      */
-    private Cursor queryKoopmanJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    private Cursor queryKoopmanJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, String groupBy) {
         SQLiteQueryBuilder koopmanJoinedQueryBuilder = new SQLiteQueryBuilder();
 
         String tables = mTableKoopman +
@@ -608,7 +620,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
                 projection,
                 selection,
                 selectionArgs,
-                null,
+                groupBy,
                 null,
                 sortOrder);
     }

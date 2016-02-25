@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -70,6 +71,15 @@ public interface MakkelijkeMarktApi {
      */
     @POST("dagvergunning/")
     Call<ApiDagvergunning> postDagvergunning(@Body JsonObject dagvergunning);
+
+    /**
+     * Put an existing dagvergunning
+     * @param id the id of the existing dagvergunning
+     * @param dagvergunning a gson object containing the dagvergunning values
+     * @return a apidagvergunning object containing the result
+     */
+    @PUT("dagvergunning/{id}")
+    Call<ApiDagvergunning> putDagvergunning(@Path("id") String id, @Body JsonObject dagvergunning);
 
     /**
      * Post a new dagvergunning concept to get a factuur with pricing

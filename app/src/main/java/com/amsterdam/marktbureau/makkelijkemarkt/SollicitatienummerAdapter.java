@@ -130,7 +130,7 @@ public class SollicitatienummerAdapter extends CursorAdapter implements Filterab
 
         // select only koopmannen with actieve sollicitaties voor geselecteerde markt
         return mContext.getContentResolver().query(
-                MakkelijkeMarktProvider.mUriKoopmanJoined,
+                MakkelijkeMarktProvider.mUriKoopmanJoinedGroupBySollicitatienummer,
                 new String[] {
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID,
                         MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER,
@@ -145,6 +145,7 @@ public class SollicitatienummerAdapter extends CursorAdapter implements Filterab
                         String.valueOf(mMarktId),
                         "%" + sollicitatienummer + "%"
                 },
+                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS + " ASC, " +
                 MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER + " ASC " +
                         " LIMIT " + limit
         );
