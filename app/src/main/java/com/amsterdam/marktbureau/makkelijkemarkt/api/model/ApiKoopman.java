@@ -26,6 +26,7 @@ public class ApiKoopman {
     private String fotoMediumUrl;
     private String status;
     private int perfectViewNummer;
+    private String nfcUid;
     private List<ApiSollicitatie> sollicitaties = new ArrayList<ApiSollicitatie>();
 
     /**
@@ -171,6 +172,20 @@ public class ApiKoopman {
     /**
      * @return
      */
+    public String getNfcUid() {
+        return nfcUid;
+    }
+
+    /**
+     * @param nfcUid
+     */
+    public void setNfcUid(String nfcUid) {
+        this.nfcUid = nfcUid;
+    }
+
+    /**
+     * @return
+     */
     public List<ApiSollicitatie> getSollicitaties() {
         return sollicitaties;
     }
@@ -199,6 +214,11 @@ public class ApiKoopman {
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL, getFotoMediumUrl());
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_STATUS, getStatus());
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_PERFECTVIEWNUMMER, getPerfectViewNummer());
+
+        // lowercase the nfc uid if we have one
+        if (getNfcUid() != null) {
+            koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_NFC_UID, getNfcUid().toLowerCase());
+        }
 
         // the list of sollicitaties is not added to the contentvalues object
 

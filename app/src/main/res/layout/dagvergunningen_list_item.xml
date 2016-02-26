@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="@dimen/margin"
+    android:background="@android:color/white"
     >
 
     <!-- Koopman foto -->

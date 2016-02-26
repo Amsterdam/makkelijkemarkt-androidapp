@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,6 +83,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     @Bind(R.id.dagvergunning_meldingen_container) LinearLayout mMeldingenContainer;
     @Bind(R.id.dagvergunning_meldingen) LinearLayout mMeldingenPlaceholder;
     @Bind(R.id.dagvergunning_pager) ViewPager mViewPager;
+    @Bind(R.id.progressbar_dagvergunning) ProgressBar mProgressbar;
     @Bind(R.id.wizard_previous) Button mWizardPreviousButton;
     @Bind(R.id.wizard_next) Button mWizardNextButton;
 
@@ -275,6 +277,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 Bundle args = new Bundle();
                 args.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID, mId);
                 getLoaderManager().initLoader(DAGVERGUNNING_LOADER, args, this);
+
+                // show the progressbar
+                mProgressbar.setVisibility(View.VISIBLE);
             }
         } else {
 
@@ -685,6 +690,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private void populateOverzichtFragment() {
         if (mOverzichtFragmentReady) {
 
+            // TODO: show the changes in case we are editing an existing dagvergunning
+
             // koopman details
             if (mKoopmanId > 0) {
                 mOverzichtFragment.setKoopman(mKoopmanId);
@@ -745,7 +752,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             if (mErkenningsnummer != null && isProductSelected()) {
                 Utility.log(getContext(), LOG_TAG, "Calling dagvergunning concept..");
 
-                // TODO: start progress bar
+                // show progress bar
+                mProgressbar.setVisibility(View.VISIBLE);
 
                 // post the dagvergunning details to the api and retrieve a concept 'factuur'
                 ApiPostDagvergunningConcept postDagvergunningConcept = new ApiPostDagvergunningConcept(getContext());
@@ -754,7 +762,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onResponse(Response<JsonObject> response) {
 
-                        // TODO: end progress bar
+                        // hide progress bar
+                        mProgressbar.setVisibility(View.GONE);
 
                         if (response.isSuccess() && response.body() != null) {
 
@@ -808,7 +817,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onFailure(Throwable t) {
 
-                        // TODO: end progress bar
+                        // hide progress bar
+                        mProgressbar.setVisibility(View.GONE);
 
                         Utility.log(getContext(), LOG_TAG, "Failed to load dagvergunning concept!");
                     }
@@ -847,7 +857,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
         } else {
 
-            // TODO: start progress bar
+            // show progress bar
+            mProgressbar.setVisibility(View.VISIBLE);
 
             if (mId == -1) {
                 // save new dagvergunning:
@@ -859,7 +870,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onResponse(Response<ApiDagvergunning> response) {
 
-                        // TODO: end progress bar
+                        // hide progress bar
+                        mProgressbar.setVisibility(View.GONE);
 
                         if (response.isSuccess() && response.body() != null) {
 
@@ -883,7 +895,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onFailure(Throwable t) {
 
-                        // TODO: end progress bar
+                        // hide progress bar
+                        mProgressbar.setVisibility(View.GONE);
 
                         Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                     }
@@ -899,7 +912,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onResponse(Response<ApiDagvergunning> response) {
 
-                        // TODO: end progress bar
+                        // hide progress bar
+                        mProgressbar.setVisibility(View.GONE);
 
                         if (response.isSuccess() && response.body() != null) {
 
@@ -932,7 +946,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onFailure(Throwable t) {
 
-                        // TODO: end progress bar
+                        // hide progress bar
+                        mProgressbar.setVisibility(View.GONE);
 
                         Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                     }
@@ -1158,15 +1173,40 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 String uid = data.getStringExtra(getString(R.string.scan_nfc_result_uid));
                 if (uid != null) {
 
+                    // lowercase the scanned uid
+                    uid = uid.toLowerCase();
+
                     // show a toast saying that we detected an nfc tag. this will come right after the toast
                     // saying 'NFC tag type not supported.' which can unfortunately not be suppressed
                     mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID: " + uid);
 
-                    // set koopman selection method to scan-nfc
-                    mKoopmanFragment.mKoopmanSelectionMethod = DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
+                    // find the koopman by querying for scanned nfc tag uid
+                    Cursor koopman = getContext().getContentResolver().query(
+                            MakkelijkeMarktProvider.mUriKoopman,
+                            new String[] {
+                                    MakkelijkeMarktProvider.Koopman.COL_ID,
+                                    MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER
+                            },
+                            MakkelijkeMarktProvider.Koopman.COL_NFC_UID + " = ? ",
+                            new String[] { uid },
+                            null);
 
-                    // TODO: find the koopman by nfc uid and populate erkenningsnummer auto-complete and select koopman
+                    // set the koopman
+                    if (koopman != null && koopman.moveToFirst()) {
+                        mKoopmanFragment.setKoopman(
+                                koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)));
+                        mKoopmanFragment.mErkenningsnummerEditText.setText(
+                                koopman.getString(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER)));
+                        mKoopmanFragment.mErkenningsnummerEditText.dismissDropDown();
+                        mKoopmanFragment.mKoopmanSelectionMethod = DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
+                    } else {
+                        mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
+                    }
 
+                    // close the cursor
+                    if (koopman != null) {
+                        koopman.close();
+                    }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_scan_nfc_cancelled));
@@ -1398,6 +1438,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // destroy the loader when we are done (this only to prevent it from being called when
             // exiting the activity by navigating back to the dagvergunningen activity)
             getLoaderManager().destroyLoader(DAGVERGUNNING_LOADER);
+
+            // hide the progressbar TODO: hide the progressbar when the koopman is loaded
+            mProgressbar.setVisibility(View.GONE);
         }
     }
 

@@ -12,6 +12,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -105,6 +106,18 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
             for (int i = 0; i < response.body().size(); i++) {
                 ApiSollicitatie sollicitatie = response.body().get(i);
                 ApiKoopman koopman = sollicitatie.getKoopman();
+
+                // TODO: remove temporary fake NFC UID once we receive it from the api
+                if (koopman.getErkenningsnummer().equals("1957051001")) {
+                    koopman.setNfcUid("407fe606");
+                } else if (koopman.getErkenningsnummer().equals("1973120702")) {
+                    koopman.setNfcUid("7c5d1e40");
+                } else if (koopman.getErkenningsnummer().equals("1970032002")) {
+                    koopman.setNfcUid("8c481740");
+                } else {
+                    koopman.setNfcUid(getRandomHexString(8));
+                }
+
                 koopmanValues[i] = koopman.toContentValues();
                 sollicitatie.setKoopmanId(koopman.getId());
                 sollicitatieValues[i] = sollicitatie.toContentValues();
@@ -122,6 +135,21 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 Utility.log(mContext, LOG_TAG, "Koopmannen inserted: " + inserted);
             }
         }
+    }
+
+    /**
+     * TODO: Delete this function once we start receiving real NFC UIDs from the Api
+     * @param numchars
+     * @return
+     */
+    private String getRandomHexString(int numchars){
+        Random r = new Random();
+        StringBuffer sb = new StringBuffer();
+        while(sb.length() < numchars){
+            sb.append(Integer.toHexString(r.nextInt()));
+        }
+
+        return sb.toString().substring(0, numchars);
     }
 
     /**

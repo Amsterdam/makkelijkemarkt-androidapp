@@ -64,6 +64,8 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
     public void enqueue() {
         super.enqueue();
 
+        // TODO: check if marktid and dag are set
+
         // set the api function to call for loading the dagvergunningen
         Call<List<ApiDagvergunning>> call = mMakkelijkeMarktApi.getDagvergunningen(mMarktId, mDag);
 
@@ -121,7 +123,10 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
 
             // replace downloaded dagvergunningen into db using our custom bulkinsert
             if (dagvergunningValues.size() > 0) {
+
+                // TODO: only delete for select markt
                 mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriDagvergunning, null, null);
+
                 int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues.toArray(new ContentValues[dagvergunningValues.size()]));
                 Utility.log(mContext, LOG_TAG, "Dagvergunningen inserted: " + inserted);
             }
