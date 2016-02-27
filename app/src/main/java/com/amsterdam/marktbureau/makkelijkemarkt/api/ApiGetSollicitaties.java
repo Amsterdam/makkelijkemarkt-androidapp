@@ -12,7 +12,6 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import java.util.List;
-import java.util.Random;
 
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -115,7 +114,7 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 } else if (koopman.getErkenningsnummer().equals("1970032002")) {
                     koopman.setNfcUid("8c481740");
                 } else {
-                    koopman.setNfcUid(getRandomHexString(8));
+                    koopman.setNfcUid(Utility.getRandomHexString(8));
                 }
 
                 koopmanValues[i] = koopman.toContentValues();
@@ -135,21 +134,6 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 Utility.log(mContext, LOG_TAG, "Koopmannen inserted: " + inserted);
             }
         }
-    }
-
-    /**
-     * TODO: Delete this function once we start receiving real NFC UIDs from the Api
-     * @param numchars
-     * @return
-     */
-    private String getRandomHexString(int numchars){
-        Random r = new Random();
-        StringBuffer sb = new StringBuffer();
-        while(sb.length() < numchars){
-            sb.append(Integer.toHexString(r.nextInt()));
-        }
-
-        return sb.toString().substring(0, numchars);
     }
 
     /**

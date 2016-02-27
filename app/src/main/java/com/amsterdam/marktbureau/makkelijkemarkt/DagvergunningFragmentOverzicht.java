@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningFragmentOverzicht extends DagvergunningFragmentPage implements LoaderManager.LoaderCallbacks<Cursor>  {
+public class DagvergunningFragmentOverzicht extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>  {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragmentOverzicht.class.getSimpleName();

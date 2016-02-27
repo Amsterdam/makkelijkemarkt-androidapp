@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
  */
-package com.amsterdam.marktbureau.makkelijkemarkt;
+package com.amsterdam.marktbureau.makkelijkemarkt.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.R;
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
 
@@ -28,10 +30,10 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningenListAdapter extends CursorAdapter {
+public class DagvergunningenAdapter extends CursorAdapter {
 
     // use classname when logging
-    private static final String LOG_TAG = DagvergunningenListAdapter.class.getSimpleName();
+    private static final String LOG_TAG = DagvergunningenAdapter.class.getSimpleName();
 
     /**
      * Constructor
@@ -39,7 +41,7 @@ public class DagvergunningenListAdapter extends CursorAdapter {
      * @param cursor
      * @param flags
      */
-    public DagvergunningenListAdapter(Context context, Cursor cursor, int flags) {
+    public DagvergunningenAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
     }
 

@@ -4,6 +4,7 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -133,6 +134,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     // sollicitatie default product data
     private Map<String, Integer> mProductenVast = new HashMap<>();
 
+    // progress dialog for during saving
+    private ProgressDialog mProgressDialog;
+
     // common toast object
     protected Toast mToast;
 
@@ -199,7 +203,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         }
 
         // create the fragment pager adapter
-        DagvergunningPagerAdapter pagerAdapter = new DagvergunningPagerAdapter(
+        DagvergunningFragmentPagerAdapter pagerAdapter = new DagvergunningFragmentPagerAdapter(
                 getChildFragmentManager(),
                 mTabLayout.getTabCount(),
                 mKoopmanFragment,
@@ -217,6 +221,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         // disable upper-casing the wizard menu buttons
         mWizardPreviousButton.setTransformationMethod(null);
         mWizardNextButton.setTransformationMethod(null);
+
+        // create the save progress dialog
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setIndeterminateDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progressbar_circle));
+        mProgressDialog.setMessage(getString(R.string.notice_dagvergunning_saving) + "...");
+        mProgressDialog.setCancelable(false);
 
         return view;
     }
@@ -857,8 +868,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
         } else {
 
-            // show progress bar
-            mProgressbar.setVisibility(View.VISIBLE);
+            // show progress dialog
+            mProgressDialog.show();
 
             if (mId == -1) {
                 // save new dagvergunning:
@@ -870,8 +881,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onResponse(Response<ApiDagvergunning> response) {
 
-                        // hide progress bar
-                        mProgressbar.setVisibility(View.GONE);
+                        // hide progress dialog
+                        mProgressDialog.dismiss();
 
                         if (response.isSuccess() && response.body() != null) {
 
@@ -895,8 +906,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onFailure(Throwable t) {
 
-                        // hide progress bar
-                        mProgressbar.setVisibility(View.GONE);
+                        // hide progress dialog
+                        mProgressDialog.dismiss();
 
                         Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                     }
@@ -912,8 +923,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onResponse(Response<ApiDagvergunning> response) {
 
-                        // hide progress bar
-                        mProgressbar.setVisibility(View.GONE);
+                        // hide progress dialog
+                        mProgressDialog.dismiss();
 
                         if (response.isSuccess() && response.body() != null) {
 
@@ -946,8 +957,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     @Override
                     public void onFailure(Throwable t) {
 
-                        // hide progress bar
-                        mProgressbar.setVisibility(View.GONE);
+                        // hide progress dialog
+                        mProgressDialog.dismiss();
 
                         Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_save_failed));
                     }
@@ -1085,7 +1096,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     scanNfcTagButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), NfcScanActivity.class);
+                            Intent intent = new Intent(getActivity(), ScanNfcActivity.class);
                             startActivityForResult(intent, NFC_SCAN_REQUEST_CODE);
                         }
                     });
@@ -1105,7 +1116,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(fragment);
 
         // use a custom scanactivity that can be rotated
-        integrator.setCaptureActivity(BarcodeScanActivity.class);
+        integrator.setCaptureActivity(ScanBarcodeActivity.class);
         integrator.setOrientationLocked(false);
 
         // limit scanning to only one-dimensional barcodes

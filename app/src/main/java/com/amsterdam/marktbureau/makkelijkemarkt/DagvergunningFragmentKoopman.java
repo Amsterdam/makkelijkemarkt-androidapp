@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -29,6 +30,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.adapters.ErkenningsnummerAdapter;
+import com.amsterdam.marktbureau.makkelijkemarkt.adapters.SollicitatienummerAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
 
@@ -42,7 +45,7 @@ import butterknife.OnItemSelected;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningFragmentKoopman extends DagvergunningFragmentPage implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DagvergunningFragmentKoopman extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragmentKoopman.class.getSimpleName();

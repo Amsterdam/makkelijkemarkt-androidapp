@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -190,5 +191,19 @@ public class Utility {
      */
     public static String bin2hex(byte[] data) {
         return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
+    }
+
+    /**
+     * Generate a random hex-decimal string of given length
+     * @param length length of the hex string
+     * @return hex string
+     */
+    public static String getRandomHexString(int length){
+        Random r = new Random();
+        StringBuffer sb = new StringBuffer();
+        while(sb.length() < length){
+            sb.append(Integer.toHexString(r.nextInt()));
+        }
+        return sb.toString().substring(0, length);
     }
 }

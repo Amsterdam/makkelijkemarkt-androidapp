@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2016 Gemeente Amsterdam, Marktbureau
  */
-package com.amsterdam.marktbureau.makkelijkemarkt;
+package com.amsterdam.marktbureau.makkelijkemarkt.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +15,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
 

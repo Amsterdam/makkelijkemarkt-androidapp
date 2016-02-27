@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -61,6 +62,7 @@ public class LoginFragment extends Fragment implements
     // keep a reference to toast messages
     private Toast mToast;
 
+    // progress dialog for during authentication
     private ProgressDialog mLoginProcessDialog;
 
     /**
@@ -105,9 +107,10 @@ public class LoginFragment extends Fragment implements
 
         // create the login progress dialog
         mLoginProcessDialog = new ProgressDialog(getContext());
+        mLoginProcessDialog.setIndeterminate(true);
+        mLoginProcessDialog.setIndeterminateDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progressbar_circle));
         mLoginProcessDialog.setMessage(getString(R.string.login) + "...");
         mLoginProcessDialog.setCancelable(false);
-        mLoginProcessDialog.setIndeterminate(true);
 
         return mainView;
     }

@@ -9,5 +9,5 @@ import com.journeyapps.barcodescanner.CaptureActivity;
  * Empty activity required for barcode scanning in any orientation
  * @author marcolangebeeke
  */
-public class BarcodeScanActivity extends CaptureActivity {
+public class ScanBarcodeActivity extends CaptureActivity {
 }

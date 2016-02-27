@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.adapters.DagvergunningenAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetDagvergunningen;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
@@ -50,7 +51,7 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     private String mDag;
 
     // cursoradapter for populating the dagvergunningen litsview with dagvergunningen from the database
-    private DagvergunningenListAdapter mDagvergunningenAdapter;
+    private DagvergunningenAdapter mDagvergunningenAdapter;
 
     /**
      * Constructor
@@ -104,7 +105,7 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         }
 
         // create an adapter for the dagvergunningen listview
-        mDagvergunningenAdapter = new DagvergunningenListAdapter(getActivity(), null, 0);
+        mDagvergunningenAdapter = new DagvergunningenAdapter(getActivity(), null, 0);
         mDagvergunningenListView.setAdapter(mDagvergunningenAdapter);
 
         // pass markt id and dag as arguments bundle to the cursorloader

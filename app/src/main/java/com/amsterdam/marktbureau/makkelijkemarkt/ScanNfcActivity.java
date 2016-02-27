@@ -20,10 +20,10 @@ import butterknife.OnClick;
  *
  * @author marcolangebeeke
  */
-public class NfcScanActivity extends Activity {
+public class ScanNfcActivity extends Activity {
 
     // use classname when logging
-    private static final String LOG_TAG = NfcScanActivity.class.getSimpleName();
+    private static final String LOG_TAG = ScanNfcActivity.class.getSimpleName();
 
     // nfc scan components
     private NfcAdapter mAdapter;
@@ -112,6 +112,9 @@ public class NfcScanActivity extends Activity {
         }
     }
 
+    /**
+     * Onclick on the cancel button close the activity with result_canceled
+     */
     @OnClick(R.id.scan_cancel)
     public void onCancelScan() {
         Intent returnIntent = new Intent();

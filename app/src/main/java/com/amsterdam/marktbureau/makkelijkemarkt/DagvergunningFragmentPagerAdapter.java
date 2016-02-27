@@ -20,7 +20,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  * 3 fragments will be kept attached in the fragmentmanager
  * @author marcolangebeeke
  */
-public class DagvergunningPagerAdapter extends FragmentPagerAdapter {
+public class DagvergunningFragmentPagerAdapter extends FragmentPagerAdapter {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragment.class.getSimpleName();
@@ -41,7 +41,7 @@ public class DagvergunningPagerAdapter extends FragmentPagerAdapter {
      * @param productFragment the product fragment
      * @param overzichtFragment the overzicht fragment
      */
-    public DagvergunningPagerAdapter(
+    public DagvergunningFragmentPagerAdapter(
             FragmentManager fragmentManager,
             int numOfTabs,
             DagvergunningFragmentKoopman koopmanFragment,

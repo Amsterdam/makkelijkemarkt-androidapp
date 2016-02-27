@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  *
  * @author marcolangebeeke
  */
-public class DagvergunningFragmentProduct extends DagvergunningFragmentPage {
+public class DagvergunningFragmentProduct extends Fragment {
 
     // use classname when logging
     private static final String LOG_TAG = DagvergunningFragmentProduct.class.getSimpleName();

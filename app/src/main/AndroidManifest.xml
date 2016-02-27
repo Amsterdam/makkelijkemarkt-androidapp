@@ -71,7 +71,7 @@
 
         <!-- BARCODE SCAN Activity -->
         <activity
-            android:name=".BarcodeScanActivity"
+            android:name=".ScanBarcodeActivity"
             android:theme="@style/zxing_CaptureTheme"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
@@ -81,7 +81,7 @@
 
         <!-- NFCTAG SCAN Activity -->
         <activity
-            android:name=".NfcScanActivity"
+            android:name=".ScanNfcActivity"
             android:theme="@style/AppDialogTheme"
             >
             <meta-data
