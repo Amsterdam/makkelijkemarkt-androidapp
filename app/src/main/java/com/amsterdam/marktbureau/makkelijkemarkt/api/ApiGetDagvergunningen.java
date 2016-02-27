@@ -64,13 +64,13 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
     public void enqueue() {
         super.enqueue();
 
-        // TODO: check if marktid and dag are set
-
         // set the api function to call for loading the dagvergunningen
-        Call<List<ApiDagvergunning>> call = mMakkelijkeMarktApi.getDagvergunningen(mMarktId, mDag);
+        if (mMarktId != null && mDag != null) {
+            Call<List<ApiDagvergunning>> call = mMakkelijkeMarktApi.getDagvergunningen(mMarktId, mDag);
 
-        // call the api asynchronously
-        call.enqueue(this);
+            // call the api asynchronously
+            call.enqueue(this);
+        }
     }
 
     /**
@@ -111,24 +111,27 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
 
             // update downloaded koopmannen into db using our custom bulkinsert
             if (koopmanValues.size() > 0) {
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues.toArray(new ContentValues[koopmanValues.size()]));
-                Utility.log(mContext, LOG_TAG, "Koopmannen inserted: " + inserted);
+                mContext.getContentResolver().bulkInsert(
+                        MakkelijkeMarktProvider.mUriKoopman,
+                        koopmanValues.toArray(new ContentValues[koopmanValues.size()]));
             }
 
             // update downloaded sollicitaties into db using our custom bulkinsert
             if (sollicitatieValues.size() > 0) {
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues.toArray(new ContentValues[sollicitatieValues.size()]));
-                Utility.log(mContext, LOG_TAG, "Sollicitaties inserted: " + inserted);
+                mContext.getContentResolver().bulkInsert(
+                        MakkelijkeMarktProvider.mUriSollicitatie,
+                        sollicitatieValues.toArray(new ContentValues[sollicitatieValues.size()]));
             }
 
             // replace downloaded dagvergunningen into db using our custom bulkinsert
             if (dagvergunningValues.size() > 0) {
-
-                // TODO: only delete for select markt
-                mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriDagvergunning, null, null);
-
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriDagvergunning, dagvergunningValues.toArray(new ContentValues[dagvergunningValues.size()]));
-                Utility.log(mContext, LOG_TAG, "Dagvergunningen inserted: " + inserted);
+                mContext.getContentResolver().delete(
+                        MakkelijkeMarktProvider.mUriDagvergunning,
+                        MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? ",
+                        new String[] { mMarktId });
+                mContext.getContentResolver().bulkInsert(
+                        MakkelijkeMarktProvider.mUriDagvergunning,
+                        dagvergunningValues.toArray(new ContentValues[dagvergunningValues.size()]));
             }
         }
     }

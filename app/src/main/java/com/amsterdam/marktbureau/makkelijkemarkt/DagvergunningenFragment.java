@@ -19,10 +19,12 @@ import android.widget.ListView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.DagvergunningenAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetDagvergunningen;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -83,25 +85,35 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
         mDag = sdf.format(new Date());
 
-        // @todo remove api call here and only call on interval basis in the service?
-        // @todo or keep it here, so we can show a zandloper and start calling it on interval basis in the service once this call is finished?
-        // @todo best way would be to call it here one time, so we use the progressbar, and on interval basis call it in the service
-        // @todo in the service we need to see what the interval for eacht type of call should be:
-        // @todo: dagvergunningen: 1x per minute?
-        // @todo: keep the api session allive: 30sec? (is this even necceserry? or we can do this also by asking for something small?)
-
         if (savedInstanceState == null) {
+
+            // @todo remove api call here and only call on interval basis in the service?
+            // @todo or keep it here, so we can show a progressbar and start calling it on interval basis in the service once this call is finished?
+            // @todo best way would be to call it here one time, so we use the progressbar, and on interval basis call it in the service
+            // @todo in the service we need to see what the interval for each type of call should be:
+            // @todo: dagvergunningen: 1x per minute?
+            // @todo: keep the api session alive: 30sec? (is this even neccesery? or we can do this also by asking for something small?)
+
+            // fetch dagvergunningen for selected markt
             ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
             getDagvergunningen.setMarktId(String.valueOf(mMarktId));
             getDagvergunningen.setDag(mDag);
             getDagvergunningen.enqueue();
 
+            // check time in hours since last fetched the sollicitaties for selected markt
+            long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours);
+            if (settings.contains(getContext().getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId)) {
+                long lastFetchTimestamp = settings.getLong(getContext().getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId, 0);
+                long differenceMs  = new Date().getTime() - lastFetchTimestamp;
+                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+            }
 
-
-//            // TODO: prevent multiple times downloading the sollicitaties for the same markt id in the same session/day (shared prefs?)
-//            ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
-//            getSollicitaties.setMarktId(mMarktId);
-//            getSollicitaties.enqueue();
+            // if last sollicitaties fetched more than 12 hours ago, fetch them again
+            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours)) {
+                ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
+                getSollicitaties.setMarktId(mMarktId);
+                getSollicitaties.enqueue();
+            }
         }
 
         // create an adapter for the dagvergunningen listview

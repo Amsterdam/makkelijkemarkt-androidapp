@@ -5,12 +5,16 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Headers;
@@ -91,7 +95,21 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                     // if there is still more to fetch, increase the offset and enqueue again
                     if (totalListSize > mListOffset + mListLength) {
                         mListOffset += mListLength;
+
+                        // enqueue again
                         enqueue();
+
+                    } else {
+
+                        // when we are done, remember when we last fetched the sollicitaties for
+                        // selected markt in shared prefs
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putLong(
+                                mContext.getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId,
+                                new Date().getTime());
+                        editor.apply();
+
                     }
                 } catch (NumberFormatException e) {
                     Utility.log(mContext, LOG_TAG, "Failed to retrieve listsize: " + e.getMessage());
