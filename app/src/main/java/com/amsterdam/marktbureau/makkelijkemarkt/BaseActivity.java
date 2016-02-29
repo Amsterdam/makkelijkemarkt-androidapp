@@ -12,8 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiCall;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +39,9 @@ public class BaseActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.toolbar_title) TextView mTitleView;
     @Bind(R.id.toolbar_subtitle) TextView mSubtitleView;
+
+    // common toast object
+    protected Toast mToast;
 
     /**
      *
@@ -82,7 +90,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // log the user out
         if (id == R.id.action_logout) {
-            logout();
+            logout(true);
             return true;
         }
 
@@ -121,20 +129,25 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * Log the user out by sending a logout call to the api and clearing the shared preferences
      */
-    private void logout() {
+    private void logout(boolean callApi) {
 
         Utility.log(this, LOG_TAG, "Logging out...");
 
         // @todo stop running api service
 
-        // call api logout method (without even waiting for the response)
-        ApiGetLogout getLogout = new ApiGetLogout(this);
-        getLogout.enqueue(new Callback() {
-            @Override
-            public void onResponse(Response response) {}
-            @Override
-            public void onFailure(Throwable t) {}
-        });
+        // call api logout method (async, but without handling the response)
+        if (callApi) {
+            ApiGetLogout getLogout = new ApiGetLogout(this);
+            getLogout.enqueue(new Callback() {
+                @Override
+                public void onResponse(Response response) {
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
 
         // clear all uuid and selected markt details from shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -149,5 +162,37 @@ public class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    /**
+     * Handle unauthorised event received from the api call unauthorised interceptor
+     * @param event the received event
+     */
+    @Subscribe
+    public void onUnauthorizedEvent(ApiCall.OnUnauthorizedEvent event) {
+
+        // if we received an event with code 401 we need to logout the user
+        if (event.mCode == 401) {
+            mToast = Utility.showToast(this, mToast, event.mMessage);
+            logout(false);
+        }
+    }
+
+    /**
+     * Register eventbus handlers
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Unregister eventbus handlers
+     */
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

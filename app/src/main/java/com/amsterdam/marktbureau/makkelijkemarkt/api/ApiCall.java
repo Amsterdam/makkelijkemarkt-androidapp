@@ -5,17 +5,22 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.CallSuper;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
@@ -43,10 +48,6 @@ public class ApiCall {
 
     // an optional gson payload to send with the request
     protected JsonObject mPayload;
-
-    /**
-     * @todo act on '401 Unauthorized' response from api if we are logged out for some reason
-     */
 
     /**
      * Constructor setting the given context and a default api base url
@@ -95,24 +96,20 @@ public class ApiCall {
         builder.baseUrl(mBaseUrl);
         builder.addConverterFactory(GsonConverterFactory.create());
 
-
-
         // @todo refactor to use real app version, app name, okhttp version, etc.
-
         // @todo refactor to get api-key somewhere more central (constructor?)
-
         // @todo refactor to create headers somewhere more central and only create an interceptor here and add all headers to it
-
         // @todo add language header? (Accept-Language: nl-NL,en-US;q=0.8)
 
+        // get api-key from shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
 
+        // if we have an api-key
         if (apiKey != null) {
-//            Utility.log(mContext, LOG_TAG, "Stored api-key found: " + apiKey);
 
+            // add header interceptor to add the api-key to the authorisation header
             final String authHeaderValue = mContext.getString(R.string.makkelijkemarkt_api_authorization_header_prefix) +" "+ apiKey;
-
             Interceptor addAuthorizationHeaderInterceptor = new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -126,14 +123,37 @@ public class ApiCall {
                                     mContext.getString(R.string.makkelijkemarkt_api_authorization_header_name),
                                     authHeaderValue)
                             .build();
-
                     return chain.proceed(request);
                 }};
-
             mClientBuilder.addInterceptor(addAuthorizationHeaderInterceptor);
+
+            // add an interceptor that will detect for a 401-Unauthorised response and send an event
+            // to be handled in the base activity
+            Interceptor handleUnauthorizedInterceptor = new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    Response response = chain.proceed(request);
+                    final int responseCode = response.code();
+
+                    // detect 401-Unauthorised http response
+                    if (responseCode == 401) {
+
+                        // get a reference to the main thread and post a runnable that will post our event
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.postAtFrontOfQueue(new Runnable() {
+                            @Override
+                            public void run() {
+                                EventBus.getDefault().post(new OnUnauthorizedEvent(
+                                        responseCode, mContext.getString(R.string.notice_api_unauthorised)));
+                            }
+                        });
+                    }
+
+                    return response;
+                }};
+            mClientBuilder.addInterceptor(handleUnauthorizedInterceptor);
         }
-
-
 
         // build and attach okhttpclient to retrofit
         builder.client(mClientBuilder.build());
@@ -164,6 +184,20 @@ public class ApiCall {
     public void enqueue(Callback callback) {
         if (mMakkelijkeMarktApi == null) {
             build();
+        }
+    }
+
+    /**
+     * Event to inform the base activity that we are not authorized to use the api and need to
+     * logout the user from the app
+     */
+    public class OnUnauthorizedEvent {
+        public final int mCode;
+        public final String mMessage;
+
+        public OnUnauthorizedEvent(int code, String message) {
+            mCode = code;
+            mMessage = message;
         }
     }
 }

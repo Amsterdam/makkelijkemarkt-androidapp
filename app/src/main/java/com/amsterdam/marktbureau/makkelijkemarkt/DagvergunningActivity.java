@@ -86,7 +86,7 @@ public class DagvergunningActivity extends BaseActivity implements
      * Connect to the google play services client
      */
     @Override
-    protected void onStart() {
+    public void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
     }
@@ -95,7 +95,7 @@ public class DagvergunningActivity extends BaseActivity implements
      * Disconnect to the google play services client
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
     }
