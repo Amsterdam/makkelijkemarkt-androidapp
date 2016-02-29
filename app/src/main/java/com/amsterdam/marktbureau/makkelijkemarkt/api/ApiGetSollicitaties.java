@@ -14,6 +14,8 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Date;
 import java.util.List;
 
@@ -81,76 +83,87 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
      */
     @Override
     public void onResponse(Response<List<ApiSollicitatie>> response) {
-        if (response.body() != null && response.body().size() > 0) {
+        if (response.body() != null) {
+            if (response.body().size() > 0) {
 
-            // get http headers from response
-            Headers headers = response.headers();
+                // get http headers from response
+                Headers headers = response.headers();
 
-            // get listsize header
-            if (headers.get("X-Api-ListSize") != null) {
-                try {
-                    int totalListSize = Integer.valueOf(headers.get("X-Api-ListSize"));
-                    Utility.log(mContext, LOG_TAG, "Sollicitaties received! Response list size = " + response.body().size() + " Total list size = " + totalListSize);
+                // get listsize header
+                if (headers.get("X-Api-ListSize") != null) {
+                    try {
 
-                    // if there is still more to fetch, increase the offset and enqueue again
-                    if (totalListSize > mListOffset + mListLength) {
-                        mListOffset += mListLength;
+                        // if there is still more to fetch, increase the offset and enqueue again
+                        int totalListSize = Integer.valueOf(headers.get("X-Api-ListSize"));
+                        if (totalListSize > mListOffset + mListLength) {
+                            mListOffset += mListLength;
 
-                        // enqueue again
-                        enqueue();
+                            // enqueue again
+                            enqueue();
 
-                    } else {
+                        } else {
 
-                        // when we are done, remember when we last fetched the sollicitaties for
-                        // selected markt in shared prefs
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putLong(
-                                mContext.getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId,
-                                new Date().getTime());
-                        editor.apply();
+                            // when we are done, remember when we last fetched the sollicitaties for
+                            // selected markt in shared prefs
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putLong(
+                                    mContext.getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId,
+                                    new Date().getTime());
+                            editor.apply();
 
+                            // inform subscribers that we completed loading all sollicitaties for selected markt
+                            EventBus.getDefault().post(new OnCompletedEvent(totalListSize, null));
+                        }
+                    } catch (NumberFormatException e) {
+
+                        // on missing listsize field send an error message
+                        EventBus.getDefault().post(new OnCompletedEvent(-1, "Failed to get X-Api-ListSize"));
                     }
-                } catch (NumberFormatException e) {
-                    Utility.log(mContext, LOG_TAG, "Failed to retrieve listsize: " + e.getMessage());
-                }
-            }
-
-            // copy the values to a contentvalues array that can be used in the
-            // contentprovider bulkinsert method
-            ContentValues[] sollicitatieValues = new ContentValues[response.body().size()];
-            ContentValues[] koopmanValues = new ContentValues[response.body().size()];
-            for (int i = 0; i < response.body().size(); i++) {
-                ApiSollicitatie sollicitatie = response.body().get(i);
-                ApiKoopman koopman = sollicitatie.getKoopman();
-
-                // TODO: remove temporary fake NFC UID once we receive it from the api
-                if (koopman.getErkenningsnummer().equals("1957051001")) {
-                    koopman.setNfcUid("407fe606");
-                } else if (koopman.getErkenningsnummer().equals("1973120702")) {
-                    koopman.setNfcUid("7c5d1e40");
-                } else if (koopman.getErkenningsnummer().equals("1970032002")) {
-                    koopman.setNfcUid("8c481740");
-                } else {
-                    koopman.setNfcUid(Utility.getRandomHexString(8));
                 }
 
-                koopmanValues[i] = koopman.toContentValues();
-                sollicitatie.setKoopmanId(koopman.getId());
-                sollicitatieValues[i] = sollicitatie.toContentValues();
-            }
+                // copy the values to a contentvalues array that can be used in the
+                // contentprovider bulkinsert method
+                ContentValues[] sollicitatieValues = new ContentValues[response.body().size()];
+                ContentValues[] koopmanValues = new ContentValues[response.body().size()];
+                for (int i = 0; i < response.body().size(); i++) {
+                    ApiSollicitatie sollicitatie = response.body().get(i);
+                    ApiKoopman koopman = sollicitatie.getKoopman();
 
-            // insert downloaded sollicitaties into db
-            if (sollicitatieValues.length > 0) {
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
-                Utility.log(mContext, LOG_TAG, "Sollicitaties inserted: " + inserted);
-            }
+                    // TODO: remove temporary fake NFC UID once we receive it from the api
+                    if (koopman.getErkenningsnummer().equals("1957051001")) {
+                        koopman.setNfcUid("407fe606");
+                    } else if (koopman.getErkenningsnummer().equals("1973120702")) {
+                        koopman.setNfcUid("7c5d1e40");
+                    } else if (koopman.getErkenningsnummer().equals("1970032002")) {
+                        koopman.setNfcUid("8c481740");
+                    } else {
+                        koopman.setNfcUid(Utility.getRandomHexString(8));
+                    }
 
-            // insert downloaded koopmannen into db
-            if (koopmanValues.length > 0) {
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues);
-                Utility.log(mContext, LOG_TAG, "Koopmannen inserted: " + inserted);
+                    koopmanValues[i] = koopman.toContentValues();
+                    sollicitatie.setKoopmanId(koopman.getId());
+                    sollicitatieValues[i] = sollicitatie.toContentValues();
+                }
+
+                // insert downloaded sollicitaties into db
+                if (sollicitatieValues.length > 0) {
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
+                }
+
+                // insert downloaded koopmannen into db
+                if (koopmanValues.length > 0) {
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues);
+                }
+            } else {
+
+                // on empty list send an error message
+                EventBus.getDefault().post(new OnCompletedEvent(-1, mContext.getString(R.string.notice_sollicitaties_empty)));
             }
+        } else {
+
+            // on empty body send an error message
+            EventBus.getDefault().post(new OnCompletedEvent(-1, "Empty response body"));
         }
     }
 
@@ -160,6 +173,19 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
      */
     @Override
     public void onFailure(Throwable t) {
-        Utility.log(mContext, LOG_TAG, "onFailure message: "+ t.getMessage());
+        EventBus.getDefault().post(new OnCompletedEvent(-1, t.getMessage()));
+    }
+
+    /**
+     * Event to inform subscribers that we completed receiving sollicitaties from the api
+     */
+    public class OnCompletedEvent {
+        public final int mSollicitatiesCount;
+        public final String mMessage;
+
+        public OnCompletedEvent(int sollicitatiesCount, String message) {
+            mSollicitatiesCount = sollicitatiesCount;
+            mMessage = message;
+        }
     }
 }

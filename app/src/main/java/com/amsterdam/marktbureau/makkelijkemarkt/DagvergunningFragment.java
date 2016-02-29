@@ -43,6 +43,9 @@ import com.google.gson.JsonObject;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -289,7 +292,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 args.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_ID, mId);
                 getLoaderManager().initLoader(DAGVERGUNNING_LOADER, args, this);
 
-                // show the progressbar
+                // show the progressbar (because we are fetching the koopman from the api later in the onloadfinished)
                 mProgressbar.setVisibility(View.VISIBLE);
             }
         } else {
@@ -703,63 +706,70 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // TODO: show the changes in case we are editing an existing dagvergunning
 
-            // koopman details
+            // koopman
             if (mKoopmanId > 0) {
+                mOverzichtFragment.mKoopmanLinearLayout.setVisibility(View.VISIBLE);
+                mOverzichtFragment.mKoopmanEmptyTextView.setVisibility(View.GONE);
+
+                // koopman details
                 mOverzichtFragment.setKoopman(mKoopmanId);
-            }
 
-            // dagvergunning registratie tijd
-            if (mRegistratieDatumtijd != null) {
-                try {
-                    Date registratieDate = new SimpleDateFormat(
-                            getString(R.string.date_format_datumtijd),
-                            Locale.getDefault()).parse(mRegistratieDatumtijd);
-                    SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_tijd));
-                    String registratieTijd = sdf.format(registratieDate);
-                    mOverzichtFragment.mRegistratieDatumtijdText.setText(registratieTijd);
-                } catch (java.text.ParseException e) {
-                    Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: " + e.getMessage());
-                }
-            } else {
-                mOverzichtFragment.mRegistratieDatumtijdText.setText("");
-            }
-
-            // dagvergunning notitie
-            if (mNotitie != null && !mNotitie.equals("")) {
-                mOverzichtFragment.mNotitieText.setText(getString(R.string.label_notitie) + ": " + mNotitie);
-                Utility.collapseView(mOverzichtFragment.mNotitieText, false);
-            } else {
-                Utility.collapseView(mOverzichtFragment.mNotitieText, true);
-            }
-
-            // dagvergunning totale lengte
-            if (mTotaleLengte != -1) {
-                mOverzichtFragment.mTotaleLengte.setText(mTotaleLengte + " " + getString(R.string.length_meter));
-            }
-
-            // registratie account naam
-            if (mRegistratieAccountNaam != null) {
-                mOverzichtFragment.mAccountNaam.setText(mRegistratieAccountNaam);
-            } else {
-                mOverzichtFragment.mAccountNaam.setText("");
-            }
-
-            // koopman aanwezig status
-            if (mKoopmanAanwezig != null) {
-
-                // get the corresponding aanwezig title from the resource array based on the aanwezig key
-                String[] aanwezigKeys = getResources().getStringArray(R.array.array_aanwezig_key);
-                String[] aanwezigTitles = getResources().getStringArray(R.array.array_aanwezig_title);
-                String aanwezigTitle = "";
-                for (int i = 0; i < aanwezigKeys.length; i++) {
-                    if (aanwezigKeys[i].equals(mKoopmanAanwezig)) {
-                        aanwezigTitle = aanwezigTitles[i];
+                // dagvergunning registratie tijd
+                if (mRegistratieDatumtijd != null) {
+                    try {
+                        Date registratieDate = new SimpleDateFormat(
+                                getString(R.string.date_format_datumtijd),
+                                Locale.getDefault()).parse(mRegistratieDatumtijd);
+                        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_tijd));
+                        String registratieTijd = sdf.format(registratieDate);
+                        mOverzichtFragment.mRegistratieDatumtijdText.setText(registratieTijd);
+                    } catch (java.text.ParseException e) {
+                        Utility.log(getContext(), LOG_TAG, "Format registratie tijd failed: " + e.getMessage());
                     }
+                } else {
+                    mOverzichtFragment.mRegistratieDatumtijdText.setText("");
                 }
-                mOverzichtFragment.mAanwezigText.setText(aanwezigTitle);
+
+                // dagvergunning notitie
+                if (mNotitie != null && !mNotitie.equals("")) {
+                    mOverzichtFragment.mNotitieText.setText(getString(R.string.label_notitie) + ": " + mNotitie);
+                    Utility.collapseView(mOverzichtFragment.mNotitieText, false);
+                } else {
+                    Utility.collapseView(mOverzichtFragment.mNotitieText, true);
+                }
+
+                // dagvergunning totale lengte
+                if (mTotaleLengte != -1) {
+                    mOverzichtFragment.mTotaleLengte.setText(mTotaleLengte + " " + getString(R.string.length_meter));
+                }
+
+                // registratie account naam
+                if (mRegistratieAccountNaam != null) {
+                    mOverzichtFragment.mAccountNaam.setText(mRegistratieAccountNaam);
+                } else {
+                    mOverzichtFragment.mAccountNaam.setText("");
+                }
+
+                // koopman aanwezig status
+                if (mKoopmanAanwezig != null) {
+
+                    // get the corresponding aanwezig title from the resource array based on the aanwezig key
+                    String[] aanwezigKeys = getResources().getStringArray(R.array.array_aanwezig_key);
+                    String[] aanwezigTitles = getResources().getStringArray(R.array.array_aanwezig_title);
+                    String aanwezigTitle = "";
+                    for (int i = 0; i < aanwezigKeys.length; i++) {
+                        if (aanwezigKeys[i].equals(mKoopmanAanwezig)) {
+                            aanwezigTitle = aanwezigTitles[i];
+                        }
+                    }
+                    mOverzichtFragment.mAanwezigText.setText(aanwezigTitle);
+                }
+            } else {
+                mOverzichtFragment.mKoopmanEmptyTextView.setVisibility(View.VISIBLE);
+                mOverzichtFragment.mKoopmanLinearLayout.setVisibility(View.GONE);
             }
 
-            // if we have all required dagvergunning details available
+            // product
             if (mErkenningsnummer != null && isProductSelected()) {
                 Utility.log(getContext(), LOG_TAG, "Calling dagvergunning concept..");
 
@@ -777,6 +787,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         mProgressbar.setVisibility(View.GONE);
 
                         if (response.isSuccess() && response.body() != null) {
+                            mOverzichtFragment.mProductenLinearLayout.setVisibility(View.VISIBLE);
+                            mOverzichtFragment.mProductenEmptyTextView.setVisibility(View.GONE);
 
                             Utility.log(getContext(), LOG_TAG, "Dagvergunning concept Response: " + response.body().toString());
 
@@ -834,7 +846,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         Utility.log(getContext(), LOG_TAG, "Failed to load dagvergunning concept!");
                     }
                 });
+            } else {
+                mOverzichtFragment.mProductenLinearLayout.setVisibility(View.GONE);
 
+                if (mKoopmanId > 0) {
+                    mOverzichtFragment.mProductenEmptyTextView.setVisibility(View.VISIBLE);
+                }
             }
 
             Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
@@ -1449,9 +1466,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // destroy the loader when we are done (this only to prevent it from being called when
             // exiting the activity by navigating back to the dagvergunningen activity)
             getLoaderManager().destroyLoader(DAGVERGUNNING_LOADER);
-
-            // hide the progressbar TODO: hide the progressbar when the koopman is loaded
-            mProgressbar.setVisibility(View.GONE);
         }
     }
 
@@ -1459,5 +1473,38 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * On loader reset, do nothing
      */
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {}
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    /**
+     * Handle response event from api get koopman request onresponse method to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onGetKoopmanResponseEvent(ApiGetKoopman.OnResponseEvent event) {
+
+        // hide progressbar or show an error
+        mProgressbar.setVisibility(View.GONE);
+        if (event.mKoopman == null) {
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_koopman_fetch_failed) + ": " + event.mMessage);
+        }
+    }
+
+    /**
+     * Register eventbus handlers
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Unregister eventbus handlers
+     */
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 }

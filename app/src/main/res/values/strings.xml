@@ -44,12 +44,20 @@
     <string name="notice_autocomplete_minimum">Enter a query of at least 2 digits</string>
     <string name="notice_select_koopman">Selecteer eerst een koopman</string>
     <string name="notice_select_product">Selecteer minimaal één product</string>
-    <string name="notice_dagvergunning_concept_loading">Producten worden geladen...</string>
     <string name="notice_dagvergunning_saving">Dagvergunning wordt opgelsagen</string>
     <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
-    <string name="notice_dagvergunning_save_success">Nieuwe dagvergunning opgeslagen</string>
+    <string name="notice_dagvergunning_save_success">Dagvergunning opgeslagen</string>
     <string name="notice_scan_barcode_cancelled">Barcode Scan geannuleerd</string>
     <string name="notice_koopman_not_found">Koopman niet gevonden</string>
+    <string name="notice_koopman_not_selected">Geen koopman geselecteerd</string>
+    <string name="notice_producten_not_selected">Geen producten geselecteerd</string>
     <string name="notice_scan_nfc_cancelled">NFC Scan geannuleerd</string>
+    <string name="notice_sollicitaties_loading">Even geduld aub, sollicitaties voor geselecteerde markt worden geladen</string>
+    <string name="notice_sollicitaties_empty">Geen sollicitaties gevonden voor geselecteerde markt</string>
+    <string name="notice_dagvergunningen_empty">Voor geselecteerde markt vandaag nog geen dagvergunningen aangemaakt</string>
+
+    <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>
+    <string name="error_sollicitaties_fetch_failed">Er is iets mis gegaan bij het ophalen van de sollicitaties</string>
+    <string name="error_koopman_fetch_failed">Er is iets mis gegaan bij het ophalen van de koopman</string>
 
 </resources>

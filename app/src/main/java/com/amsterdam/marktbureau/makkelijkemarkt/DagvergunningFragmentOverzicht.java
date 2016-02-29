@@ -39,6 +39,7 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
     private static final int KOOPMAN_LOADER = 6;
 
     // bind layout elements
+    @Bind(R.id.koopman) LinearLayout mKoopmanLinearLayout;
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
     @Bind(R.id.koopman_status) TextView mKoopmanStatus;
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
@@ -48,6 +49,9 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
     @Bind(R.id.dagvergunning_totale_lente) TextView mTotaleLengte;
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig) TextView mAanwezigText;
+    @Bind(R.id.koopman_empty) TextView mKoopmanEmptyTextView;
+    @Bind(R.id.producten) LinearLayout mProductenLinearLayout;
+    @Bind(R.id.producten_empty) TextView mProductenEmptyTextView;
 
     // koopman id
     public int mKoopmanId = -1;

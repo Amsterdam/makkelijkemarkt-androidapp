@@ -136,13 +136,14 @@ public class BaseActivity extends AppCompatActivity {
             public void onFailure(Throwable t) {}
         });
 
-        // clear all shared preferences, accept for account id
+        // clear all uuid and selected markt details from shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        int accountId = settings.getInt(getString(R.string.sharedpreferences_key_account_id), 0);
-        settings.edit().clear().apply();
-        if (accountId != 0) {
-            settings.edit().putInt(getString(R.string.sharedpreferences_key_account_id), accountId).apply();
-        }
+        settings.edit()
+                .remove(getString(R.string.sharedpreferences_key_uuid))
+                .remove(getString(R.string.sharedpreferences_key_markt_id))
+                .remove(getString(R.string.sharedpreferences_key_markt_naam))
+                .remove(getString(R.string.sharedpreferences_key_markt_producten))
+                .apply();
 
         // clear active activities and history stack and open mainactivity home screen
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

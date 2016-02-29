@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             transaction.add(R.id.container, mMainFragment, MAIN_FRAGMENT_TAG);
             transaction.commit();
 
-            // TODO: move these api calls later to a service that keeps running api calls on set intervals in a separate thread
+            // TODO: prevent getaccounts and getmarkten to be called every time the app is started, or when the user is logged out, the same way is with the sollicitaties: only check once a day
             // TODO: check internet connection before calling the api
 
             // update the local accounts by reloading them from the api

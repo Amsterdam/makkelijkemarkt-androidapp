@@ -55,7 +55,6 @@
         android:id="@+id/progressbar_dagvergunning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin"
         android:layout_centerInParent="true"
         android:visibility="gone"
         android:indeterminateDrawable="@drawable/progressbar_circle"

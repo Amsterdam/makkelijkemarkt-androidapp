@@ -12,6 +12,8 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
+import org.greenrobot.eventbus.EventBus;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,18 +94,37 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
                 Uri koopmanUri = mContext.getContentResolver().insert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues);
                 if (koopmanUri != null) {
                     Utility.log(mContext, LOG_TAG, "Koopman inserted/updated with id: " + koopmanUri.getLastPathSegment());
+
+                    // send event to subscribers that we retrieved the koopman succesfully
+                    EventBus.getDefault().post(new OnResponseEvent(response.body(), null));
                 }
             }
+        } else {
 
+            // on empty body send an error message
+            EventBus.getDefault().post(new OnResponseEvent(null, "Empty response body"));
         }
     }
 
     /**
-     * On failure of the getKoopman method log the error message
+     * On failure of the getKoopman method send an error message
      * @param t the thrown exception
      */
     @Override
     public void onFailure(Throwable t) {
-        Utility.log(mContext, LOG_TAG, "onFailure message: " + t.getMessage());
+        EventBus.getDefault().post(new OnResponseEvent(null, t.getMessage()));
+    }
+
+    /**
+     * Event to inform subscribers that we received a response from the api
+     */
+    public class OnResponseEvent {
+        public final ApiKoopman mKoopman;
+        public final String mMessage;
+
+        public OnResponseEvent(ApiKoopman koopman, String message) {
+            mKoopman = koopman;
+            mMessage = message;
+        }
     }
 }
