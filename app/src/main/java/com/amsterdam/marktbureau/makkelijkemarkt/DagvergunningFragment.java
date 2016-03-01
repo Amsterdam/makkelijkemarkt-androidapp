@@ -796,11 +796,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             View overzichtView = mOverzichtFragment.getView();
                             if (overzichtView != null) {
 
-                                // totaal
-                                String totaal = response.body().get("totaal").getAsString();
-                                TextView totaalText = (TextView) overzichtView.findViewById(R.id.producten_totaal);
-                                totaalText.setText("Totaal € " + totaal);
-
                                 LinearLayout placeholderLayout = (LinearLayout) overzichtView.findViewById(R.id.producten_placeholder);
                                 if (placeholderLayout != null) {
                                     placeholderLayout.removeAllViews();
@@ -809,29 +804,97 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                     // get the producten array
                                     JsonArray producten = response.body().getAsJsonArray(getString(R.string.makkelijkemarkt_api_dagvergunning_concept_producten));
 
-                                    for (int i = 0; i < producten.size(); i++) {
-                                        JsonObject product = producten.get(i).getAsJsonObject();
+                                    if (producten != null) {
+                                        int rowCount = 0;
 
-                                        // get the product item layout
-                                        View childLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
+                                        // table header
+                                        View headerLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
+                                        TextView btwHeaderText = (TextView) headerLayout.findViewById(R.id.btw_totaal);
+                                        btwHeaderText.setText("BTW");
+                                        TextView exclusiefHeaderText = (TextView) headerLayout.findViewById(R.id.bedrag_totaal);
+                                        exclusiefHeaderText.setText("Ex. BTW");
+                                        placeholderLayout.addView(headerLayout, rowCount++);
 
-                                        // aantal
-                                        String aantal = product.get("aantal").getAsString();
-                                        TextView aantalText = (TextView) childLayout.findViewById(R.id.product_aantal);
-                                        aantalText.setText(aantal + " x ");
+                                        for (int i = 0; i < producten.size(); i++) {
+                                            JsonObject product = producten.get(i).getAsJsonObject();
 
-                                        // naam
-                                        String naam = product.get("naam").getAsString();
-                                        TextView naamText = (TextView) childLayout.findViewById(R.id.product_naam);
-                                        naamText.setText(naam);
+                                            // get the product item layout
+                                            View childLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
 
-                                        // bedrag
-                                        String bedrag = product.get("bedrag").getAsString();
-                                        TextView bedragText = (TextView) childLayout.findViewById(R.id.product_bedrag);
-                                        bedragText.setText("€ " + bedrag);
+                                            // aantal
+                                            if (product.get("aantal") != null) {
+                                                String aantal = product.get("aantal").getAsString();
+                                                TextView aantalText = (TextView) childLayout.findViewById(R.id.product_aantal);
+                                                aantalText.setText(aantal + " x ");
+                                            }
 
-                                        // add child view
-                                        placeholderLayout.addView(childLayout, i);
+                                            // naam
+                                            if (product.get("naam") != null) {
+                                                String naam = product.get("naam").getAsString();
+                                                TextView naamText = (TextView) childLayout.findViewById(R.id.product_naam);
+                                                naamText.setText(naam);
+                                            }
+
+                                            // btw %
+                                            if (product.get("btw") != null) {
+                                                String btwPercentage = product.get("btw").getAsString();
+                                                TextView btwPercentageText = (TextView) childLayout.findViewById(R.id.btw_percentage);
+                                                btwPercentageText.setText(btwPercentage + "%");
+                                            }
+
+                                            // btw totaal
+                                            if (product.get("totaal") != null && product.get("exclusief") != null) {
+                                                double totaalProduct = product.get("totaal").getAsDouble();
+                                                double exclusiefProduct = product.get("exclusief").getAsDouble();
+                                                double btwTotaalProduct = totaalProduct - exclusiefProduct;
+                                                TextView btwTotaalText = (TextView) childLayout.findViewById(R.id.btw_totaal);
+                                                btwTotaalText.setText(String.format("€ %.2f", btwTotaalProduct));
+                                            }
+
+                                            // bedrag totaal
+                                            if (product.get("totaal") != null) {
+                                                double bedragTotaal = product.get("totaal").getAsDouble();
+                                                TextView bedragTotaalText = (TextView) childLayout.findViewById(R.id.bedrag_totaal);
+                                                bedragTotaalText.setText(String.format("€ %.2f", bedragTotaal));
+                                            }
+
+                                            // add child view
+                                            placeholderLayout.addView(childLayout, rowCount++);
+                                        }
+
+                                        // exclusief
+                                        double exclusief = 0;
+                                        if (response.body().get("exclusief") != null) {
+                                            exclusief = response.body().get("exclusief").getAsDouble();
+                                        }
+
+                                        // totaal
+                                        double totaal = 0;
+                                        if (response.body().get("totaal") != null) {
+                                            totaal = response.body().get("totaal").getAsDouble();
+                                        }
+
+                                        // totaal btw en ex. btw
+                                        View totaalLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
+                                        TextView naamText = (TextView) totaalLayout.findViewById(R.id.product_naam);
+                                        naamText.setText("Totaal");
+                                        TextView btwTotaalText = (TextView) totaalLayout.findViewById(R.id.btw_totaal);
+                                        btwTotaalText.setText(String.format("€ %.2f", (totaal - exclusief)));
+                                        TextView exclusiefText = (TextView) totaalLayout.findViewById(R.id.bedrag_totaal);
+                                        exclusiefText.setText(String.format("€ %.2f", exclusief));
+                                        placeholderLayout.addView(totaalLayout, rowCount++);
+
+                                        // seperator
+                                        View emptyLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
+                                        placeholderLayout.addView(emptyLayout, rowCount++);
+
+                                        // totaal inc. btw
+                                        View totaalIncLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
+                                        TextView totaalNaamText = (TextView) totaalIncLayout.findViewById(R.id.product_naam);
+                                        totaalNaamText.setText("Totaal inc. BTW");
+                                        TextView totaalIncText = (TextView) totaalIncLayout.findViewById(R.id.bedrag_totaal);
+                                        totaalIncText.setText(String.format("€ %.2f", totaal));
+                                        placeholderLayout.addView(totaalIncLayout, rowCount);
                                     }
                                 }
                             }

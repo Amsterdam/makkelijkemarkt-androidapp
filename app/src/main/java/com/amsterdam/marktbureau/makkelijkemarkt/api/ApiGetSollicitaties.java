@@ -129,18 +129,6 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 for (int i = 0; i < response.body().size(); i++) {
                     ApiSollicitatie sollicitatie = response.body().get(i);
                     ApiKoopman koopman = sollicitatie.getKoopman();
-
-                    // TODO: remove temporary fake NFC UID once we receive it from the api
-                    if (koopman.getErkenningsnummer().equals("1957051001")) {
-                        koopman.setNfcUid("407fe606");
-                    } else if (koopman.getErkenningsnummer().equals("1973120702")) {
-                        koopman.setNfcUid("7c5d1e40");
-                    } else if (koopman.getErkenningsnummer().equals("1970032002")) {
-                        koopman.setNfcUid("8c481740");
-                    } else {
-                        koopman.setNfcUid(Utility.getRandomHexString(8));
-                    }
-
                     koopmanValues[i] = koopman.toContentValues();
                     sollicitatie.setKoopmanId(koopman.getId());
                     sollicitatieValues[i] = sollicitatie.toContentValues();

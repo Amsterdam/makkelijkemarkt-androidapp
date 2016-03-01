@@ -18,13 +18,37 @@
         android:paddingRight="0dp"
         android:paddingEnd="0dp"
         android:textColor="@color/primary_text"
+        android:textStyle="bold"
         />
 
-    <!-- bedrag -->
+    <!-- btw % -->
     <TextView
-        android:id="@+id/product_bedrag"
+        android:id="@+id/btw_percentage"
         android:gravity="end"
         android:textColor="@color/primary_text"
+        />
+
+    <!-- btw totaal -->
+    <TextView
+        android:id="@+id/btw_totaal"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:gravity="end"
+        android:textColor="@color/primary_text"
+        />
+
+    <!-- bedrag totaal -->
+    <TextView
+        android:id="@+id/bedrag_totaal"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:gravity="end"
+        android:textColor="@color/primary_text"
+        android:textStyle="bold"
         />
 
 </TableRow>

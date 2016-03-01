@@ -84,59 +84,27 @@
             android:id="@+id/producten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/margin"
-            android:paddingRight="@dimen/margin"
-            android:paddingLeft="@dimen/margin"
-            android:visibility="gone"
+            android:orientation="vertical"
+            android:padding="@dimen/margin"
             >
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="0dp"
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textsize_title_small"
+                android:textColor="@color/primary_text"
+                android:textStyle="bold"
+                android:text="@string/product"
                 />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="7"
+            <!-- Producten placeholder -->
+            <TableLayout
+                android:id="@+id/producten_placeholder"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/margin"
-                android:paddingStart="@dimen/margin"
-                android:paddingRight="0dp"
-                android:paddingEnd="0dp"
-                >
+                android:stretchColumns="1"
+                />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_title_small"
-                    android:textColor="@color/primary_text"
-                    android:textStyle="bold"
-                    android:text="@string/product"
-                    />
-
-                <!-- Producten placeholder -->
-                <TableLayout
-                    android:id="@+id/producten_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin"
-                    android:stretchColumns="1"
-                    />
-
-                <!-- Totaal -->
-                <TextView
-                    android:id="@+id/producten_totaal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin"
-                    android:gravity="end"
-                    android:textColor="@color/primary_text"
-                    android:textStyle="bold"
-                    />
-
-            </LinearLayout>
         </LinearLayout>
         <TextView
             android:id="@+id/producten_empty"
