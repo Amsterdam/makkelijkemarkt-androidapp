@@ -179,6 +179,13 @@ public class DagvergunningActivity extends BaseActivity implements
     }
 
     /**
+     * DagvergunningFragmentKoopman callback to update meldingen based on loaded koopman
+     */
+    public void onMeldingenUpdated() {
+        mDagvergunningFragment.populateMeldingen();
+    }
+
+    /**
      * DagvergunningFragmentProduct callback to inform the dagvergunningfragment that it's ready
      */
     public void onProductFragmentReady() {

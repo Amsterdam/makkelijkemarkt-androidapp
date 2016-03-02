@@ -26,6 +26,8 @@
                 layout="@layout/dagvergunning_koopman_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
                 />
             <View
                 android:layout_width="match_parent"
@@ -35,35 +37,23 @@
                 />
 
             <!-- Aanwezig -->
-            <LinearLayout
+            <TextView
+                android:id="@+id/aanwezig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginRight="0dp"
+                android:layout_marginEnd="0dp"
                 android:paddingTop="@dimen/margin"
-                android:paddingRight="@dimen/margin"
                 android:paddingBottom="@dimen/margin"
                 android:paddingLeft="@dimen/margin"
-                >
-                <View
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="0dp"
-                    />
-
-                <TextView
-                    android:id="@+id/aanwezig"
-                    android:layout_width="0dp"
-                    android:layout_weight="7"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/margin"
-                    android:paddingStart="@dimen/margin"
-                    android:paddingRight="0dp"
-                    android:paddingEnd="0dp"
-                    android:textColor="@color/primary_text"
-                    android:textStyle="bold"
-                    />
-
-            </LinearLayout>
+                android:paddingStart="@dimen/margin"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/primary_text"
+                android:textStyle="bold"
+                />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -86,6 +76,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/margin"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
             >
 
             <TextView

@@ -563,6 +563,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REINIGING, "dagvergunning_reiniging"));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_REINIGING_VAST, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "koopman_koopman_id"));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_STATUS, "koopman_status"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));

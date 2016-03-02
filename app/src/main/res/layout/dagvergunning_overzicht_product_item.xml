@@ -13,6 +13,7 @@
     <!-- naam -->
     <TextView
         android:id="@+id/product_naam"
+        android:maxWidth="140dp"
         android:paddingLeft="@dimen/large_margin"
         android:paddingStart="@dimen/large_margin"
         android:paddingRight="0dp"

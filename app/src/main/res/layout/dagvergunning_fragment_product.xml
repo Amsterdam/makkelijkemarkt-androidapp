@@ -15,6 +15,8 @@
         android:paddingBottom="40dp"
         android:paddingLeft="@dimen/margin"
         android:paddingStart="@dimen/margin"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
         >
 
         <!-- Producten placeholder -->

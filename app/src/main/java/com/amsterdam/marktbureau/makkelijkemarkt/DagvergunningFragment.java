@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -398,6 +399,49 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         getChildFragmentManager().putFragment(outState, OVERZICHT_FRAGMENT_TAG, mOverzichtFragment);
 
         Utility.log(getContext(), LOG_TAG, "State saved!");
+    }
+
+    /**
+     * Update the meldingen based on the koopmanfragment meldingen data
+     */
+    public void populateMeldingen() {
+        if (mKoopmanFragmentReady) {
+
+            Utility.collapseView(mMeldingenContainer, true);
+            mMeldingenPlaceholder.removeAllViews();
+
+            if (mKoopmanFragment.mMeldingVerwijderd || mKoopmanFragment.mMeldingMultipleDagvergunningen || mKoopmanFragment.mMeldingNoValidSollicitatie) {
+                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                // koopman verwijderd
+                if (mKoopmanFragment.mMeldingVerwijderd) {
+                    View meldingLayout = layoutInflater.inflate(R.layout.dagvergunning_meldingen_item, null);
+                    TextView meldingText = (TextView) meldingLayout.findViewById(R.id.melding);
+                    meldingText.setText(getString(R.string.notice_koopman_verwijderd));
+                    mMeldingenPlaceholder.addView(meldingLayout, mMeldingenPlaceholder.getChildCount());
+                }
+
+                // koopman heeft vandaag al een dagvergunning ontvangen
+                if (mKoopmanFragment.mMeldingMultipleDagvergunningen) {
+                    View meldingLayout = layoutInflater.inflate(R.layout.dagvergunning_meldingen_item, null);
+                    TextView meldingText = (TextView) meldingLayout.findViewById(R.id.melding);
+                    meldingText.setText(getString(R.string.notice_koopman_multiple_dagvergunningen));
+                    mMeldingenPlaceholder.addView(meldingLayout, mMeldingenPlaceholder.getChildCount());
+                }
+
+                // koopman heeft geen geldige sollicitatie
+                if (mKoopmanFragment.mMeldingNoValidSollicitatie) {
+                    View meldingLayout = layoutInflater.inflate(R.layout.dagvergunning_meldingen_item, null);
+                    TextView meldingText = (TextView) meldingLayout.findViewById(R.id.melding);
+                    meldingText.setText(getString(R.string.notice_koopman_no_valid_sollicitatie));
+                    mMeldingenPlaceholder.addView(meldingLayout, mMeldingenPlaceholder.getChildCount());
+                }
+
+                Utility.collapseView(mMeldingenContainer, false);
+            }
+        }
+
+        Utility.log(getContext(), LOG_TAG, "Meldingen populated!");
     }
 
     /**
@@ -771,7 +815,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // product
             if (mErkenningsnummer != null && isProductSelected()) {
-                Utility.log(getContext(), LOG_TAG, "Calling dagvergunning concept..");
 
                 // show progress bar
                 mProgressbar.setVisibility(View.VISIBLE);
@@ -790,13 +833,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             mOverzichtFragment.mProductenLinearLayout.setVisibility(View.VISIBLE);
                             mOverzichtFragment.mProductenEmptyTextView.setVisibility(View.GONE);
 
-                            Utility.log(getContext(), LOG_TAG, "Dagvergunning concept Response: " + response.body().toString());
-
                             // from the response, populate the product section of the overzicht fragment
                             View overzichtView = mOverzichtFragment.getView();
                             if (overzichtView != null) {
 
-                                LinearLayout placeholderLayout = (LinearLayout) overzichtView.findViewById(R.id.producten_placeholder);
+                                // find placeholder table layout view
+                                TableLayout placeholderLayout = (TableLayout) overzichtView.findViewById(R.id.producten_placeholder);
                                 if (placeholderLayout != null) {
                                     placeholderLayout.removeAllViews();
                                     LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -822,38 +864,40 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                             View childLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
 
                                             // aantal
-                                            if (product.get("aantal") != null) {
-                                                String aantal = product.get("aantal").getAsString();
+                                            if (product.get("aantal") != null && !product.get("aantal").isJsonNull()) {
                                                 TextView aantalText = (TextView) childLayout.findViewById(R.id.product_aantal);
-                                                aantalText.setText(aantal + " x ");
+                                                aantalText.setText(product.get("aantal").getAsInt() + " x ");
                                             }
 
                                             // naam
-                                            if (product.get("naam") != null) {
-                                                String naam = product.get("naam").getAsString();
+                                            if (product.get("naam") != null && !product.get("naam").isJsonNull()) {
                                                 TextView naamText = (TextView) childLayout.findViewById(R.id.product_naam);
-                                                naamText.setText(naam);
+                                                naamText.setText(Utility.capitalize(product.get("naam").getAsString()));
                                             }
 
                                             // btw %
-                                            if (product.get("btw") != null) {
-                                                String btwPercentage = product.get("btw").getAsString();
-                                                TextView btwPercentageText = (TextView) childLayout.findViewById(R.id.btw_percentage);
-                                                btwPercentageText.setText(btwPercentage + "%");
+                                            if (product.get("btw_percentage") != null && !product.get("btw_percentage").isJsonNull()) {
+                                                long btwPercentage = Math.round(Double.parseDouble(product.get("btw_percentage").getAsString()));
+                                                if (btwPercentage != 0) {
+                                                    TextView btwPercentageText = (TextView) childLayout.findViewById(R.id.btw_percentage);
+                                                    btwPercentageText.setText(btwPercentage + "%");
+                                                }
                                             }
 
                                             // btw totaal
-                                            if (product.get("totaal") != null && product.get("exclusief") != null) {
-                                                double totaalProduct = product.get("totaal").getAsDouble();
-                                                double exclusiefProduct = product.get("exclusief").getAsDouble();
-                                                double btwTotaalProduct = totaalProduct - exclusiefProduct;
+                                            if (product.get("btw_totaal") != null && !product.get("btw_totaal").isJsonNull()) {
+                                                double btwTotaalProduct = Double.parseDouble(product.get("btw_totaal").getAsString());
                                                 TextView btwTotaalText = (TextView) childLayout.findViewById(R.id.btw_totaal);
-                                                btwTotaalText.setText(String.format("€ %.2f", btwTotaalProduct));
+                                                if (Math.round(btwTotaalProduct) != 0) {
+                                                    btwTotaalText.setText(String.format("€ %.2f", btwTotaalProduct));
+                                                } else {
+                                                    btwTotaalText.setText("-");
+                                                }
                                             }
 
                                             // bedrag totaal
-                                            if (product.get("totaal") != null) {
-                                                double bedragTotaal = product.get("totaal").getAsDouble();
+                                            if (product.get("totaal") != null && !product.get("totaal").isJsonNull()) {
+                                                double bedragTotaal = Double.parseDouble(product.get("totaal").getAsString());
                                                 TextView bedragTotaalText = (TextView) childLayout.findViewById(R.id.bedrag_totaal);
                                                 bedragTotaalText.setText(String.format("€ %.2f", bedragTotaal));
                                             }
@@ -864,13 +908,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                                         // exclusief
                                         double exclusief = 0;
-                                        if (response.body().get("exclusief") != null) {
-                                            exclusief = response.body().get("exclusief").getAsDouble();
+                                        if (response.body().get("exclusief") != null && !response.body().get("exclusief").isJsonNull()) {
+                                            exclusief = Double.parseDouble(response.body().get("exclusief").getAsString());
                                         }
 
                                         // totaal
                                         double totaal = 0;
-                                        if (response.body().get("totaal") != null) {
+                                        if (response.body().get("totaal") != null && !response.body().get("totaal").isJsonNull()) {
                                             totaal = response.body().get("totaal").getAsDouble();
                                         }
 
@@ -879,7 +923,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                         TextView naamText = (TextView) totaalLayout.findViewById(R.id.product_naam);
                                         naamText.setText("Totaal");
                                         TextView btwTotaalText = (TextView) totaalLayout.findViewById(R.id.btw_totaal);
-                                        btwTotaalText.setText(String.format("€ %.2f", (totaal - exclusief)));
+                                        if (Math.round(totaal - exclusief) != 0) {
+                                            btwTotaalText.setText(String.format("€ %.2f", (totaal - exclusief)));
+                                        }
                                         TextView exclusiefText = (TextView) totaalLayout.findViewById(R.id.bedrag_totaal);
                                         exclusiefText.setText(String.format("€ %.2f", exclusief));
                                         placeholderLayout.addView(totaalLayout, rowCount++);
@@ -1519,7 +1565,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // update the view elements of the currently selected tab
             setFragmentValuesByPosition(mCurrentTab);
 
-            // load the koopman details from the api
+            // load the koopman details from the api (will get his sollicitaties at other markten)
             if (mErkenningsnummer != null && !mErkenningsnummer.equals("")) {
                 ApiGetKoopman getKoopman = new ApiGetKoopman(getContext());
                 getKoopman.setErkenningsnummer(mErkenningsnummer);

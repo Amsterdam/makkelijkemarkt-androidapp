@@ -30,10 +30,12 @@
             android:id="@+id/dagvergunning_meldingen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
             android:orientation="vertical"
+            android:padding="@dimen/margin"
             >
         </LinearLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

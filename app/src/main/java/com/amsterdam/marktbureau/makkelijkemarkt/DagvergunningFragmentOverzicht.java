@@ -41,7 +41,6 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
     // bind layout elements
     @Bind(R.id.koopman) LinearLayout mKoopmanLinearLayout;
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
-    @Bind(R.id.koopman_status) TextView mKoopmanStatus;
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
     @Bind(R.id.dagvergunning_registratie_datumtijd) TextView mRegistratieDatumtijdText;
     @Bind(R.id.erkenningsnummer) TextView mErkenningsnummerText;
@@ -152,15 +151,6 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
                     .load(data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
                     .error(R.drawable.no_koopman_image)
                     .into(mKoopmanFotoImage);
-
-            // koopman status
-            String koopmanStatus = data.getString(data.getColumnIndex("koopman_status"));
-            if (koopmanStatus.equals(getString(R.string.koopman_status_verwijderd))) {
-                Utility.collapseView(mKoopmanStatus, false);
-                mKoopmanStatus.setText(getString(R.string.notice_koopman_verwijderd));
-            } else {
-                Utility.collapseView(mKoopmanStatus, true);
-            }
 
             // koopman naam
             String naam =

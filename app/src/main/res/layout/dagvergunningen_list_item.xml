@@ -32,20 +32,43 @@
             android:id="@+id/koopman_naam_tijd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/mini_margin"
             >
+
+            <!-- Alert (!) -->
+            <TextView
+                android:id="@+id/koopman_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:paddingTop="0dp"
+                android:paddingRight="@dimen/mini_margin"
+                android:paddingEnd="@dimen/mini_margin"
+                android:paddingBottom="0dp"
+                android:paddingStart="@dimen/mini_margin"
+                android:paddingLeft="@dimen/mini_margin"
+                android:background="@drawable/circle_attention"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:text="!"
+                />
 
             <!-- Koopman naam -->
             <TextView
                 android:id="@+id/koopman_voorletters_achternaam"
                 android:layout_width="wrap_content"
-                android:maxWidth="220dp"
+                android:maxWidth="200dp"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/koopman_status"
+                android:layout_toEndOf="@+id/koopman_status"
+                android:paddingTop="0dp"
                 android:singleLine="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:textColor="@color/primary_text"
-                android:textSize="@dimen/textsize_title_small"
+                android:textSize="@dimen/textsize_content_small"
                 android:textStyle="bold"
                 />
 

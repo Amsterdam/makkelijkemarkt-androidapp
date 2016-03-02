@@ -27,21 +27,10 @@
         android:orientation="vertical"
         >
 
-        <!-- Verwijderd -->
-        <TextView
-            android:id="@+id/koopman_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/textsize_content_small"
-            android:textColor="@color/dagvergunning_melding_background"
-            android:textStyle="bold"
-            />
-
         <RelativeLayout
             android:id="@+id/koopman_naam_tijd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/koopman_status"
             android:layout_marginBottom="@dimen/mini_margin"
             >
 

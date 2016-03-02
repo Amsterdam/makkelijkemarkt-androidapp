@@ -113,9 +113,7 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
             // @todo remove api call here and only call on interval basis in the service?
             // @todo or keep it here, so we can show a progressbar and start calling it on interval basis in the service once this call is finished?
             // @todo best way would be to call it here one time, so we use the progressbar, and on interval basis call it in the service
-            // @todo in the service we need to see what the interval for each type of call should be:
             // @todo: dagvergunningen: 1x per minute?
-            // @todo: keep the api session alive: 30sec? (is this even neccesery? or we can do this also by asking for something small?)
 
             // show the progressbar
             mDagvergunningenProgressBar.setVisibility(View.VISIBLE);

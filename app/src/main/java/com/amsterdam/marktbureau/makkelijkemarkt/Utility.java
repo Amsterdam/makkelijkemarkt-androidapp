@@ -206,4 +206,16 @@ public class Utility {
         }
         return sb.toString().substring(0, length);
     }
+
+    /**
+     * Capatilze the first character of a string
+     * @param original string to capatilize
+     * @return capatilized string
+     */
+    public static String capitalize(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        return original.substring(0, 1).toUpperCase() + original.substring(1);
+    }
 }

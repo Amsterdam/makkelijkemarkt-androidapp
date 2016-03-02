@@ -73,6 +73,25 @@ public class DagvergunningenAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        boolean multipleDagvergunningen = false;
+
+        // get erkenningsnummer for checking multiple dagvergunningen for the same koopman
+        String erkenningsnummer = cursor.getString(cursor.getColumnIndex(
+                MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE));
+
+        // get current position, check for multiple dagvergunningen, and restore position again
+        int position = cursor.getPosition();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            if (cursor.getString(cursor.getColumnIndex(
+                    MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE))
+                    .equals(erkenningsnummer) && cursor.getPosition() != position) {
+                multipleDagvergunningen = true;
+                break;
+            }
+            cursor.moveToNext();
+        }
+        cursor.moveToPosition(position);
 
         // get the viewholder layout containing the view items
         ViewHolder viewHolder = (ViewHolder) view.getTag();
@@ -82,6 +101,14 @@ public class DagvergunningenAdapter extends CursorAdapter {
                 cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
                 .error(R.drawable.no_koopman_image)
                 .into(viewHolder.koopmanFoto);
+
+        // alert !
+        String koopmanStatus = cursor.getString(cursor.getColumnIndex("koopman_status"));
+        if (multipleDagvergunningen || koopmanStatus.equals(context.getString(R.string.koopman_status_verwijderd))) {
+            viewHolder.koopmanStatusText.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.koopmanStatusText.setVisibility(View.GONE);
+        }
 
         // koopman naam
         String koopmanVoorletters = cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS));
@@ -96,11 +123,11 @@ public class DagvergunningenAdapter extends CursorAdapter {
             SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.date_format_tijd));
             String registratieTijd = sdf.format(registratieDate);
             viewHolder.dagvergunningRegistratieDatumtijdText.setText(registratieTijd);
-        } catch (java.text.ParseException e) {}
+        } catch (java.text.ParseException e) {
+            viewHolder.dagvergunningRegistratieDatumtijdText.setText("");
+        }
 
         // erkennings nummer
-        String erkenningsnummer = cursor.getString(cursor.getColumnIndex(
-                MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE));
         viewHolder.erkenningsnummerText.setText(context.getString(R.string.label_erkenningsnummer) + ": " + erkenningsnummer);
 
         // sollicitatie nummer
@@ -109,6 +136,11 @@ public class DagvergunningenAdapter extends CursorAdapter {
         if (sollicitatieNummer != null && !sollicitatieNummer.equals("")) {
             viewHolder.sollicitatieSollicitatieNummerText.setVisibility(View.VISIBLE);
             viewHolder.sollicitatieSollicitatieNummerText.setText(context.getString(R.string.label_sollicitatienummer) + ": " + sollicitatieNummer);
+        } else {
+            // we need to clear the textview contents because listview items are recycled and may
+            // therefor contain data from other dagvergunning
+            viewHolder.sollicitatieSollicitatieNummerText.setVisibility(View.GONE);
+            viewHolder.sollicitatieSollicitatieNummerText.setText("");
         }
 
         // sollicitatie status
@@ -118,6 +150,9 @@ public class DagvergunningenAdapter extends CursorAdapter {
             viewHolder.sollicitatieStatusText.setVisibility(View.VISIBLE);
             viewHolder.sollicitatieStatusText.setText(sollicitatieStatus);
             viewHolder.sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(context, Utility.getSollicitatieStatusColor(context, sollicitatieStatus)));
+        } else {
+            viewHolder.sollicitatieStatusText.setVisibility(View.GONE);
+            viewHolder.sollicitatieStatusText.setText("");
         }
 
         // notitie
@@ -147,19 +182,15 @@ public class DagvergunningenAdapter extends CursorAdapter {
 
         // bind the elements
         @Bind(R.id.koopman_foto) ImageView koopmanFoto;
-
+        @Bind(R.id.koopman_status) TextView koopmanStatusText;
         @Bind(R.id.koopman_naam_tijd) RelativeLayout koopmanNaamTijd;
         @Bind(R.id.koopman_voorletters_achternaam) TextView koopmanVoorlettersAchternaamText;
         @Bind(R.id.dagvergunning_registratie_datumtijd) TextView dagvergunningRegistratieDatumtijdText;
-
         @Bind(R.id.erkenningsnummer) TextView erkenningsnummerText;
-
         @Bind(R.id.sollicitatie_nummer_status) RelativeLayout sollicitatieNummerStatus;
         @Bind(R.id.sollicitatie_sollicitatie_nummer) TextView sollicitatieSollicitatieNummerText;
         @Bind(R.id.sollicitatie_status) TextView sollicitatieStatusText;
-
         @Bind(R.id.notitie) TextView notitieText;
-
         @Bind(R.id.totalelengte_accountnaam) RelativeLayout totaleLengteAccountNaam;
         @Bind(R.id.dagvergunning_totale_lente) TextView dagvergunningTotaleLengteText;
         @Bind(R.id.account_naam) TextView accountNaamText;

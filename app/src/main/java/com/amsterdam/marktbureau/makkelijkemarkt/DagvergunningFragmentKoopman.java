@@ -35,6 +35,9 @@ import com.amsterdam.marktbureau.makkelijkemarkt.adapters.SollicitatienummerAdap
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,7 +72,6 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
     // bind dagvergunning list item layout include elements
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
-    @Bind(R.id.koopman_status) TextView mKoopmanStatus;
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
     @Bind(R.id.dagvergunning_registratie_datumtijd) TextView mRegistratieDatumtijdText;
     @Bind(R.id.erkenningsnummer) TextView mErkenningsnummerText;
@@ -99,6 +101,11 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     int mKrachtstroomVast = -1;
     int mReinigingVast = -1;
 
+    // meldingen
+    boolean mMeldingMultipleDagvergunningen = false;
+    boolean mMeldingNoValidSollicitatie = false;
+    boolean mMeldingVerwijderd = false;
+
     // common toast object
     protected Toast mToast;
 
@@ -114,6 +121,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     public interface Callback {
         void onKoopmanFragmentReady();
         void onKoopmanFragmentUpdated();
+        void onMeldingenUpdated();
     }
 
     /**
@@ -305,6 +313,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
+            boolean validSollicitatie = false;
 
             // get the markt id from the sharedprefs
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -313,20 +322,17 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             // make the koopman details visible
             mKoopmanDetail.setVisibility(View.VISIBLE);
 
+            // check koopman status
+            String koopmanStatus = data.getString(data.getColumnIndex("koopman_status"));
+            if (koopmanStatus.equals(getString(R.string.koopman_status_verwijderd))) {
+                mMeldingVerwijderd = true;
+            }
+
             // koopman photo
             Glide.with(getContext())
                     .load(data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
                     .error(R.drawable.no_koopman_image)
                     .into(mKoopmanFotoImage);
-
-            // koopman status
-            String koopmanStatus = data.getString(data.getColumnIndex("koopman_status"));
-            if (koopmanStatus.equals(getString(R.string.koopman_status_verwijderd))) {
-                Utility.collapseView(mKoopmanStatus, false);
-                mKoopmanStatus.setText(getString(R.string.notice_koopman_verwijderd));
-            } else {
-                Utility.collapseView(mKoopmanStatus, true);
-            }
 
             // koopman naam
             String naam =
@@ -385,6 +391,11 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                         sollicitatieStatusText.setBackgroundColor(ContextCompat.getColor(
                                 getContext(),
                                 Utility.getSollicitatieStatusColor(getContext(), sollicitatieStatus)));
+
+                        // check if koopman has at least one valid sollicitatie on selected markt
+                        if (marktId == data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID))) {
+                            validSollicitatie = true;
+                        }
                     }
 
                     // add view and move cursor to next
@@ -392,6 +403,41 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                     data.moveToNext();
                 }
             }
+
+            // check valid sollicitatie
+            if (!validSollicitatie) {
+                mMeldingNoValidSollicitatie = true;
+            }
+
+            // get the date of today for the dag param
+            SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
+            String dag = sdf.format(new Date());
+
+            // TODO: checken op dagvergunning doorgehaald
+            // TODO: niet checken op meer dan 1 vergunning, maar op dagvergunning id ongelijk aan id van geselecteerde dagvergunning
+
+            // check multiple dagvergunningen
+            Cursor multipleDagvergunningen = getContext().getContentResolver().query(
+                    MakkelijkeMarktProvider.mUriDagvergunningJoined,
+                    null,
+                    MakkelijkeMarktProvider.mTableDagvergunning + "." + MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? AND " +
+                            MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE + " = ? AND " +
+                            MakkelijkeMarktProvider.Dagvergunning.COL_DAG + " = ? ",
+                    new String[] {
+                            String.valueOf(marktId),
+                            mErkenningsnummer,
+                            dag
+                    },
+                    null);
+            if (multipleDagvergunningen != null && multipleDagvergunningen.getCount() > 1) {
+                mMeldingMultipleDagvergunningen = true;
+            }
+            if (multipleDagvergunningen != null) {
+                multipleDagvergunningen.close();
+            }
+
+            // callback to dagvergunning activity to updaten the meldingen view
+            ((Callback) getActivity()).onMeldingenUpdated();
         }
     }
 
