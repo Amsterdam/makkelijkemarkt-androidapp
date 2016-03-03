@@ -80,6 +80,9 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig_spinner) Spinner mAanwezigSpinner;
 
+    // existing dagvergunning id
+    private int mDagvergunningId = -1;
+
     // koopman id
     public int mKoopmanId = -1;
 
@@ -264,8 +267,9 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
      * Set the koopman id and init the loader
      * @param koopmanId id of the koopman
      */
-    public void setKoopman(int koopmanId) {
+    public void setKoopman(int koopmanId, int dagvergunningId) {
         mKoopmanId = koopmanId;
+        mDagvergunningId = dagvergunningId;
         getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
     }
 
@@ -324,9 +328,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
             // check koopman status
             String koopmanStatus = data.getString(data.getColumnIndex("koopman_status"));
-            if (koopmanStatus.equals(getString(R.string.koopman_status_verwijderd))) {
-                mMeldingVerwijderd = true;
-            }
+            mMeldingVerwijderd = koopmanStatus.equals(getString(R.string.koopman_status_verwijderd));
 
             // koopman photo
             Glide.with(getContext())
@@ -405,35 +407,29 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             }
 
             // check valid sollicitatie
-            if (!validSollicitatie) {
-                mMeldingNoValidSollicitatie = true;
-            }
+            mMeldingNoValidSollicitatie = !validSollicitatie;
 
             // get the date of today for the dag param
             SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
             String dag = sdf.format(new Date());
 
-            // TODO: checken op dagvergunning doorgehaald
-            // TODO: niet checken op meer dan 1 vergunning, maar op dagvergunning id ongelijk aan id van geselecteerde dagvergunning
-
             // check multiple dagvergunningen
-            Cursor multipleDagvergunningen = getContext().getContentResolver().query(
+            Cursor dagvergunningen = getContext().getContentResolver().query(
                     MakkelijkeMarktProvider.mUriDagvergunningJoined,
                     null,
-                    MakkelijkeMarktProvider.mTableDagvergunning + "." + MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? AND " +
-                            MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE + " = ? AND " +
-                            MakkelijkeMarktProvider.Dagvergunning.COL_DAG + " = ? ",
+                    "dagvergunning_doorgehaald != '1' AND " +
+                            MakkelijkeMarktProvider.mTableDagvergunning + "." + MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? AND " +
+                            MakkelijkeMarktProvider.Dagvergunning.COL_DAG + " = ? AND " +
+                            MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE + " = ? ",
                     new String[] {
                             String.valueOf(marktId),
+                            dag,
                             mErkenningsnummer,
-                            dag
                     },
                     null);
-            if (multipleDagvergunningen != null && multipleDagvergunningen.getCount() > 1) {
-                mMeldingMultipleDagvergunningen = true;
-            }
-            if (multipleDagvergunningen != null) {
-                multipleDagvergunningen.close();
+            mMeldingMultipleDagvergunningen = (dagvergunningen != null && dagvergunningen.moveToFirst()) && (dagvergunningen.getCount() > 1 || mDagvergunningId == -1);
+            if (dagvergunningen != null) {
+                dagvergunningen.close();
             }
 
             // callback to dagvergunning activity to updaten the meldingen view

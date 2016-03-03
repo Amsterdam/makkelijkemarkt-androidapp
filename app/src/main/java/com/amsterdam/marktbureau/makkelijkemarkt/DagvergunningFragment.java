@@ -463,7 +463,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // set the koopman details
             if (mKoopmanId > 0) {
-                mKoopmanFragment.setKoopman(mKoopmanId);
+                mKoopmanFragment.setKoopman(mKoopmanId, mId);
             }
 
             // dagvergunning registratie tijd
@@ -1289,10 +1289,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // set the koopman
                     if (koopman != null && koopman.moveToFirst()) {
-                        mKoopmanFragment.setKoopman(koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)));
+                        mKoopmanFragment.setKoopman(
+                                koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)),
+                                mId);
                         mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
                         mKoopmanFragment.mErkenningsnummerEditText.dismissDropDown();
-                        mKoopmanFragment.mKoopmanSelectionMethod = DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_BARCODE;
+                        mKoopmanFragment.mKoopmanSelectionMethod =
+                                DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_BARCODE;
                     } else {
                         mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
                     }
@@ -1331,11 +1334,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     // set the koopman
                     if (koopman != null && koopman.moveToFirst()) {
                         mKoopmanFragment.setKoopman(
-                                koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)));
+                                koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)),
+                                mId);
                         mKoopmanFragment.mErkenningsnummerEditText.setText(
                                 koopman.getString(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER)));
                         mKoopmanFragment.mErkenningsnummerEditText.dismissDropDown();
-                        mKoopmanFragment.mKoopmanSelectionMethod = DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
+                        mKoopmanFragment.mKoopmanSelectionMethod =
+                                DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
                     } else {
                         mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
                     }
