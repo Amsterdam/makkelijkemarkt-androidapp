@@ -54,6 +54,8 @@
     <string name="makkelijkemarkt_api_dagvergunning_payload_notitie" translatable="false">notitie</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd" translatable="false">registratieDatumtijd</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie" translatable="false">registratieGeolocatie</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_doorgehaald_datumtijd" translatable="false">doorgehaaldDatumtijd</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_doorgehaald_geolocatie" translatable="false">doorgehaaldGeolocatie</string>
 
     <string name="makkelijkemarkt_api_dagvergunning_concept_producten" translatable="false">producten</string>
 

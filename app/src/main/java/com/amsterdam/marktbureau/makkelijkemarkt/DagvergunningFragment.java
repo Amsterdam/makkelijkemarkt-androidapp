@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -22,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiDeleteDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept;
@@ -1137,7 +1140,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         }
 
         DateFormat datumtijdFormat = new SimpleDateFormat(getString(R.string.date_format_datumtijd));
-        dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd), String.valueOf(datumtijdFormat.format(new Date())));
+        dagvergunningPayload.addProperty(
+                getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd),
+                String.valueOf(datumtijdFormat.format(new Date())));
 
         // add the location from gps
         if (mRegistratieGeolocatieLatitude != -1 && mRegistratieGeolocatieLongitude != -1) {
@@ -1148,6 +1153,74 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         }
 
         return dagvergunningPayload;
+    }
+
+    /**
+     * Delete an existing dagvergunning
+     */
+    private void deleteDagvergunning(boolean confirmed) {
+        if (mId != -1) {
+            if (!confirmed) {
+
+                // show a dialog to ask for confirmation
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.delete))
+                        .setMessage(getString(R.string.notice_dagvergunning_delete_confirm))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteDagvergunning(true);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(R.drawable.mm_orange)
+                        .show();
+            } else {
+
+                // show progress dialog
+                mProgressDialog.show();
+
+                // create and send the delete request
+                ApiDeleteDagvergunning deleteDagvergunning = new ApiDeleteDagvergunning(getContext());
+                deleteDagvergunning.setId(mId);
+                deleteDagvergunning.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Response<String> response) {
+
+                        // hide progress dialog
+                        mProgressDialog.dismiss();
+
+                        if (response.isSuccess()) {
+
+                            // delete the dagvergunning from the local db
+                            int deleted = getContext().getContentResolver().delete(
+                                    MakkelijkeMarktProvider.mUriDagvergunning,
+                                    MakkelijkeMarktProvider.Dagvergunning.COL_ID + " = ? ",
+                                    new String[] { String.valueOf(mId) }
+                            );
+
+                            // on success close current activity and go back to dagvergunningen activity
+                            if (deleted == 1) {
+                                getActivity().finish();
+                                Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_delete_success));
+                            } else {
+                                Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_delete_failed));
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                        // hide progress dialog
+                        mProgressDialog.dismiss();
+
+                        Utility.showToast(getContext(), mToast, getString(R.string.notice_dagvergunning_delete_failed));
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -1415,12 +1488,20 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public void setWizardMenu(int tabPosition) {
 
         // button background colors
-        int activeBackgroundColor = ContextCompat.getColor(getContext(), R.color.accent);
-        int inActiveBackgroundColor = ContextCompat.getColor(getContext(), android.R.color.white);
+        int accentColor = ContextCompat.getColor(getContext(), R.color.accent);
+        int whiteColor = ContextCompat.getColor(getContext(), android.R.color.white);
+        int primaryDarkColor = ContextCompat.getColor(getContext(), R.color.primary_dark);
+        int redColor = ContextCompat.getColor(getContext(), R.color.dagvergunning_melding_background);
 
         // button icons
+        Drawable leftDrawable = ContextCompat.getDrawable(getContext(), R.drawable.chevron_left_primary_dark);
+        Drawable trashDrawable = ContextCompat.getDrawable(getContext(), R.drawable.delete_white);
         Drawable rightDrawable = ContextCompat.getDrawable(getContext(), R.drawable.chevron_right_primary_dark);
         Drawable checkDrawable = ContextCompat.getDrawable(getContext(), R.drawable.check_primary_dark);
+
+        // get previous button left drawable bounds
+        Drawable[] previousButtonDrawables = mWizardPreviousButton.getCompoundDrawables();
+        Drawable previousButtonLeftDrawable = previousButtonDrawables[0];
 
         // get next button right drawable bounds
         Drawable[] nextButtonDrawables = mWizardNextButton.getCompoundDrawables();
@@ -1430,11 +1511,27 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // koopman tab
             case 0:
-                mWizardPreviousButton.setVisibility(View.INVISIBLE);
-                mWizardPreviousButton.setBackgroundColor(inActiveBackgroundColor);
-                mWizardPreviousButton.setText("");
+                if (mId == -1) {
+                    mWizardPreviousButton.setVisibility(View.INVISIBLE);
+                    mWizardPreviousButton.setBackgroundColor(whiteColor);
+                    mWizardPreviousButton.setText("");
+                    mWizardPreviousButton.setTextColor(primaryDarkColor);
+                    if (leftDrawable != null) {
+                        leftDrawable.setBounds(previousButtonLeftDrawable.getBounds());
+                        mWizardPreviousButton.setCompoundDrawables(leftDrawable, null, null, null);
+                    }
+                } else {
+                    mWizardPreviousButton.setVisibility(View.VISIBLE);
+                    mWizardPreviousButton.setBackgroundColor(redColor);
+                    mWizardPreviousButton.setText(getString(R.string.delete));
+                    mWizardPreviousButton.setTextColor(whiteColor);
+                    if (trashDrawable != null) {
+                        trashDrawable.setBounds(previousButtonLeftDrawable.getBounds());
+                        mWizardPreviousButton.setCompoundDrawables(trashDrawable, null, null, null);
+                    }
+                }
                 mWizardNextButton.setVisibility(View.VISIBLE);
-                mWizardNextButton.setBackgroundColor(activeBackgroundColor);
+                mWizardNextButton.setBackgroundColor(accentColor);
                 mWizardNextButton.setText(getString(R.string.product));
                 if (rightDrawable != null) {
                     rightDrawable.setBounds(nextButtonRightDrawable.getBounds());
@@ -1445,10 +1542,15 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // product tab
             case 1:
                 mWizardPreviousButton.setVisibility(View.VISIBLE);
-                mWizardPreviousButton.setBackgroundColor(inActiveBackgroundColor);
+                mWizardPreviousButton.setBackgroundColor(whiteColor);
                 mWizardPreviousButton.setText(getString(R.string.koopman));
+                mWizardPreviousButton.setTextColor(primaryDarkColor);
+                if (leftDrawable != null) {
+                    leftDrawable.setBounds(previousButtonLeftDrawable.getBounds());
+                    mWizardPreviousButton.setCompoundDrawables(leftDrawable, null, null, null);
+                }
                 mWizardNextButton.setVisibility(View.VISIBLE);
-                mWizardNextButton.setBackgroundColor(activeBackgroundColor);
+                mWizardNextButton.setBackgroundColor(accentColor);
                 mWizardNextButton.setText(getString(R.string.overzicht));
                 if (rightDrawable != null) {
                     rightDrawable.setBounds(nextButtonRightDrawable.getBounds());
@@ -1459,10 +1561,15 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // overzicht tab
             case 2:
                 mWizardPreviousButton.setVisibility(View.VISIBLE);
-                mWizardPreviousButton.setBackgroundColor(inActiveBackgroundColor);
+                mWizardPreviousButton.setBackgroundColor(whiteColor);
                 mWizardPreviousButton.setText(getString(R.string.product));
+                mWizardPreviousButton.setTextColor(primaryDarkColor);
+                if (leftDrawable != null) {
+                    leftDrawable.setBounds(previousButtonLeftDrawable.getBounds());
+                    mWizardPreviousButton.setCompoundDrawables(leftDrawable, null, null, null);
+                }
                 mWizardNextButton.setVisibility(View.VISIBLE);
-                mWizardNextButton.setBackgroundColor(activeBackgroundColor);
+                mWizardNextButton.setBackgroundColor(accentColor);
                 mWizardNextButton.setText(getString(R.string.label_opslaan));
                 if (checkDrawable != null) {
                     checkDrawable.setBounds(nextButtonRightDrawable.getBounds());
@@ -1482,6 +1589,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     public void goToPrevious() {
         if (mCurrentTab > 0) {
             switchTab(mCurrentTab - 1);
+        } else if (mCurrentTab == 0) {
+            deleteDagvergunning(false);
         }
     }
 

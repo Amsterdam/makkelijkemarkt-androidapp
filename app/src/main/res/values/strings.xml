@@ -11,6 +11,7 @@
     <string name="product">Producten</string>
     <string name="overzicht">Overzicht</string>
     <string name="cancel">Annuleren</string>
+    <string name="delete">Verwijderen</string>
 
     <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
@@ -50,6 +51,9 @@
     <string name="notice_dagvergunning_saving">Dagvergunning wordt opgelsagen</string>
     <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
     <string name="notice_dagvergunning_save_success">Dagvergunning opgeslagen</string>
+    <string name="notice_dagvergunning_delete_confirm">Weet u zeker dat u deze dagvergunning wilt verwijderen?</string>
+    <string name="notice_dagvergunning_delete_success">Dagvergunning verwijderd</string>
+    <string name="notice_dagvergunning_delete_failed">Er is iets mis gegaan bij het verwijderen, probeer het nog een keer</string>
     <string name="notice_scan_barcode_cancelled">Barcode Scan geannuleerd</string>
     <string name="notice_koopman_not_found">Koopman niet gevonden</string>
     <string name="notice_koopman_not_selected">Geen koopman geselecteerd</string>

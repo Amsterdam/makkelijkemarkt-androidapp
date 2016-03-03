@@ -14,6 +14,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -80,6 +81,13 @@ public interface MakkelijkeMarktApi {
      */
     @PUT("dagvergunning/{id}")
     Call<ApiDagvergunning> putDagvergunning(@Path("id") String id, @Body JsonObject dagvergunning);
+
+    /**
+     * Delete a dagvergunning
+     * @param id the id of the dagvergunning
+     */
+    @DELETE("dagvergunning/{id}")
+    Call<String> deleteDagvergunning(@Path("id") String id);
 
     /**
      * Post a new dagvergunning concept to get a factuur with pricing
