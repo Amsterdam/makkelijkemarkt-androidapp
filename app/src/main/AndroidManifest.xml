@@ -69,6 +69,17 @@
                 android:value=".DagvergunningenActivity" />
         </activity>
 
+        <!-- NOTITIES Activity-->
+        <activity
+            android:name=".NotitiesActivity"
+            android:label="@string/notities"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MarktenActivity" />
+        </activity>
+
         <!-- BARCODE SCAN Activity -->
         <activity
             android:name=".ScanBarcodeActivity"

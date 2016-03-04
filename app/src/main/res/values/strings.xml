@@ -12,11 +12,15 @@
     <string name="overzicht">Overzicht</string>
     <string name="cancel">Annuleren</string>
     <string name="delete">Verwijderen</string>
+    <string name="notities">Notities</string>
 
     <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
 
     <string name="app_sub_title">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>
@@ -62,6 +66,7 @@
     <string name="notice_sollicitaties_loading">Even geduld aub, sollicitaties voor geselecteerde markt worden geladen</string>
     <string name="notice_sollicitaties_empty">Geen sollicitaties gevonden voor geselecteerde markt</string>
     <string name="notice_dagvergunningen_empty">Voor geselecteerde markt vandaag nog geen dagvergunningen aangemaakt</string>
+    <string name="notice_notities_empty">Voor geselecteerde markt vandaag nog geen notities aangemaakt</string>
 
     <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>
     <string name="error_sollicitaties_fetch_failed">Er is iets mis gegaan bij het ophalen van de sollicitaties</string>

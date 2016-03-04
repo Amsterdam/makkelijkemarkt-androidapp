@@ -4,7 +4,10 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,6 +37,13 @@ public class BaseActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.toolbar_title) TextView mTitleView;
     @Bind(R.id.toolbar_subtitle) TextView mSubtitleView;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+
+    // reference to the drawerfragment containing the menu
+    public DrawerFragment mDrawerFragment;
+
+    // drawertoggle component to control the drawer icon state
+    private ActionBarDrawerToggle mDrawerToggle;
 
     // common toast object
     protected Toast mToast;
@@ -46,17 +56,32 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // set the base activity layout containing the toolbar (@todo and later the drawer?)
+        // set the base activity layout containing the toolbar
         setContentView(R.layout.base_activity);
 
         // bind the elements to the view
         ButterKnife.bind(this);
+
+        // get a reference to the drawerfragment containing the menu so we can set the active option
+        // in the extending activities
+        mDrawerFragment = (DrawerFragment) getSupportFragmentManager().findFragmentById(R.id.drawer);
+
+        // link the drawer with the toolbar so we can control the drawer icon state
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout,
+                mToolbar,
+                R.string.drawer_open,
+                R.string.drawer_close);
+
+        // set the drawer toggle as the drawerlistener
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         // set the toolbar as supportactionbar, with default title disabled and homebutton enabled
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
 
@@ -82,6 +107,11 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        // handle clicks on the drawer icon
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         // log the user out
         if (id == R.id.action_logout) {
@@ -119,6 +149,26 @@ public class BaseActivity extends AppCompatActivity {
             // also un-hide the subtitle to ensure correct vertical alignment
             mSubtitleView.setVisibility(TextView.VISIBLE);
         }
+    }
+
+    /**
+     * Sync the toggle state after onRestoreInstanceState has occurred
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    /**
+     * Handle configuration changes
+     * @param newConfig
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**

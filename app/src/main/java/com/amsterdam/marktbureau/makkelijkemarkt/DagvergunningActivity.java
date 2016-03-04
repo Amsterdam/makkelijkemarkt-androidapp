@@ -70,6 +70,11 @@ public class DagvergunningActivity extends BaseActivity implements
                     DAGVERGUNNING_FRAGMENT_TAG);
         }
 
+        // set the active drawer menu option
+        if (mDrawerFragment.isAdded()) {
+            mDrawerFragment.checkItem(mDrawerFragment.DRAWER_POSITION_DAGVERGUNNINGEN);
+        }
+
         // TODO: Implement functionality that disables the location scanning when app in background (to save battery life)
 
         // build the google play services client

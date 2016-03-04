@@ -43,17 +43,13 @@ public class MarktenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // set the base activity layout containing the toolbar
-        setContentView(R.layout.base_activity);
+        setContentView(R.layout.markten_activity);
 
         // bind the elements to the view
         ButterKnife.bind(this);
 
         // set the toolbar as supportactionbar, with default title disabled and homebutton enabled
         setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         // set the title in the toolbar
         setToolbarTitle(getString(R.string.markten));

@@ -2,12 +2,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".DagvergunningenActivity"
+    tools:context=".NotitiesActivity"
     >
 
-    <!-- Dagvergunningen list -->
+    <!-- Notities list -->
     <ListView
-        android:id="@+id/listview_dagvergunningen"
+        android:id="@+id/listview_notities"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
@@ -18,14 +18,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin"
-        android:layout_below="@+id/listview_dagvergunningen"
+        android:layout_below="@+id/listview_notities"
         android:gravity="center_horizontal"
-        android:text="@string/notice_dagvergunningen_empty"
+        android:text="@string/notice_notities_empty"
         />
 
     <!-- Progressbar -->
     <ProgressBar
-        android:id="@+id/progressbar_dagvergunningen"
+        android:id="@+id/progressbar_notities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -34,9 +34,9 @@
         style="?android:attr/progressBarStyle"
         />
 
-    <!-- Fab add dagvergunning -->
+    <!-- Fab add notitie -->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_dagvergunning"
+        android:id="@+id/fab_add_notitie"
         android:src="@drawable/ic_add_white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +49,6 @@
         app:fabSize="normal"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
-    />
+        />
 
 </RelativeLayout>
