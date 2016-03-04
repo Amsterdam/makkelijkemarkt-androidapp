@@ -5,19 +5,27 @@ package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
+
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  *
@@ -217,5 +225,42 @@ public class Utility {
             return original;
         }
         return original.substring(0, 1).toUpperCase() + original.substring(1);
+    }
+
+    /**
+     * Log the user out by clearing the authentication details from the sharedpreferences,
+     * optionally sending a logout call to the api, and sending the user back to the main activity
+     * login screen
+     * @param context context we are called from
+     * @param callApi should we send a logout request to the api?
+     */
+    public static void logout(Context context, boolean callApi) {
+
+        // call api logout method (async, but without handling the response)
+        if (callApi) {
+            ApiGetLogout getLogout = new ApiGetLogout(context);
+            getLogout.enqueue(new Callback() {
+                @Override
+                public void onResponse(Response response) {
+                }
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
+
+        // clear all uuid and selected markt details from shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        settings.edit()
+                .remove(context.getString(R.string.sharedpreferences_key_uuid))
+                .remove(context.getString(R.string.sharedpreferences_key_markt_id))
+                .remove(context.getString(R.string.sharedpreferences_key_markt_naam))
+                .remove(context.getString(R.string.sharedpreferences_key_markt_producten))
+                .apply();
+
+        // clear active activities and history stack and open mainactivity home screen
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 }

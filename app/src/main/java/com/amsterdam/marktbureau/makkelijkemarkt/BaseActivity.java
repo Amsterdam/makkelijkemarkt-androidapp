@@ -4,9 +4,7 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,15 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiCall;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Base activity for the main app activities. It will create the toolbar, actions menu, drawer, and
@@ -127,7 +122,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Log the user out by sending a logout call to the api and clearing the shared preferences
+     * Log the user out by clearing the authentication details from the sharedpreferences,
+     * optionally sending a logout call to the api, and sending the user back to the main activity
+     * login screen
      */
     private void logout(boolean callApi) {
 
@@ -135,33 +132,8 @@ public class BaseActivity extends AppCompatActivity {
 
         // @todo stop running api service
 
-        // call api logout method (async, but without handling the response)
-        if (callApi) {
-            ApiGetLogout getLogout = new ApiGetLogout(this);
-            getLogout.enqueue(new Callback() {
-                @Override
-                public void onResponse(Response response) {
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                }
-            });
-        }
-
-        // clear all uuid and selected markt details from shared preferences
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        settings.edit()
-                .remove(getString(R.string.sharedpreferences_key_uuid))
-                .remove(getString(R.string.sharedpreferences_key_markt_id))
-                .remove(getString(R.string.sharedpreferences_key_markt_naam))
-                .remove(getString(R.string.sharedpreferences_key_markt_producten))
-                .apply();
-
-        // clear active activities and history stack and open mainactivity home screen
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        // logout of the app, and optionally the api
+        Utility.logout(this, callApi);
     }
 
     /**
@@ -171,7 +143,8 @@ public class BaseActivity extends AppCompatActivity {
     @Subscribe
     public void onUnauthorizedEvent(ApiCall.OnUnauthorizedEvent event) {
 
-        // if we received an event with code 401 we need to logout the user
+        // if we received an event with code 401 we need to logout the user because it means that
+        // the uuid token on the api has expired
         if (event.mCode == 401) {
             mToast = Utility.showToast(this, mToast, event.mMessage);
             logout(false);
