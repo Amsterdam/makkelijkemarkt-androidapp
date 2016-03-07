@@ -1,27 +1,113 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
     >
 
-    <!-- Icon -->
-    <ImageView
+    <FrameLayout
+        android:id="@+id/drawer_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/mm_orange_wide"
-        />
+        android:layout_alignParentTop="true"
+        >
+
+        <!-- MM icon -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/mm_orange_wide"
+            />
+
+        <!-- Account naam -->
+        <TextView
+            android:id="@+id/drawer_account_naam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingStart="@dimen/margin"
+            android:paddingLeft="@dimen/margin"
+            android:paddingEnd="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="@dimen/components_height"
+            android:layout_marginLeft="@dimen/mini_margin"
+            android:layout_marginStart="@dimen/mini_margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:textSize="@dimen/textsize_title_small"
+            android:textColor="@color/primary_dark"
+            />
+
+    </FrameLayout>
 
     <!-- Menu -->
     <ListView
         android:id="@+id/drawer_menu"
+        android:layout_below="@+id/drawer_heading"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:choiceMode="singleChoice"
         android:divider="@color/primary_light"
         android:dividerHeight="1dp"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/drawer_menu"
+        android:background="@color/primary_light"
+        />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light"
+            />
+
+        <!-- Uitgegeven -->
+        <TextView
+            android:id="@+id/dagvergunningen_uitgegeven"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+            android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+            android:background="?android:attr/activatedBackgroundIndicator"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:textColor="@color/primary_text"
+            android:text="Uitgegeven: Geen"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light"
+            />
+
+        <!-- Today -->
+        <TextView
+            android:id="@+id/date_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+            android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+            android:background="?android:attr/activatedBackgroundIndicator"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:textColor="@color/primary_text"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

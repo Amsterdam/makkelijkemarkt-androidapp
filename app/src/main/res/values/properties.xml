@@ -2,6 +2,7 @@
 <resources>
 
     <string name="date_format_datumtijd" translatable="false">"yyyy-MM-dd HH:mm:ss"</string>
+    <string name="date_format_datum_dag" translatable="false">cccc, d LLLL yyyy</string>
     <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
     <string name="date_format_tijd" translatable="false">HH:mm</string>
 

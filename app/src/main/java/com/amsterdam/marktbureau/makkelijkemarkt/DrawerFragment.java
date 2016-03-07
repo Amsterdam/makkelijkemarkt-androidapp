@@ -4,13 +4,25 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,7 +31,7 @@ import butterknife.OnItemClick;
 /**
  * @author marcolangebeeke
  */
-public class DrawerFragment extends Fragment {
+public class DrawerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // use classname when logging
     private static final String LOG_TAG = DrawerFragment.class.getSimpleName();
@@ -29,8 +41,14 @@ public class DrawerFragment extends Fragment {
     public final int DRAWER_POSITION_DAGVERGUNNINGEN = 1;
     public final int DRAWER_POSITION_NOTITIES = 2;
 
+    // unique id for the uitgegeven dagvergunningen loader
+    private static final int DAGVERGUNNINGEN_LOADER = 7;
+
     // bind layout elements
+    @Bind(R.id.drawer_account_naam) TextView mAccountNaam;
     @Bind(R.id.drawer_menu) ListView mDrawerMenu;
+    @Bind(R.id.dagvergunningen_uitgegeven) TextView mDagvergunningenUitgegeven;
+    @Bind(R.id.date_today) TextView mDateToday;
 
     /**
      * Constructor
@@ -54,14 +72,25 @@ public class DrawerFragment extends Fragment {
         // bind the elements to the view
         ButterKnife.bind(this, view);
 
+        // get the account naam from the shared prefs
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mAccountNaam.setText(settings.getString(getContext().getString(R.string.sharedpreferences_key_account_naam), ""));
+
+        // get the date of today
+        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_datum_dag));
+        mDateToday.setText(Utility.capitalize(sdf.format(new Date())));
+
         // populate the drawer menu options
         mDrawerMenu.setAdapter(new ArrayAdapter<>(getContext(),
                 R.layout.drawer_fragment_list_item,
                 android.R.id.text1,
-                new String[] {
+                new String[]{
                         getString(R.string.markten),
                         getString(R.string.dagvergunningen),
                         getString(R.string.notities)}));
+
+        // inititate loading the dagvergunningen from the database
+        getLoaderManager().initLoader(DAGVERGUNNINGEN_LOADER, null, this);
 
         return view;
     }
@@ -98,5 +127,53 @@ public class DrawerFragment extends Fragment {
             default:
                 break;
         }
+    }
+
+    /**
+     * Create a loader to get the total amount of dagvergunnigen for today
+     * @param id
+     * @param args
+     * @return
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        // get the id of selected markt from the shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int marktId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_markt_id), 0);
+
+        // get the date of today for the dag param
+        SimpleDateFormat dagSdf = new SimpleDateFormat(getString(R.string.date_format_dag));
+        String dag = dagSdf.format(new Date());
+
+        // create the loader
+        CursorLoader loader = new CursorLoader(getActivity());
+        loader.setUri(MakkelijkeMarktProvider.mUriDagvergunning);
+        loader.setSelection(
+                MakkelijkeMarktProvider.Dagvergunning.COL_MARKT_ID + " = ? AND " +
+                        MakkelijkeMarktProvider.Dagvergunning.COL_DAG + " = ? "
+        );
+        loader.setSelectionArgs(new String[] {
+                String.valueOf(marktId),
+                dag
+        });
+
+        return loader;
+    }
+
+    /**
+     * Populate the drawer textview with the dagvergunning count, if greater than 0
+     * @param loader
+     * @param data
+     */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data != null && data.getCount() > 0) {
+            mDagvergunningenUitgegeven.setText("Uitgegeven: " + data.getCount() + " totaal");
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 }
