@@ -20,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetMarkten;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -108,23 +107,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_accounts_fetch_interval_hours)) {
                 ApiGetAccounts getAccounts = new ApiGetAccounts(this);
                 getAccounts.enqueue();
-            }
-
-            // check time in hours since last fetched the markten
-            diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_markten_fetch_interval_hours);
-            if (settings.contains(context.getString(R.string.sharedpreferences_key_markten_last_fetched))) {
-                long lastFetchTimestamp = settings.getLong(context.getString(R.string.sharedpreferences_key_markten_last_fetched), 0);
-                long differenceMs  = new Date().getTime() - lastFetchTimestamp;
-                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
-            }
-
-            // update the local markten by reloading them from the api (with an http client containing
-            // an interceptor that will modify the response to transform the aanwezigeopties object
-            // into an array of strings)
-            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_markten_fetch_interval_hours)) {
-                ApiGetMarkten getMarkten = new ApiGetMarkten(this);
-                getMarkten.addAanwezigeOptiesInterceptor();
-                getMarkten.enqueue();
             }
         } else {
 

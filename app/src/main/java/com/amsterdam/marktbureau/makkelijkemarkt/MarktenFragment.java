@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,24 +18,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetMarkten;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  *
  * @author marcolangebeeke
  */
-public class MarktenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MarktenFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        Callback<List<ApiMarkt>> {
 
     // use classname when logging
     private static final String LOG_TAG = MarktenFragment.class.getSimpleName();
 
     // bind layout elements
     @Bind(R.id.listview_markten) ListView mMarktenListView;
+    @Bind(R.id.progressbar_markten) ProgressBar mMarktenProgressBar;
 
     // unique id for the markten loader
     private static final int MARKTEN_LOADER = 2;
@@ -75,6 +88,31 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
 
         // attach the adapter to the markten listview
         mMarktenListView.setAdapter(mMarktenAdapter);
+
+        if (savedInstanceState == null) {
+
+            // check time in hours since last fetched the markten
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+            long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_markten_fetch_interval_hours);
+            if (settings.contains(getContext().getString(R.string.sharedpreferences_key_markten_last_fetched))) {
+                long lastFetchTimestamp = settings.getLong(getContext().getString(R.string.sharedpreferences_key_markten_last_fetched), 0);
+                long differenceMs  = new Date().getTime() - lastFetchTimestamp;
+                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+            }
+
+            // update the local markten by reloading them from the api (with an http client containing
+            // an interceptor that will modify the response to transform the aanwezigeopties object
+            // into an array of strings)
+            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_markten_fetch_interval_hours)) {
+
+                // show the progressbar
+                mMarktenProgressBar.setVisibility(View.VISIBLE);
+
+                ApiGetMarkten getMarkten = new ApiGetMarkten(getContext());
+                getMarkten.addAanwezigeOptiesInterceptor();
+                getMarkten.enqueue(this);
+            }
+        }
 
         // inititate loading the markten from the database
         getLoaderManager().initLoader(MARKTEN_LOADER, null, this);
@@ -127,7 +165,7 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
                 MakkelijkeMarktProvider.Markt.COL_AANWEZIGE_OPTIES
         });
         loader.setSortOrder(
-                MakkelijkeMarktProvider.Markt.COL_NAAM +" ASC"
+                MakkelijkeMarktProvider.Markt.COL_NAAM + " ASC"
         );
 
         return loader;
@@ -151,4 +189,51 @@ public class MarktenFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoaderReset(Loader<Cursor> loader) {
         mMarktenAdapter.swapCursor(null);
     }
-}
+
+    /**
+     * Response from the getMarkten method arrives here for updating the database
+     * @param response response we received from the api
+     */
+    @Override
+    public void onResponse(Response<List<ApiMarkt>> response) {
+
+        // hide progressbar
+        mMarktenProgressBar.setVisibility(View.GONE);
+
+        if (response.body() != null && response.body().size() > 0) {
+
+            // copy the values to a contentvalues array that can be used in the
+            // contentprovider bulkinsert method
+            ContentValues[] contentValues = new ContentValues[response.body().size()];
+            for (int i = 0; i < response.body().size(); i++) {
+                contentValues[i] = response.body().get(i).toContentValues();
+            }
+
+            // delete existing markten and insert downloaded marken into db
+            if (contentValues.length > 0) {
+                getContext().getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
+                getContext().getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, contentValues);
+
+                // when we are done, remember when we last fetched the markten
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putLong(
+                        getContext().getString(R.string.sharedpreferences_key_markten_last_fetched),
+                        new Date().getTime());
+                editor.apply();
+            }
+        }
+    }
+
+    /**
+     * On failure of the getMarkten method log the error message
+     * @param t the thrown exception
+     */
+    @Override
+    public void onFailure(Throwable t) {
+
+        // hide progressbar
+        mMarktenProgressBar.setVisibility(View.GONE);
+
+        Utility.log(getContext(), LOG_TAG, "onFailure message: " + t.getMessage());
+    }}

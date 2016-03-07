@@ -66,6 +66,7 @@
     <string name="notice_sollicitaties_loading">Even geduld aub, sollicitaties voor geselecteerde markt worden geladen</string>
     <string name="notice_sollicitaties_empty">Geen sollicitaties gevonden voor geselecteerde markt</string>
     <string name="notice_dagvergunningen_empty">Voor geselecteerde markt vandaag nog geen dagvergunningen aangemaakt</string>
+    <string name="notice_markten_empty">Markten worden geladen...</string>
     <string name="notice_notities_empty">Voor geselecteerde markt vandaag nog geen notities aangemaakt</string>
 
     <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>

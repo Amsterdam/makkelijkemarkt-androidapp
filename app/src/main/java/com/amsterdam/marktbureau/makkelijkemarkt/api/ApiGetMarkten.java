@@ -3,22 +3,16 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
-import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,13 +21,12 @@ import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Load markten from the makkelijkemarkt api and store them in the database
  * @author marcolangebeeke
  */
-public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
+public class ApiGetMarkten extends ApiCall {
 
     // use classname when logging
     private static final String LOG_TAG = ApiGetMarkten.class.getSimpleName();
@@ -50,14 +43,14 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
      * Enqueue an async call to load the markten
      */
     @Override
-    public void enqueue() {
-        super.enqueue();
+    public void enqueue(Callback callback) {
+        super.enqueue(callback);
 
         // set the api function to call for loading the markten
         Call<List<ApiMarkt>> call = mMakkelijkeMarktApi.getMarkten();
 
         // call the api asynchronously
-        call.enqueue(this);
+        call.enqueue(callback);
     }
 
     /**
@@ -121,45 +114,5 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
 
         // add the interceptor to the http client builder
         mClientBuilder.addInterceptor(convertAanwezigeOpties);
-    }
-
-    /**
-     * Response from the getMarkten method arrives here for updating the database
-     * @param response response we received from the api
-     */
-    @Override
-    public void onResponse(Response<List<ApiMarkt>> response) {
-        if (response.body() != null && response.body().size() > 0) {
-
-            // copy the values to a contentvalues array that can be used in the
-            // contentprovider bulkinsert method
-            ContentValues[] contentValues = new ContentValues[response.body().size()];
-            for (int i = 0; i < response.body().size(); i++) {
-                contentValues[i] = response.body().get(i).toContentValues();
-            }
-
-            // delete existing markten and insert downloaded marken into db
-            if (contentValues.length > 0) {
-                mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
-                mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, contentValues);
-
-                // when we are done, remember when we last fetched the markten
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putLong(
-                        mContext.getString(R.string.sharedpreferences_key_markten_last_fetched),
-                        new Date().getTime());
-                editor.apply();
-            }
-        }
-    }
-
-    /**
-     * On failure of the getMarkten method log the error message
-     * @param t the thrown exception
-     */
-    @Override
-    public void onFailure(Throwable t) {
-        Utility.log(mContext, LOG_TAG, "onFailure message: " + t.getMessage());
     }
 }
