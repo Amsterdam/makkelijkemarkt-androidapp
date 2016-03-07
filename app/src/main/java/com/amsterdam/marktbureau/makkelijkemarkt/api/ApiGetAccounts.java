@@ -5,11 +5,15 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiAccount;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -65,8 +69,15 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
             // delete existing accounts and insert downloaded accounts into db
             if (contentValues.length > 0) {
                 mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriAccount, null, null);
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriAccount, contentValues);
-                Utility.log(mContext, LOG_TAG, "Accounts inserted: " + inserted);
+                mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriAccount, contentValues);
+
+                // when we are done, remember when we last fetched the accounts
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putLong(
+                        mContext.getString(R.string.sharedpreferences_key_accounts_last_fetched),
+                        new Date().getTime());
+                editor.apply();
             }
         }
     }

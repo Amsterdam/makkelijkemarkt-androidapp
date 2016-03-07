@@ -19,6 +19,9 @@
     <string name="sharedpreferences_key_markt_naam" translatable="false">marktNaam</string>
     <string name="sharedpreferences_key_markt_producten" translatable="false">marktProducten</string>
     <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
+
+    <string name="sharedpreferences_key_accounts_last_fetched" translatable="false">accounts-fetched</string>
+    <string name="sharedpreferences_key_markten_last_fetched" translatable="false">markten-fetched</string>
     <string name="sharedpreferences_key_sollicitaties_last_fetched" translatable="false">sollicitaties-fetched-for-markt-</string>
 
     <string name="sollicitatie_status_soll" translatable="false">soll</string>
@@ -60,6 +63,8 @@
 
     <string name="makkelijkemarkt_api_dagvergunning_concept_producten" translatable="false">producten</string>
 
+    <integer name="makkelijkemarkt_api_accounts_fetch_interval_hours">12</integer>
+    <integer name="makkelijkemarkt_api_markten_fetch_interval_hours">12</integer>
     <integer name="makkelijkemarkt_api_sollicitaties_fetch_interval_hours">12</integer>
 
 </resources>

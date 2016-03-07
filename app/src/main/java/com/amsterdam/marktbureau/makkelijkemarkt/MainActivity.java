@@ -3,9 +3,12 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +21,9 @@ import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetMarkten;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -86,20 +92,40 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             transaction.add(R.id.container, mMainFragment, MAIN_FRAGMENT_TAG);
             transaction.commit();
 
-            // TODO: prevent getaccounts and getmarkten to be called every time the app is started, or when the user is logged out, the same way is with the sollicitaties: only check once a day
             // TODO: check internet connection before calling the api
 
+            // check time in hours since last fetched the accounts
+            Context context = getApplicationContext();
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_accounts_fetch_interval_hours);
+            if (settings.contains(context.getString(R.string.sharedpreferences_key_accounts_last_fetched))) {
+                long lastFetchTimestamp = settings.getLong(context.getString(R.string.sharedpreferences_key_accounts_last_fetched), 0);
+                long differenceMs  = new Date().getTime() - lastFetchTimestamp;
+                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+            }
+
             // update the local accounts by reloading them from the api
-            ApiGetAccounts getAccounts = new ApiGetAccounts(this);
-            getAccounts.enqueue();
+            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_accounts_fetch_interval_hours)) {
+                ApiGetAccounts getAccounts = new ApiGetAccounts(this);
+                getAccounts.enqueue();
+            }
+
+            // check time in hours since last fetched the markten
+            diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_markten_fetch_interval_hours);
+            if (settings.contains(context.getString(R.string.sharedpreferences_key_markten_last_fetched))) {
+                long lastFetchTimestamp = settings.getLong(context.getString(R.string.sharedpreferences_key_markten_last_fetched), 0);
+                long differenceMs  = new Date().getTime() - lastFetchTimestamp;
+                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+            }
 
             // update the local markten by reloading them from the api (with an http client containing
             // an interceptor that will modify the response to transform the aanwezigeopties object
             // into an array of strings)
-            ApiGetMarkten getMarkten = new ApiGetMarkten(this);
-            getMarkten.addAanwezigeOptiesInterceptor();
-            getMarkten.enqueue();
-
+            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_markten_fetch_interval_hours)) {
+                ApiGetMarkten getMarkten = new ApiGetMarkten(this);
+                getMarkten.addAanwezigeOptiesInterceptor();
+                getMarkten.enqueue();
+            }
         } else {
 
             // re-use existing instance of main fragment

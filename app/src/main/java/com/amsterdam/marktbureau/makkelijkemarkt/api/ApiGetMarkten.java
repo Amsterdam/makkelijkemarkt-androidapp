@@ -5,7 +5,10 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
@@ -15,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -137,8 +141,15 @@ public class ApiGetMarkten extends ApiCall implements Callback<List<ApiMarkt>> {
             // delete existing markten and insert downloaded marken into db
             if (contentValues.length > 0) {
                 mContext.getContentResolver().delete(MakkelijkeMarktProvider.mUriMarkt, null, null);
-                int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, contentValues);
-                Utility.log(mContext, LOG_TAG, "Markten inserted: " + inserted);
+                mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriMarkt, contentValues);
+
+                // when we are done, remember when we last fetched the markten
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putLong(
+                        mContext.getString(R.string.sharedpreferences_key_markten_last_fetched),
+                        new Date().getTime());
+                editor.apply();
             }
         }
     }
