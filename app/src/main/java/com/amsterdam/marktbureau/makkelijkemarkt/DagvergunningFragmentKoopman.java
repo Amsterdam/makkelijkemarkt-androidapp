@@ -101,8 +101,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     int mAantal4MeterKramenVast = -1;
     int mAantalExtraMetersVast = -1;
     int mAantalElektraVast = -1;
-    int mKrachtstroomVast = -1;
-    int mReinigingVast = -1;
+    int mAfvaleilandVast = -1;
 
     // meldingen
     boolean mMeldingMultipleDagvergunningen = false;
@@ -158,8 +157,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 mAantal4MeterKramenVast = -1;
                 mAantalExtraMetersVast = -1;
                 mAantalElektraVast = -1;
-                mKrachtstroomVast = -1;
-                mReinigingVast = -1;
+                mAfvaleilandVast = -1;
 
                 // inform the dagvergunningfragment that the koopman has changed, get the new values,
                 // and populate our layout with the new koopman
@@ -362,8 +360,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                         mAantal4MeterKramenVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_4METER_KRAMEN));
                         mAantalExtraMetersVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS));
                         mAantalElektraVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA));
-                        mKrachtstroomVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM));
-                        mReinigingVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_REINIGING));
+                        mAfvaleilandVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AFVALEILAND));
                     }
 
                     // inflate sollicitatie layout and populate its view items

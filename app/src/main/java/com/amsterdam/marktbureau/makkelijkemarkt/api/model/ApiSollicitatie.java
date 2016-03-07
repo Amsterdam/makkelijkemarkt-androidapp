@@ -25,8 +25,7 @@ public class ApiSollicitatie {
     private int aantal4MeterKramen;
     private int aantalExtraMeters;
     private int aantalElektra;
-    private boolean krachtstroom;
-    private boolean reiniging;
+    private int afvaleiland;
     private boolean doorgehaald;
     private String doorgehaaldReden;
     private int koopmanId;
@@ -155,29 +154,15 @@ public class ApiSollicitatie {
     /**
      * @return
      */
-    public boolean isKrachtstroom() {
-        return krachtstroom;
+    public int getAfvaleiland() {
+        return afvaleiland;
     }
 
     /**
-     * @param krachtstroom
+     * @param afvaleiland
      */
-    public void setKrachtstroom(boolean krachtstroom) {
-        this.krachtstroom = krachtstroom;
-    }
-
-    /**
-     * @return
-     */
-    public boolean isReiniging() {
-        return reiniging;
-    }
-
-    /**
-     * @param reiniging
-     */
-    public void setReiniging(boolean reiniging) {
-        this.reiniging = reiniging;
+    public void setAfvaleiland(int afvaleiland) {
+        this.afvaleiland = afvaleiland;
     }
 
     /**
@@ -267,8 +252,7 @@ public class ApiSollicitatie {
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_4METER_KRAMEN, getAantal4MeterKramen());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS, getAantalExtraMeters());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA, getAantalElektra());
-        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM, isKrachtstroom());
-        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_REINIGING, isReiniging());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AFVALEILAND, getAfvaleiland());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KOOPMAN_ID, getKoopmanId());
 
         if (getMarkt() != null) {

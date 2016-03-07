@@ -23,8 +23,7 @@ public class ApiDagvergunning {
     private int extraMeters;
     private int totaleLengte;
     private int aantalElektra;
-    private boolean krachtstroom;
-    private boolean reiniging;
+    private int afvaleiland;
     private String erkenningsnummer;
     private String erkenningsnummerInvoerMethode;
     private String aanwezig;
@@ -34,8 +33,7 @@ public class ApiDagvergunning {
     private int aantalExtraMetersVast;
     private int totaleLengteVast;
     private int aantalElektraVast;
-    private boolean krachtstroomVast;
-    private boolean reinigingVast;
+    private int afvaleilandVast;
     private String status;
     private String registratieDatumtijd;
     private List<Float> registratieGeolocatie = new ArrayList<Float>();
@@ -147,29 +145,15 @@ public class ApiDagvergunning {
     /**
      * @return
      */
-    public boolean isKrachtstroom() {
-        return krachtstroom;
+    public int getAfvaleiland() {
+        return afvaleiland;
     }
 
     /**
-     * @param krachtstroom
+     * @param afvaleiland
      */
-    public void setKrachtstroom(boolean krachtstroom) {
-        this.krachtstroom = krachtstroom;
-    }
-
-    /**
-     * @return
-     */
-    public boolean isReiniging() {
-        return reiniging;
-    }
-
-    /**
-     * @param reiniging
-     */
-    public void setReiniging(boolean reiniging) {
-        this.reiniging = reiniging;
+    public void setAfvaleiland(int afvaleiland) {
+        this.afvaleiland = afvaleiland;
     }
 
     /**
@@ -301,29 +285,15 @@ public class ApiDagvergunning {
     /**
      * @return
      */
-    public boolean isKrachtstroomVast() {
-        return krachtstroomVast;
+    public int getAfvaleilandVast() {
+        return afvaleilandVast;
     }
 
     /**
-     * @param krachtstroomVast
+     * @param afvaleilandVast
      */
-    public void setKrachtstroomVast(boolean krachtstroomVast) {
-        this.krachtstroomVast = krachtstroomVast;
-    }
-
-    /**
-     * @return
-     */
-    public boolean isReinigingVast() {
-        return reinigingVast;
-    }
-
-    /**
-     * @param reinigingVast
-     */
-    public void setReinigingVast(boolean reinigingVast) {
-        this.reinigingVast = reinigingVast;
+    public void setAfvaleilandVast(int afvaleilandVast) {
+        this.afvaleilandVast = afvaleilandVast;
     }
 
     /**
@@ -466,8 +436,7 @@ public class ApiDagvergunning {
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, getExtraMeters());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE, getTotaleLengte());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, getAantalElektra());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, isKrachtstroom());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, isReiniging());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND, getAfvaleiland());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, getErkenningsnummer());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE, getErkenningsnummerInvoerMethode());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG, getAanwezig());
@@ -477,8 +446,7 @@ public class ApiDagvergunning {
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, getAantalExtraMetersVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE_VAST, getTotaleLengteVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, getAantalElektraVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, isKrachtstroomVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, isReinigingVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND_VAST, getAfvaleilandVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE, getStatus());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD, getRegistratieDatumtijd());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD, getAanmaakDatumtijd());
