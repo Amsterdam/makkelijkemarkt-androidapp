@@ -43,7 +43,7 @@ public class BaseActivity extends AppCompatActivity {
     public DrawerFragment mDrawerFragment;
 
     // drawertoggle component to control the drawer icon state
-    private ActionBarDrawerToggle mDrawerToggle;
+    protected ActionBarDrawerToggle mDrawerToggle;
 
     // common toast object
     protected Toast mToast;

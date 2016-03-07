@@ -85,6 +85,13 @@ public class DagvergunningActivity extends BaseActivity implements
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        // replace the drawer hamburger with the back-arrow
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /**
