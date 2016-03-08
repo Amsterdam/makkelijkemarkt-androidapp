@@ -110,19 +110,64 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
         if (savedInstanceState == null) {
 
+
+
             // @todo remove api call here and only call on interval basis in the service?
             // @todo or keep it here, so we can show a progressbar and start calling it on interval basis in the service once this call is finished?
             // @todo best way would be to call it here one time, so we use the progressbar, and on interval basis call it in the service
             // @todo: dagvergunningen: 1x per minute?
 
+
+
+
+
             // show the progressbar
             mDagvergunningenProgressBar.setVisibility(View.VISIBLE);
 
-            // fetch dagvergunningen for selected markt
-            ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
-            getDagvergunningen.setMarktId(String.valueOf(mMarktId));
-            getDagvergunningen.setDag(mDag);
-            getDagvergunningen.enqueue();
+
+
+
+
+
+//            Timer timer = new Timer();
+//            timer.scheduleAtFixedRate(new TimerTask() {
+//                final Context ctx = getContext();
+//
+//                @Override
+//                public void run() {
+//
+//                    Log.e(LOG_TAG, "=========> GO get dagvergunningen!");
+//
+//                    if (ctx != null) {
+//                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+//                        int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
+//
+//                        if (marktId > 0) {
+//
+//                            // get the date of today for the dag param
+//                            SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
+//                            mDag = sdf.format(new Date());
+
+                            // fetch dagvergunningen for selected markt
+                            ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
+                            getDagvergunningen.setMarktId(String.valueOf(mMarktId));
+                            getDagvergunningen.setDag(mDag);
+                            getDagvergunningen.enqueue();
+
+//                        }
+//                    }
+//                }
+//
+//            }, 0, 10000);
+
+
+
+
+
+
+
+
+
 
             // check time in hours since last fetched the sollicitaties for selected markt
             long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours);
