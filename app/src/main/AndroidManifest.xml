@@ -124,5 +124,10 @@
             android:authorities="com.amsterdam.marktbureau.makkelijkemarkt.data"
             android:exported="false" />
 
+        <!-- MakkelijkeMarkt Api Service -->
+        <service
+            android:name=".api.MakkelijkeMarktApiService"
+            android:exported="false" />
+
     </application>
 </manifest>

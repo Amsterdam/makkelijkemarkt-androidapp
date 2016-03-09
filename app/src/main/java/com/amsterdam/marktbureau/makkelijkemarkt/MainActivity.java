@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -213,5 +214,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         }
 
         super.onBackPressed();
+    }
+
+    /**
+     * On destroy stop the api service
+     */
+    @Override
+    protected void onDestroy() {
+
+        // stop the api service when the app is closed
+        Intent apiServiceIntent = new Intent(this, MakkelijkeMarktApiService.class);
+        stopService(apiServiceIntent);
+
+        super.onDestroy();
     }
 }

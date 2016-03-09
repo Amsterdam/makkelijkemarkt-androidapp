@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostLoginBasicId;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.gson.JsonObject;
 
@@ -254,6 +255,10 @@ public class LoginFragment extends Fragment implements
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(getString(R.string.sharedpreferences_key_uuid), uuid);
             editor.apply();
+
+            // start the api service
+            Intent apiServiceIntent = new Intent(getContext(), MakkelijkeMarktApiService.class);
+            getContext().startService(apiServiceIntent);
 
             // open the markten activity
             Intent intent = new Intent(getActivity(), MarktenActivity.class);

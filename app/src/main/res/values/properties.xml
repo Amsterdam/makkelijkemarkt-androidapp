@@ -67,4 +67,6 @@
     <integer name="makkelijkemarkt_api_markten_fetch_interval_hours">12</integer>
     <integer name="makkelijkemarkt_api_sollicitaties_fetch_interval_hours">12</integer>
 
+    <integer name="makkelijkemarkt_service_getdagvergunningen_interval_seconds">30</integer>
+
 </resources>

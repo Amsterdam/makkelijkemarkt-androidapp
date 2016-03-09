@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiDeleteDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPutDagvergunning;
@@ -58,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -144,6 +146,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     // progress dialog for during saving
     private ProgressDialog mProgressDialog;
 
+    // progress dialog for during retrieving sollicitaties
+    private ProgressDialog mGetSollicitatiesProcessDialog;
+
     // common toast object
     protected Toast mToast;
 
@@ -193,6 +198,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+        // create progress dialog for loading the sollicitaties
+        mGetSollicitatiesProcessDialog = new ProgressDialog(getContext());
+        mGetSollicitatiesProcessDialog.setIndeterminate(true);
+        mGetSollicitatiesProcessDialog.setIndeterminateDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progressbar_circle));
+        mGetSollicitatiesProcessDialog.setMessage(getString(R.string.notice_sollicitaties_loading) + "...");
+        mGetSollicitatiesProcessDialog.setCancelable(false);
 
         // create new viewpager fragments or restore them from saved state
         if (savedInstanceState == null) {
@@ -296,6 +308,25 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                 // show the progressbar (because we are fetching the koopman from the api later in the onloadfinished)
                 mProgressbar.setVisibility(View.VISIBLE);
+            } else {
+
+                // check time in hours since last fetched the sollicitaties for selected markt
+                long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours);
+                if (settings.contains(getContext().getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId)) {
+                    long lastFetchTimestamp = settings.getLong(getContext().getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId, 0);
+                    long differenceMs  = new Date().getTime() - lastFetchTimestamp;
+                    diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+                }
+
+                // if last sollicitaties fetched more than 12 hours ago, fetch them again
+                if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours)) {
+
+                    // show progress dialog
+                    mGetSollicitatiesProcessDialog.show();
+                    ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
+                    getSollicitaties.setMarktId(mMarktId);
+                    getSollicitaties.enqueue();
+                }
             }
         } else {
 
@@ -1697,6 +1728,20 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mProgressbar.setVisibility(View.GONE);
         if (event.mKoopman == null) {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_koopman_fetch_failed) + ": " + event.mMessage);
+        }
+    }
+
+    /**
+     * Handle response event from api get sollicitaties request completed to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onGetSollicitatiesCompletedEvent(ApiGetSollicitaties.OnCompletedEvent event) {
+
+        // hide progress dialog
+        mGetSollicitatiesProcessDialog.dismiss();
+        if (event.mSollicitatiesCount == -1) {
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_sollicitaties_fetch_failed) + ": " + event.mMessage);
         }
     }
 

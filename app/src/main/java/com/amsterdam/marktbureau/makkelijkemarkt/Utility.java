@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 
 import java.lang.reflect.Field;
 import java.math.BigInteger;
@@ -235,6 +236,10 @@ public class Utility {
      * @param callApi should we send a logout request to the api?
      */
     public static void logout(Context context, boolean callApi) {
+
+        // stop the api service
+        Intent apiServiceIntent = new Intent(context, MakkelijkeMarktApiService.class);
+        context.stopService(apiServiceIntent);
 
         // call api logout method (async, but without handling the response)
         if (callApi) {

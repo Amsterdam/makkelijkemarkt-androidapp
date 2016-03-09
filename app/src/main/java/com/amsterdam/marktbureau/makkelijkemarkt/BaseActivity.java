@@ -180,8 +180,6 @@ public class BaseActivity extends AppCompatActivity {
 
         Utility.log(this, LOG_TAG, "Logging out...");
 
-        // @todo stop running api service
-
         // logout of the app, and optionally the api
         Utility.logout(this, callApi);
     }

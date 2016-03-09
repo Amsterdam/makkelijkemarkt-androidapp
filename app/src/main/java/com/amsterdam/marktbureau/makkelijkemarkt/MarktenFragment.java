@@ -143,8 +143,8 @@ public class MarktenFragment extends Fragment implements
         editor.apply();
 
         // open the dagvergunningen activity
-        Intent intent = new Intent(getActivity(), DagvergunningenActivity.class);
-        startActivity(intent);
+        Intent dagvergunningenIntent = new Intent(getActivity(), DagvergunningenActivity.class);
+        startActivity(dagvergunningenIntent);
     }
 
     /**
@@ -236,4 +236,5 @@ public class MarktenFragment extends Fragment implements
         mMarktenProgressBar.setVisibility(View.GONE);
 
         Utility.log(getContext(), LOG_TAG, "onFailure message: " + t.getMessage());
-    }}
+    }
+}

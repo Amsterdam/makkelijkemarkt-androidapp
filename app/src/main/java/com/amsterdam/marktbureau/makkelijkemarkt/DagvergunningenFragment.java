@@ -3,7 +3,6 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.DagvergunningenAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetDagvergunningen;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,7 +29,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,9 +60,6 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
     // cursoradapter for populating the dagvergunningen litsview with dagvergunningen from the database
     private DagvergunningenAdapter mDagvergunningenAdapter;
-
-    // progress dialog for during retrieving sollicitaties
-    private ProgressDialog mGetSollicitatiesProcessDialog;
 
     // common toast object
     protected Toast mToast;
@@ -101,91 +94,13 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
         mDag = sdf.format(new Date());
 
-        // create progress dialog for loading the sollicitaties
-        mGetSollicitatiesProcessDialog = new ProgressDialog(getContext());
-        mGetSollicitatiesProcessDialog.setIndeterminate(true);
-        mGetSollicitatiesProcessDialog.setIndeterminateDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progressbar_circle));
-        mGetSollicitatiesProcessDialog.setMessage(getString(R.string.notice_sollicitaties_loading) + "...");
-        mGetSollicitatiesProcessDialog.setCancelable(false);
-
         if (savedInstanceState == null) {
 
-
-
-            // @todo remove api call here and only call on interval basis in the service?
-            // @todo or keep it here, so we can show a progressbar and start calling it on interval basis in the service once this call is finished?
-            // @todo best way would be to call it here one time, so we use the progressbar, and on interval basis call it in the service
-            // @todo: dagvergunningen: 1x per minute?
-
-
-
-
-
-            // show the progressbar
-            mDagvergunningenProgressBar.setVisibility(View.VISIBLE);
-
-
-
-
-
-
-//            Timer timer = new Timer();
-//            timer.scheduleAtFixedRate(new TimerTask() {
-//                final Context ctx = getContext();
-//
-//                @Override
-//                public void run() {
-//
-//                    Log.e(LOG_TAG, "=========> GO get dagvergunningen!");
-//
-//                    if (ctx != null) {
-//                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-//                        int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
-//
-//                        if (marktId > 0) {
-//
-//                            // get the date of today for the dag param
-//                            SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
-//                            mDag = sdf.format(new Date());
-
-                            // fetch dagvergunningen for selected markt
-                            ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
-                            getDagvergunningen.setMarktId(String.valueOf(mMarktId));
-                            getDagvergunningen.setDag(mDag);
-                            getDagvergunningen.enqueue();
-
-//                        }
-//                    }
-//                }
-//
-//            }, 0, 10000);
-
-
-
-
-
-
-
-
-
-
-            // check time in hours since last fetched the sollicitaties for selected markt
-            long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours);
-            if (settings.contains(getContext().getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId)) {
-                long lastFetchTimestamp = settings.getLong(getContext().getString(R.string.sharedpreferences_key_sollicitaties_last_fetched) + mMarktId, 0);
-                long differenceMs  = new Date().getTime() - lastFetchTimestamp;
-                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
-            }
-
-            // if last sollicitaties fetched more than 12 hours ago, fetch them again
-            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_sollicitaties_fetch_interval_hours)) {
-                ApiGetSollicitaties getSollicitaties = new ApiGetSollicitaties(getContext());
-                getSollicitaties.setMarktId(mMarktId);
-                getSollicitaties.enqueue();
-
-                // show progress dialog
-                mGetSollicitatiesProcessDialog.show();
-            }
+            // fetch dagvergunningen for selected markt
+            ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
+            getDagvergunningen.setMarktId(String.valueOf(mMarktId));
+            getDagvergunningen.setDag(mDag);
+            getDagvergunningen.enqueue();
         }
 
         // create an adapter for the dagvergunningen listview
@@ -266,7 +181,13 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        // show the progressbar if we have no dagvergunningen in the db yet
+        mDagvergunningenProgressBar.setVisibility(data.getCount() == 0 ? View.VISIBLE : View.GONE);
+
+        // show the empty notice if we have not dagvergunningen in the db yet
         mListViewEmptyTextView.setVisibility(data.getCount() == 0 ? View.VISIBLE : View.GONE);
+
         mDagvergunningenAdapter.swapCursor(data);
     }
 
@@ -291,20 +212,6 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         mDagvergunningenProgressBar.setVisibility(View.GONE);
         if (event.mDagvergunningCount == -1) {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_dagvergunningen_fetch_failed) + ": " + event.mMessage);
-        }
-    }
-
-    /**
-     * Handle response event from api get sollicitaties request completed to update our ui
-     * @param event the received event
-     */
-    @Subscribe
-    public void onGetSollicitatiesCompletedEvent(ApiGetSollicitaties.OnCompletedEvent event) {
-
-        // hide progress dialog
-        mGetSollicitatiesProcessDialog.dismiss();
-        if (event.mSollicitatiesCount == -1) {
-            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_sollicitaties_fetch_failed) + ": " + event.mMessage);
         }
     }
 
