@@ -14,7 +14,11 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPutNotitie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+import com.google.gson.JsonObject;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,23 +73,13 @@ public class NotitiesAdapter extends CursorAdapter {
      * @param cursor
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
         // get the viewholder layout containing the view items
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        // afgevinkt
-        int afgevinkt = cursor.getInt(cursor.getColumnIndex(MakkelijkeMarktProvider.Notitie.COL_AFGEVINKT));
-        if (afgevinkt > 0) {
-            viewHolder.afgevinktCheck.setChecked(true);
-            viewHolder.berichtText.setTextColor(ContextCompat.getColor(context, R.color.primary));
-        } else {
-            viewHolder.afgevinktCheck.setChecked(false);
-            viewHolder.berichtText.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
-        }
-
         // bericht
-        String bericht = cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Notitie.COL_BERICHT));
+        final String bericht = cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Notitie.COL_BERICHT));
         viewHolder.berichtText.setText(bericht);
 
         // aangemaakt
@@ -98,6 +92,39 @@ public class NotitiesAdapter extends CursorAdapter {
         } catch (java.text.ParseException e) {
             viewHolder.aangemaaktText.setText("");
         }
+
+        // afgevinkt
+        int afgevinkt = cursor.getInt(cursor.getColumnIndex(MakkelijkeMarktProvider.Notitie.COL_AFGEVINKT));
+        if (afgevinkt > 0) {
+            viewHolder.afgevinktCheck.setChecked(true);
+            viewHolder.berichtText.setTextColor(ContextCompat.getColor(context, R.color.primary));
+        } else {
+            viewHolder.afgevinktCheck.setChecked(false);
+            viewHolder.berichtText.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
+        }
+
+        // onclick afgevinkt
+        final int id = cursor.getInt(cursor.getColumnIndex(MakkelijkeMarktProvider.Notitie.COL_ID));
+        viewHolder.afgevinktCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean afgevinkt = ((CheckBox) v).isChecked();
+
+                // event to inform subscribers that we are starting to update the notitie
+                EventBus.getDefault().post(new OnUpdateEvent(id, null));
+
+                // create json object from checked state, id, and bericht
+                JsonObject notitiePayload = new JsonObject();
+                notitiePayload.addProperty(context.getString(R.string.makkelijkemarkt_api_notitie_payload_bericht), bericht);
+                notitiePayload.addProperty(context.getString(R.string.makkelijkemarkt_api_notitie_payload_afgevinkt), afgevinkt);
+
+                // send ApiPutNotitie and let the call update the database with the resulting object from the api call
+                ApiPutNotitie apiPutNotitie = new ApiPutNotitie(context);
+                apiPutNotitie.setId(id);
+                apiPutNotitie.setPayload(notitiePayload);
+                apiPutNotitie.enqueue();
+            }
+        });
     }
 
     /**
@@ -116,6 +143,19 @@ public class NotitiesAdapter extends CursorAdapter {
          */
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
+        }
+    }
+
+    /**
+     * Event to inform subscribers that we are starting to update the notitie
+     */
+    public class OnUpdateEvent {
+        public final int mNotitieId;
+        public final String mMessage;
+
+        public OnUpdateEvent(int id, String message) {
+            mNotitieId = id;
+            mMessage = message;
         }
     }
 }

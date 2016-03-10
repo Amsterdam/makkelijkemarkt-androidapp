@@ -63,6 +63,9 @@
 
     <string name="makkelijkemarkt_api_dagvergunning_concept_producten" translatable="false">producten</string>
 
+    <string name="makkelijkemarkt_api_notitie_payload_bericht" translatable="false">bericht</string>
+    <string name="makkelijkemarkt_api_notitie_payload_afgevinkt" translatable="false">afgevinkt</string>
+
     <integer name="makkelijkemarkt_api_accounts_fetch_interval_hours">12</integer>
     <integer name="makkelijkemarkt_api_markten_fetch_interval_hours">12</integer>
     <integer name="makkelijkemarkt_api_sollicitaties_fetch_interval_hours">12</integer>

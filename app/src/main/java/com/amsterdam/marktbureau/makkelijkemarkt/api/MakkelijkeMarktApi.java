@@ -125,4 +125,13 @@ public interface MakkelijkeMarktApi {
      */
     @GET("notitie/{marktId}/{dag}")
     Call<List<ApiNotitie>> getNotities(@Path("marktId") String marktId, @Path("dag") String dag, @Query("verwijderdStatus") String verwijderdStatus);
+
+    /**
+     * Put an existing notitie
+     * @param id the id of the existing notitie
+     * @param notitie a gson object containing the notitie values
+     * @return a apinotitie object containing the result
+     */
+    @PUT("notitie/{id}")
+    Call<ApiNotitie> putNotitie(@Path("id") String id, @Body JsonObject notitie);
 }

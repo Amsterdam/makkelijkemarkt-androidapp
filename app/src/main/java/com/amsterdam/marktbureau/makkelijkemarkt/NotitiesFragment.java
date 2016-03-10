@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.NotitiesAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetNotities;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPutNotitie;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import org.greenrobot.eventbus.EventBus;
@@ -110,6 +111,14 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
         return mainView;
     }
 
+    @OnClick(R.id.fab_add_notitie)
+    public void addNotitieClick() {
+        Utility.log(getContext(), LOG_TAG, "FAB clicked!");
+
+        // TODO: Implement NotitieActivity
+
+    }
+
     /**
      * Get the non-removed notities for selected markt and dag
      * @param id
@@ -134,7 +143,6 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
                 args.getString(getString(R.string.sharedpreferences_key_date_today), "")
         });
         loader.setSortOrder(
-                MakkelijkeMarktProvider.Notitie.COL_AFGEVINKT + " ASC, " +
                 MakkelijkeMarktProvider.Notitie.COL_AANGEMAAKT_DATUMTIJD + " DESC"
         );
 
@@ -179,6 +187,29 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
         mNotitiesProgressBar.setVisibility(View.GONE);
         if (event.mNotitieCount == -1) {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_notities_fetch_failed) + ": " + event.mMessage);
+        }
+    }
+
+    /**
+     * Handle update event when we start to update a notitie for showing the progressbar
+     * @param event the received event
+     */
+    @Subscribe
+    public void onUpdateNotitieEvent(NotitiesAdapter.OnUpdateEvent event) {
+        mNotitiesProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Handle response event from api putnotitie request onresponse method to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onPutNotitieResponseEvent(ApiPutNotitie.OnResponseEvent event) {
+
+        // hide progressbar or show an error
+        mNotitiesProgressBar.setVisibility(View.GONE);
+        if (event.mNotitie == null) {
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_notitie_update_failed) + ": " + event.mMessage);
         }
     }
 
