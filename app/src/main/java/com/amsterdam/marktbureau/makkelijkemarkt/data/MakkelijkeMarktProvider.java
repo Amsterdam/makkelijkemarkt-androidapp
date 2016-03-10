@@ -285,7 +285,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.TEXT)
         public static final String COL_NOTITIE = "notitie";
 
-        @Column(Column.FieldType.INTEGER)
+        @Column(Column.FieldType.TEXT)
         public static final String COL_AANMAAK_DATUMTIJD = "aanmaak_datumtijd";
 
         @Column(Column.FieldType.INTEGER)
@@ -337,6 +337,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.TEXT)
         public static final String COL_BERICHT = "bericht";
 
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_AANGEMAAKT_DATUMTIJD = "aangemaakt_datumtijd";
+
         @Column(Column.FieldType.REAL)
         public static final String COL_AANGEMAAKT_GEOLOCATIE_LAT = "aangemaakt_geolocatie_lat";
 
@@ -344,18 +347,15 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_AANGEMAAKT_GEOLOCATIE_LONG = "aangemaakt_geolocatie_long";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AFGEVINKT_STATUS = "afgevinkt_status";
+        public static final String COL_AFGEVINKT = "afgevinkt";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_AFGEVINKT_DATUMTIJD = "afgevinkt_datumtijd";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_VERWIJDERD = "verwijderd";
 
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANGEMAAKT_DATUMTIJD = "aangemaakt_datumtijd";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AFGEVINKT_DATUMTIJD = "afgevinkt_datumtijd";
-
-        @Column(Column.FieldType.INTEGER)
+        @Column(Column.FieldType.TEXT)
         public static final String COL_VERWIJDERD_DATUMTIJD = "verwijderd_datumtijd";
     }
 

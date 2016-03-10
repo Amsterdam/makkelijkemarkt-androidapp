@@ -34,6 +34,10 @@ public class MakkelijkeMarktApiService extends Service {
     private Timer mGetDagvergunningenTimer;
     private int mGetDagvergunningenInterval;
 
+    // timer object for loading the notities on interval
+    private Timer mGetNotitiesTimer;
+    private int mGetNotitiesInterval;
+
     /**
      * Called only once, upon initial creation
      */
@@ -43,6 +47,10 @@ public class MakkelijkeMarktApiService extends Service {
         // create a timer instance for loading the dagvergunningen on interval
         mGetDagvergunningenTimer = new Timer();
         mGetDagvergunningenInterval = getResources().getInteger(R.integer.makkelijkemarkt_service_getdagvergunningen_interval_seconds) * 1000;
+
+        // create a timer instance for loading the notities on interval
+        mGetNotitiesTimer = new Timer();
+        mGetNotitiesInterval = getResources().getInteger(R.integer.makkelijkemarkt_service_getnotities_interval_seconds) * 1000;
 
         super.onCreate();
     }
@@ -56,7 +64,6 @@ public class MakkelijkeMarktApiService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(LOG_TAG, "=========> onStartCommand called");
 
         // only started if we are not started yet, or the service was stopped by the system
         if (!mIsStarted || intent == null) {
@@ -67,42 +74,70 @@ public class MakkelijkeMarktApiService extends Service {
             // update state to know we are started and should not be started again
             mIsStarted = true;
 
+            // get final reference to the context
+            final Context ctx = getApplicationContext();
+
             // create a timer task that will start the first time after the given interval and
             // execute on the same interval afterwards
             mGetDagvergunningenTimer.scheduleAtFixedRate(new TimerTask() {
-                final Context ctx = getApplicationContext();
-
                 /**
                  * Start a seperate thread that will retrieve the dagvergunningen
                  */
                 @Override
                 public void run() {
-                    if (ctx != null) {
 
-                        Log.i(LOG_TAG, "=========> Get dagvergunningen!");
+                    Log.i(LOG_TAG, "=========> Get dagvergunningen!");
 
-                        // get the markt id from the shared preferences
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-                        int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
-                        if (marktId > 0) {
+                    // get the markt id from the shared preferences
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+                    int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
 
-                            // get the date of today for the dag param
-                            SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
-                            String dag = sdf.format(new Date());
+                    if (marktId > 0) {
 
-                            // fetch dagvergunningen for selected markt
-                            ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(ctx);
-                            getDagvergunningen.setMarktId(String.valueOf(marktId));
-                            getDagvergunningen.setDag(dag);
-                            getDagvergunningen.enqueue();
+                        // get the date of today for the dag param
+                        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
+                        String dag = sdf.format(new Date());
 
-                        } else {
-                            Log.i(LOG_TAG, "=========> marktId not set!");
-                        }
+                        // fetch dagvergunningen for selected markt
+                        ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(ctx);
+                        getDagvergunningen.setMarktId(String.valueOf(marktId));
+                        getDagvergunningen.setDag(dag);
+                        getDagvergunningen.enqueue();
+
                     }
                 }
             }, mGetDagvergunningenInterval, mGetDagvergunningenInterval);
 
+            // create a timer task that will start the first time after the given interval and
+            // execute on the same interval afterwards
+            mGetNotitiesTimer.scheduleAtFixedRate(new TimerTask() {
+                /**
+                 * Start a seperate thread that will retrieve the notities
+                 */
+                @Override
+                public void run() {
+
+                    Log.i(LOG_TAG, "=========> Get notities!");
+
+                    // get the markt id from the shared preferences
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+                    int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
+
+                    if (marktId > 0) {
+
+                        // get the date of today for the dag param
+                        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
+                        String dag = sdf.format(new Date());
+
+                        // fetch notities for selected markt
+                        ApiGetNotities getNotities = new ApiGetNotities(ctx);
+                        getNotities.setMarktId(String.valueOf(marktId));
+                        getNotities.setDag(dag);
+                        getNotities.enqueue();
+
+                    }
+                }
+            }, mGetNotitiesInterval, mGetNotitiesInterval);
 
             // TODO: add a timertask that will download the sollicitaties:
             // - on a 1 hour interval
@@ -122,10 +157,13 @@ public class MakkelijkeMarktApiService extends Service {
      */
     @Override
     public void onDestroy() {
-        Log.i(LOG_TAG, "=========> onDestroy called");
 
+        // reset the started indicator
         mIsStarted = false;
+
+        // stop the timers
         mGetDagvergunningenTimer.cancel();
+        mGetNotitiesTimer.cancel();
 
         super.onDestroy();
     }
@@ -135,6 +173,7 @@ public class MakkelijkeMarktApiService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
+        // not used
         return null;
     }
 }

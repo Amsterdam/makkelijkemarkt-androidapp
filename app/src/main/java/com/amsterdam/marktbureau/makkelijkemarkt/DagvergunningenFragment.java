@@ -44,19 +44,13 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     // use classname when logging
     private static final String LOG_TAG = DagvergunningenFragment.class.getSimpleName();
 
-    // unique id for the markten loader
+    // unique id for the dagvergunningen loader
     private static final int DAGVERGUNNINGEN_LOADER = 3;
 
     // bind layout elements
     @Bind(R.id.listview_dagvergunningen) ListView mDagvergunningenListView;
     @Bind(R.id.progressbar_dagvergunningen) ProgressBar mDagvergunningenProgressBar;
     @Bind(R.id.listview_empty) TextView mListViewEmptyTextView;
-
-    // the id of the selected markt
-    private int mMarktId;
-
-    // the date of today in a formatted string
-    private String mDag;
 
     // cursoradapter for populating the dagvergunningen litsview with dagvergunningen from the database
     private DagvergunningenAdapter mDagvergunningenAdapter;
@@ -88,18 +82,18 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
         // get the id of selected market from the shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mMarktId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_markt_id), 0);
+        int marktId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_markt_id), 0);
 
         // get the date of today for the dag param
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
-        mDag = sdf.format(new Date());
+        String dag = sdf.format(new Date());
 
         if (savedInstanceState == null) {
 
             // fetch dagvergunningen for selected markt
             ApiGetDagvergunningen getDagvergunningen = new ApiGetDagvergunningen(getContext());
-            getDagvergunningen.setMarktId(String.valueOf(mMarktId));
-            getDagvergunningen.setDag(mDag);
+            getDagvergunningen.setMarktId(String.valueOf(marktId));
+            getDagvergunningen.setDag(dag);
             getDagvergunningen.enqueue();
         }
 
@@ -109,8 +103,8 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
 
         // pass markt id and dag as arguments bundle to the cursorloader
         Bundle args = new Bundle();
-        args.putString(getString(R.string.sharedpreferences_key_markt_id), String.valueOf(mMarktId));
-        args.putString(getString(R.string.sharedpreferences_key_date_today), mDag);
+        args.putString(getString(R.string.sharedpreferences_key_markt_id), String.valueOf(marktId));
+        args.putString(getString(R.string.sharedpreferences_key_date_today), dag);
 
         // inititate loading the dagvergunningen from the database with the selected markt id and date of today
         getLoaderManager().initLoader(DAGVERGUNNINGEN_LOADER, args, this);

@@ -70,6 +70,7 @@
     <string name="notice_notities_empty">Voor geselecteerde markt vandaag nog geen notities aangemaakt</string>
 
     <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>
+    <string name="error_notities_fetch_failed">Er is iets mis gegaan bij het ophalen van de notities</string>
     <string name="error_sollicitaties_fetch_failed">Er is iets mis gegaan bij het ophalen van de sollicitaties</string>
     <string name="error_koopman_fetch_failed">Er is iets mis gegaan bij het ophalen van de koopman</string>
 

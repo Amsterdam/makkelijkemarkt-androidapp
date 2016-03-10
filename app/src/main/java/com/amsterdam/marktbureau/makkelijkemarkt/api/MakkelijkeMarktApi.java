@@ -7,6 +7,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiAccount;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiNotitie;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
 import com.google.gson.JsonObject;
 
@@ -114,4 +115,14 @@ public interface MakkelijkeMarktApi {
      */
     @GET("sollicitaties/markt/{marktId}")
     Call<List<ApiSollicitatie>> getSollicitaties(@Path("marktId") String marktId, @Query("listOffset") String listOffset, @Query("listLength") String listLength);
+
+    /**
+     * Get a list of notities for a given markt and date
+     * @param marktId the id of the markt
+     * @param dag the date
+     * @param verwijderdStatus the status of the notitie
+     * @return a list of ApiNotitie objects
+     */
+    @GET("notitie/{marktId}/{dag}")
+    Call<List<ApiNotitie>> getNotities(@Path("marktId") String marktId, @Path("dag") String dag, @Query("verwijderdStatus") String verwijderdStatus);
 }

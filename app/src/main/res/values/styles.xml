@@ -37,4 +37,10 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!-- Checkbox -->
+    <style name="MMCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/primary</item>
+        <item name="colorControlActivated">@color/accent</item>
+    </style>
+
 </resources>
