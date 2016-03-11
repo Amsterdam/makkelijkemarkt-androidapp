@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -89,6 +90,9 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (savedInstanceState == null) {
 
+            // show the progressbar
+            mNotitiesProgressBar.setVisibility(View.VISIBLE);
+
             // fetch notities for selected markt
             ApiGetNotities getNotities = new ApiGetNotities(getContext());
             getNotities.setMarktId(String.valueOf(marktId));
@@ -111,12 +115,13 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
         return mainView;
     }
 
+    /**
+     * Onclick on the fab open the notitie activity to let the user add a new notitie
+     */
     @OnClick(R.id.fab_add_notitie)
     public void addNotitieClick() {
-        Utility.log(getContext(), LOG_TAG, "FAB clicked!");
-
-        // TODO: Implement NotitieActivity
-
+        Intent intent = new Intent(getActivity(), NotitieActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -150,15 +155,12 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     /**
-     *
+     * Onloadfinished populate the adapter and therefor its listview
      * @param loader
      * @param data
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        // show the progressbar if we have no notities in the db yet
-        mNotitiesProgressBar.setVisibility(data.getCount() == 0 ? View.VISIBLE : View.GONE);
 
         // show the empty notice if we have not notities in the db yet
         mListViewEmptyTextView.setVisibility(data.getCount() == 0 ? View.VISIBLE : View.GONE);
@@ -167,7 +169,7 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     /**
-     *
+     * Onloader reset clear the adapter and therefor its listview
      * @param loader
      */
     @Override
@@ -183,7 +185,7 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
     @Subscribe
     public void onGetNotitiesResponseEvent(ApiGetNotities.OnResponseEvent event) {
 
-        // hide progressbar or show an error
+        // hide progressbar and optionally show an error
         mNotitiesProgressBar.setVisibility(View.GONE);
         if (event.mNotitieCount == -1) {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_notities_fetch_failed) + ": " + event.mMessage);

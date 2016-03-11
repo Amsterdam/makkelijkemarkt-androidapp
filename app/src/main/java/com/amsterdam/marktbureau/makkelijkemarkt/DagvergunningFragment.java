@@ -1590,7 +1590,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 }
                 mWizardNextButton.setVisibility(View.VISIBLE);
                 mWizardNextButton.setBackgroundColor(accentColor);
-                mWizardNextButton.setText(getString(R.string.label_opslaan));
+                mWizardNextButton.setText(getString(R.string.save));
                 if (checkDrawable != null) {
                     checkDrawable.setBounds(nextButtonRightDrawable.getBounds());
                     mWizardNextButton.setCompoundDrawables(null, null, checkDrawable, null);

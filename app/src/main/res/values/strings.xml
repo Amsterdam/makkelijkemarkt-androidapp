@@ -7,12 +7,18 @@
     <string name="markten">Markten</string>
     <string name="dagvergunningen">Dagvergunningen</string>
     <string name="dagvergunning">Dagvergunning</string>
+    <string name="dagvergunning_add">Nieuwe Dagvergunning</string>
+    <string name="dagvergunning_edit">Dagvergunning wijzigen</string>
     <string name="koopman">Koopman</string>
     <string name="product">Producten</string>
     <string name="overzicht">Overzicht</string>
     <string name="cancel">Annuleren</string>
+    <string name="save">Opslaan</string>
     <string name="delete">Verwijderen</string>
     <string name="notities">Notities</string>
+    <string name="notitie">Notitie</string>
+    <string name="notitie_add">Nieuwe Notitie</string>
+    <string name="notitie_edit">Notitie wijzigen</string>
 
     <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
@@ -33,10 +39,9 @@
     <string name="length_meter">meter</string>
     <string name="label_erkenningsnummer">Erkenningsnummer</string>
     <string name="label_sollicitatienummer">Sollicitatienummer</string>
-    <string name="label_notitie">Opmerking</string>
+    <string name="label_notitie">Notitie</string>
     <string name="label_barcode_scannen">Barcode Scannen</string>
     <string name="label_nfc_scannen">NFC Scannen</string>
-    <string name="label_opslaan">Opslaan</string>
     <string name="hint_erkenningsnummer">Erkenningsnummer</string>
     <string name="hint_sollicitatienummer">Sollicitatienummer</string>
     <string name="hint_scan_barcode">Scan de barcode van een markt koopman pas</string>
@@ -68,6 +73,10 @@
     <string name="notice_dagvergunningen_empty">Voor geselecteerde markt vandaag nog geen dagvergunningen aangemaakt</string>
     <string name="notice_markten_empty">Markten worden geladen...</string>
     <string name="notice_notities_empty">Voor geselecteerde markt vandaag nog geen notities aangemaakt</string>
+    <string name="notice_notitie_enter_text">Voer eerst een bericht in</string>
+    <string name="notice_notitie_saving">Notitie wordt opgelsagen</string>
+    <string name="notice_notitie_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
+    <string name="notice_notitie_save_success">Notitie opgeslagen</string>
 
     <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>
     <string name="error_sollicitaties_fetch_failed">Er is iets mis gegaan bij het ophalen van de sollicitaties</string>

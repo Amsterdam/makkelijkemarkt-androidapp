@@ -4,6 +4,7 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -51,12 +53,18 @@ public class DagvergunningActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // get selected markt naam from sharedpreferences
+        // set the title in the toolbar
+        Intent intent = getIntent();
+        if ((intent != null) && (intent.hasExtra(MakkelijkeMarktProvider.mTableDagvergunning +
+                MakkelijkeMarktProvider.Dagvergunning.COL_ID))) {
+            setToolbarTitle(getString(R.string.dagvergunning_edit));
+        } else {
+            setToolbarTitle(getString(R.string.dagvergunning_add));
+        }
+
+        // get selected markt naam from sharedpreferences and set the subtitle in the toolbar
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String marktNaam = settings.getString(getString(R.string.sharedpreferences_key_markt_naam), "");
-
-        // set the title and subtitle in the toolbar
-        setToolbarTitle(getString(R.string.dagvergunning));
         setToolbarSubtitle(marktNaam);
 
         // create new or get existing instance of dagvergunningfragment

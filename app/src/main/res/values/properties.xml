@@ -63,6 +63,8 @@
 
     <string name="makkelijkemarkt_api_dagvergunning_concept_producten" translatable="false">producten</string>
 
+    <string name="makkelijkemarkt_api_notitie_payload_markt_id" translatable="false">marktId</string>
+    <string name="makkelijkemarkt_api_notitie_payload_dag" translatable="false">dag</string>
     <string name="makkelijkemarkt_api_notitie_payload_bericht" translatable="false">bericht</string>
     <string name="makkelijkemarkt_api_notitie_payload_afgevinkt" translatable="false">afgevinkt</string>
 

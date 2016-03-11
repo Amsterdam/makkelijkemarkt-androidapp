@@ -14,11 +14,16 @@
     <!-- Empty listview -->
     <TextView
         android:id="@+id/listview_empty"
+        android:layout_below="@+id/listview_dagvergunningen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin"
-        android:layout_below="@+id/listview_dagvergunningen"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="@dimen/large_margin"
+        android:paddingEnd="@dimen/large_margin"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         android:text="@string/notice_dagvergunningen_empty"
         />
 

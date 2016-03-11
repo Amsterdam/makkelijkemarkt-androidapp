@@ -134,4 +134,12 @@ public interface MakkelijkeMarktApi {
      */
     @PUT("notitie/{id}")
     Call<ApiNotitie> putNotitie(@Path("id") String id, @Body JsonObject notitie);
+
+    /**
+     * Post a new notitie
+     * @param notitie a gson object containing the notitie values
+     * @return a apinotitie object containing the result
+     */
+    @POST("notitie/")
+    Call<ApiNotitie> postNotitie(@Body JsonObject notitie);
 }

@@ -80,6 +80,17 @@
                 android:value=".MarktenActivity" />
         </activity>
 
+        <!-- NOTITIE Activity-->
+        <activity
+            android:name=".NotitieActivity"
+            android:label="@string/notitie"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NotitiesActivity" />
+        </activity>
+
         <!-- BARCODE SCAN Activity -->
         <activity
             android:name=".ScanBarcodeActivity"
