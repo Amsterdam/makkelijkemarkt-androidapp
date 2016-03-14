@@ -5,24 +5,11 @@
     android:padding="@dimen/activity_horizontal_margin"
     >
 
-    <!-- App title -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:textSize="@dimen/textsize_title_small"
-        android:text="@string/app_title"
-        />
-
     <!-- About text -->
-    <TextView
-        android:layout_width="wrap_content"
+    <WebView
+        android:id="@+id/about_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:textSize="@dimen/textsize_content_small"
-        android:textDirection="anyRtl"
-        android:text="@string/about_text"
         />
 
 </LinearLayout>

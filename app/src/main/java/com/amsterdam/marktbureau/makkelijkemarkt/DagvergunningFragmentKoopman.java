@@ -108,6 +108,8 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     boolean mMeldingNoValidSollicitatie = false;
     boolean mMeldingVerwijderd = false;
 
+    // TODO: melding toevoegen wanneer een koopman vandaag al een vergunning heeft op een andere dan de geselecteerde markt
+
     // common toast object
     protected Toast mToast;
 

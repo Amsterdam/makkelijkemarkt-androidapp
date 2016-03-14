@@ -12,8 +12,6 @@
     <string name="app_login_title">Welkom bij de Makkelijke Markt</string>
     <string name="app_login_description">Selecteer een account om verder te gaan</string>
 
-    <string name="about_text">De app om dagelijks de invulling van de Amsterdamse markten in kaart te brengen.</string>
-
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
     <string name="notice_login_password_invalid">Wachtwoord ongeldig</string>
     <string name="notice_network_required">Internet verbinding vereist, controleer je netwerk instellingen</string>

@@ -1309,6 +1309,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     });
                 }
 
+                // TODO: check if we have nfc (if not, hide nfc button)
+                // TODO: check if nfc is enabled (if not, show option to enable nfc)
+
                 // nfctag scan button
                 final Button scanNfcTagButton = (Button) view.findViewById(R.id.scan_nfctag_button);
                 if (!scanNfcTagButton.hasOnClickListeners()) {
@@ -1411,7 +1414,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // show a toast saying that we detected an nfc tag. this will come right after the toast
                     // saying 'NFC tag type not supported.' which can unfortunately not be suppressed
-                    mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID: " + uid);
+                    //mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID: " + uid);
 
                     // find the koopman by querying for scanned nfc tag uid
                     Cursor koopman = getContext().getContentResolver().query(

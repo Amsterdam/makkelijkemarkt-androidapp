@@ -34,8 +34,6 @@
     <string name="scan_nfc_text">Houdt een markt koopman pas tegen de achterkant van het toestel</string>
     <string name="scan_nfc_result_uid">nfctag-uid</string>
 
-    <string name="about_text">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
-
     <string name="length_meter">meter</string>
     <string name="label_erkenningsnummer">Erkenningsnummer</string>
     <string name="label_sollicitatienummer">Sollicitatienummer</string>
