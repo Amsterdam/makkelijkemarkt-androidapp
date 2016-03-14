@@ -1420,7 +1420,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                     MakkelijkeMarktProvider.Koopman.COL_ID,
                                     MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER
                             },
-                            MakkelijkeMarktProvider.Koopman.COL_NFC_UID + " = ? ",
+                            MakkelijkeMarktProvider.Koopman.COL_PAS_UID + " = ? ",
                             new String[] { uid },
                             null);
 

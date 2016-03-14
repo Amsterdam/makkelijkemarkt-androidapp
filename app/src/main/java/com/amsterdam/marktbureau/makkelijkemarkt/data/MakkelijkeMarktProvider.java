@@ -173,7 +173,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_PERFECTVIEWNUMMER = "perfectviewnummer";
 
         @Column(Column.FieldType.TEXT)
-        public static final String COL_NFC_UID = "nfc_uid";
+        public static final String COL_PAS_UID = "pas_uid";
     }
 
     /**
@@ -598,7 +598,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_URL, null));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));
-        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_NFC_UID, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_PAS_UID, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_ID, "sollicitatie_id"));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_SOLLICITATIE_NUMMER, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_DOORGEHAALD, null));
