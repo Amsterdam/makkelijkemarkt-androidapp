@@ -32,15 +32,20 @@ public class ApiPostLoginBasicId extends ApiCall {
      * @param callback the object that will process the api response
      */
     @Override
-    public void enqueue(Callback callback) {
-        super.enqueue(callback);
+    public boolean enqueue(Callback callback) {
+        if (super.enqueue(callback)) {
 
-        // set the api function to call for loading the accounts
-        if (callback != null && mPayload != null) {
-            Call<JsonObject> call = mMakkelijkeMarktApi.postLoginBasicId(mPayload);
+            // set the api function to call for loading the accounts
+            if (callback != null && mPayload != null) {
+                Call<JsonObject> call = mMakkelijkeMarktApi.postLoginBasicId(mPayload);
 
-            // call the api asynchronously
-            call.enqueue(callback);
+                // call the api asynchronously
+                call.enqueue(callback);
+            }
+
+            return true;
         }
+
+        return false;
     }
 }

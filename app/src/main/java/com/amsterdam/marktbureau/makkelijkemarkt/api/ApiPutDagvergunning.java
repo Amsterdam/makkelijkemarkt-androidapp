@@ -45,15 +45,20 @@ public class ApiPutDagvergunning extends ApiCall {
      * @param callback the object that will process the api response
      */
     @Override
-    public void enqueue(Callback callback) {
-        super.enqueue(callback);
+    public boolean enqueue(Callback callback) {
+        if (super.enqueue(callback)) {
 
-        // if we have a payload we set the function to call and enqueue the async request
-        if (callback != null && mId != null && mPayload != null) {
-            Call<ApiDagvergunning> call = mMakkelijkeMarktApi.putDagvergunning(mId, mPayload);
+            // if we have a payload we set the function to call and enqueue the async request
+            if (callback != null && mId != null && mPayload != null) {
+                Call<ApiDagvergunning> call = mMakkelijkeMarktApi.putDagvergunning(mId, mPayload);
 
-            // call the api asynchronously
-            call.enqueue(callback);
+                // call the api asynchronously
+                call.enqueue(callback);
+            }
+
+            return true;
         }
+
+        return false;
     }
 }

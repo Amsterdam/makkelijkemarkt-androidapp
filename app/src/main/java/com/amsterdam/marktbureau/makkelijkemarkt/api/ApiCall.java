@@ -9,8 +9,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.CallSuper;
+import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,6 +50,9 @@ public class ApiCall {
 
     // an optional gson payload to send with the request
     protected JsonObject mPayload;
+
+    // keep a reference to toast messages
+    private Toast mToast;
 
     /**
      * Constructor setting the given context and a default api base url
@@ -89,12 +94,14 @@ public class ApiCall {
     /**
      * Build the retrofit object, optionally with a custom client
      */
-    public void build() {
+    public MakkelijkeMarktApi build() {
 
         // create the retrofit builder with a gson converter
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(mBaseUrl);
         builder.addConverterFactory(GsonConverterFactory.create());
+
+        // @todo add deviceUuid, clientApp, and clientVersion in the post request (see login/basicId api doc)
 
         // @todo refactor to use real app version, app name, okhttp version, etc.
         // @todo refactor to get api-key somewhere more central (constructor?)
@@ -162,7 +169,7 @@ public class ApiCall {
         Retrofit retrofit = builder.build();
 
         // apply the makkelijkemarkt api interface
-        mMakkelijkeMarktApi = retrofit.create(MakkelijkeMarktApi.class);
+        return retrofit.create(MakkelijkeMarktApi.class);
     }
 
     /**
@@ -170,10 +177,25 @@ public class ApiCall {
      * method is always called
      */
     @CallSuper
-    public void enqueue() {
-        if (mMakkelijkeMarktApi == null) {
-            build();
+    public boolean enqueue() {
+        boolean ready = false;
+
+        // check network availability
+        if (Utility.isNetworkAvailable(mContext)) {
+
+            // build api
+            if (mMakkelijkeMarktApi == null) {
+                mMakkelijkeMarktApi = build();
+            }
+
+            if (mMakkelijkeMarktApi != null) {
+                ready = true;
+            }
+        } else {
+            mToast = Utility.showToast(mContext, mToast, mContext.getString(R.string.notice_network_required));
         }
+
+        return ready;
     }
 
     /**
@@ -181,10 +203,8 @@ public class ApiCall {
      * @param callback the object that will process the response
      */
     @CallSuper
-    public void enqueue(Callback callback) {
-        if (mMakkelijkeMarktApi == null) {
-            build();
-        }
+    public boolean enqueue(Callback callback) {
+        return enqueue();
     }
 
     /**

@@ -19,14 +19,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostLoginBasicId;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.google.gson.JsonObject;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,6 +58,7 @@ public class LoginFragment extends Fragment implements
     @Bind(R.id.account) Spinner mAcount;
     @Bind(R.id.password) TextView mPassword;
     @Bind(R.id.login_button) Button mLoginButton;
+    @Bind(R.id.progressbar_accounts) ProgressBar mAccountsProgressBar;
 
     // unique id for the accounts loader
     private static final int ACCOUNTS_LOADER = 1;
@@ -87,6 +96,33 @@ public class LoginFragment extends Fragment implements
 
         // bind the elements to the view
         ButterKnife.bind(this, mainView);
+
+        if (savedInstanceState == null) {
+
+            // TODO: if there is no internet connection and accounts were never loaded: keep checking for an internet connection and try again
+
+            // check time in hours since last fetched the accounts
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+            long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_accounts_fetch_interval_hours);
+            if (settings.contains(getContext().getString(R.string.sharedpreferences_key_accounts_last_fetched))) {
+                long lastFetchTimestamp = settings.getLong(getContext().getString(R.string.sharedpreferences_key_accounts_last_fetched), 0);
+                long differenceMs = new Date().getTime() - lastFetchTimestamp;
+                diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+            }
+
+            // update the local accounts by reloading them from the api
+            if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_accounts_fetch_interval_hours)) {
+
+                // show the progressbar
+                mAccountsProgressBar.setVisibility(View.VISIBLE);
+
+                // call the api
+                ApiGetAccounts getAccounts = new ApiGetAccounts(getContext());
+                if (!getAccounts.enqueue()) {
+                    mAccountsProgressBar.setVisibility(View.GONE);
+                }
+            }
+        }
 
         // create an adapter for the account spinner
         mAccountsAdapter = new SimpleCursorAdapter(
@@ -147,26 +183,19 @@ public class LoginFragment extends Fragment implements
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_enter_password));
         } else {
 
-            // check if we have a network
-            if (Utility.isNetworkAvailable(getContext())) {
+            // prepare the json payload for the post request from the entered login details
+            JsonObject auth = new JsonObject();
+            auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_accound_id_name), String.valueOf(mSelectedAccountId));
+            auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_password_name), mPassword.getText().toString());
 
-                // @todo add deviceUuid, clientApp, and clientVersion in the post request (see login/basicId api doc)
+            // show progress dialog
+            mLoginProcessDialog.show();
 
-                // prepare the json payload for the post request from the entered login details
-                JsonObject auth = new JsonObject();
-                auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_accound_id_name), String.valueOf(mSelectedAccountId));
-                auth.addProperty(getString(R.string.makkelijkemarkt_api_login_payload_password_name), mPassword.getText().toString());
-
-                // show progress dialog
-                mLoginProcessDialog.show();
-
-                // create a login post request and add the account details as json
-                ApiPostLoginBasicId postLogin = new ApiPostLoginBasicId(getContext());
-                postLogin.setPayload(auth);
-                postLogin.enqueue(this);
-
-            } else {
-                mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_network_required));
+            // create a login post request and add the account details as json
+            ApiPostLoginBasicId postLogin = new ApiPostLoginBasicId(getContext());
+            postLogin.setPayload(auth);
+            if (!postLogin.enqueue(this)) {
+                mLoginProcessDialog.dismiss();
             }
         }
     }
@@ -282,5 +311,37 @@ public class LoginFragment extends Fragment implements
         mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_failed_connect));
 
         Utility.log(getContext(), LOG_TAG, "onFailure message: "+ t.getMessage());
+    }
+
+    /**
+     * Handle response event from api get accounts request onresponse method to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onGetAccountsResponseEvent(ApiGetAccounts.OnResponseEvent event) {
+
+        // hide progressbar or show an error
+        mAccountsProgressBar.setVisibility(View.GONE);
+        if (event.mAccountCount == -1) {
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_accounts_fetch_failed) + ": " + event.mMessage);
+        }
+    }
+
+    /**
+     * Register eventbus handlers
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Unregister eventbus handlers
+     */
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

@@ -62,16 +62,21 @@ public class ApiGetDagvergunningen extends ApiCall implements Callback<List<ApiD
      * Enqueue an async call that will request the dagvergunningen for selected markt and day
      */
     @Override
-    public void enqueue() {
-        super.enqueue();
+    public boolean enqueue() {
+        if (super.enqueue()) {
 
-        // set the api function to call for loading the dagvergunningen
-        if (mMarktId != null && mDag != null) {
-            Call<List<ApiDagvergunning>> call = mMakkelijkeMarktApi.getDagvergunningen(mMarktId, mDag);
+            // set the api function to call for loading the dagvergunningen
+            if (mMarktId != null && mDag != null) {
+                Call<List<ApiDagvergunning>> call = mMakkelijkeMarktApi.getDagvergunningen(mMarktId, mDag);
 
-            // call the api asynchronously
-            call.enqueue(this);
+                // call the api asynchronously
+                call.enqueue(this);
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     /**

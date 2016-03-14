@@ -9,9 +9,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
-import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
-import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiAccount;
+import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 import java.util.List;
@@ -41,14 +42,19 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
      * Enqueue an async call to load the accounts
      */
     @Override
-    public void enqueue() {
-        super.enqueue();
+    public boolean enqueue() {
+        if (super.enqueue()) {
 
-        // set the api function to call for loading the accounts
-        Call<List<ApiAccount>> call = mMakkelijkeMarktApi.getAccounts();
+            // set the api function to call for loading the accounts
+            Call<List<ApiAccount>> call = mMakkelijkeMarktApi.getAccounts();
 
-        // call the api asynchronously
-        call.enqueue(this);
+            // call the api asynchronously
+            call.enqueue(this);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -78,16 +84,36 @@ public class ApiGetAccounts extends ApiCall implements Callback<List<ApiAccount>
                         mContext.getString(R.string.sharedpreferences_key_accounts_last_fetched),
                         new Date().getTime());
                 editor.apply();
+
+                // send event to subscribers that we retrieved a response
+                EventBus.getDefault().post(new OnResponseEvent(response.body().size(), null));
             }
+        } else {
+
+            // on empty body send an error message
+            EventBus.getDefault().post(new OnResponseEvent(-1, "Empty response body"));
         }
     }
 
     /**
-     * On failure of the loadAccounts method log the error message
+     * On failure of the loadAccounts method send the error message
      * @param t the thrown exception
      */
     @Override
     public void onFailure(Throwable t) {
-        Utility.log(mContext, LOG_TAG, "onFailure message: "+ t.getMessage());
+        EventBus.getDefault().post(new OnResponseEvent(-1, t.getMessage()));
+    }
+
+    /**
+     * Event to inform subscribers that we received a response from the api
+     */
+    public class OnResponseEvent {
+        public final int mAccountCount;
+        public final String mMessage;
+
+        public OnResponseEvent(int accountCount, String message) {
+            mAccountCount = accountCount;
+            mMessage = message;
+        }
     }
 }

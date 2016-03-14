@@ -79,6 +79,7 @@
     <string name="notice_notitie_save_success">Notitie opgeslagen</string>
 
     <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>
+    <string name="error_accounts_fetch_failed">Er is iets mis gegaan bij het ophalen van de accounts</string>
     <string name="error_sollicitaties_fetch_failed">Er is iets mis gegaan bij het ophalen van de sollicitaties</string>
     <string name="error_koopman_fetch_failed">Er is iets mis gegaan bij het ophalen van de koopman</string>
     <string name="error_notities_fetch_failed">Er is iets mis gegaan bij het ophalen van de notities</string>

@@ -43,14 +43,19 @@ public class ApiGetMarkten extends ApiCall {
      * Enqueue an async call to load the markten
      */
     @Override
-    public void enqueue(Callback callback) {
-        super.enqueue(callback);
+    public boolean enqueue(Callback callback) {
+        if (super.enqueue(callback)) {
 
-        // set the api function to call for loading the markten
-        Call<List<ApiMarkt>> call = mMakkelijkeMarktApi.getMarkten();
+            // set the api function to call for loading the markten
+            Call<List<ApiMarkt>> call = mMakkelijkeMarktApi.getMarkten();
 
-        // call the api asynchronously
-        call.enqueue(callback);
+            // call the api asynchronously
+            call.enqueue(callback);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

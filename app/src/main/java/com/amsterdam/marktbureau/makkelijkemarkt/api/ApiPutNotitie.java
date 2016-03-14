@@ -49,16 +49,21 @@ public class ApiPutNotitie extends ApiCall implements Callback<ApiNotitie> {
      * Enqueue the async post
      */
     @Override
-    public void enqueue() {
-        super.enqueue();
+    public boolean enqueue() {
+        if (super.enqueue()) {
 
-        // if we have a payload we set the function to call and enqueue the async request
-        if (mId != null && mPayload != null) {
-            Call<ApiNotitie> call = mMakkelijkeMarktApi.putNotitie(mId, mPayload);
+            // if we have a payload we set the function to call and enqueue the async request
+            if (mId != null && mPayload != null) {
+                Call<ApiNotitie> call = mMakkelijkeMarktApi.putNotitie(mId, mPayload);
 
-            // call the api asynchronously
-            call.enqueue(this);
+                // call the api asynchronously
+                call.enqueue(this);
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     /**

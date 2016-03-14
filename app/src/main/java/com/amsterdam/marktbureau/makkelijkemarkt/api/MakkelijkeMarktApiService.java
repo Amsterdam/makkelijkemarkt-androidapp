@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
+import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -92,7 +93,7 @@ public class MakkelijkeMarktApiService extends Service {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
 
-                    if (marktId > 0) {
+                    if (Utility.isNetworkAvailable(ctx) && marktId > 0) {
 
                         // get the date of today for the dag param
                         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
@@ -123,7 +124,7 @@ public class MakkelijkeMarktApiService extends Service {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     int marktId = settings.getInt(ctx.getString(R.string.sharedpreferences_key_markt_id), 0);
 
-                    if (marktId > 0) {
+                    if (Utility.isNetworkAvailable(ctx) && marktId > 0) {
 
                         // get the date of today for the dag param
                         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
@@ -138,6 +139,9 @@ public class MakkelijkeMarktApiService extends Service {
                     }
                 }
             }, mGetNotitiesInterval, mGetNotitiesInterval);
+
+            // TODO: add a timertask that will check if the app is actively being used and if not
+            // logout the user after a certain amount of time
 
             // TODO: add a timertask that will download the sollicitaties:
             // - on a 1 hour interval

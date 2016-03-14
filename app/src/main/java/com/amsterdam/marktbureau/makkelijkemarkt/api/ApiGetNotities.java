@@ -61,16 +61,21 @@ public class ApiGetNotities extends ApiCall implements Callback<List<ApiNotitie>
      * Enqueue an async call that will request the notities for selected markt and day
      */
     @Override
-    public void enqueue() {
-        super.enqueue();
+    public boolean enqueue() {
+        if (super.enqueue()) {
 
-        // set the api function to call for loading the notities
-        if (mMarktId != null && mDag != null) {
-            Call<List<ApiNotitie>> call = mMakkelijkeMarktApi.getNotities(mMarktId, mDag, "-1");
+            // set the api function to call for loading the notities
+            if (mMarktId != null && mDag != null) {
+                Call<List<ApiNotitie>> call = mMakkelijkeMarktApi.getNotities(mMarktId, mDag, "-1");
 
-            // call the api asynchronously
-            call.enqueue(this);
+                // call the api asynchronously
+                call.enqueue(this);
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     /**

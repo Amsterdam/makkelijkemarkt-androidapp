@@ -58,22 +58,27 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
      * Enqueue an async call to load the accounts
      */
     @Override
-    public void enqueue() {
-        super.enqueue();
-        if (mMarktId != -1) {
+    public boolean enqueue() {
+        if (super.enqueue()) {
+            if (mMarktId != -1) {
 
-            // set the api function to call for loading the sollicitaties
-            Call<List<ApiSollicitatie>> call = mMakkelijkeMarktApi.getSollicitaties(
-                    String.valueOf(mMarktId),
-                    String.valueOf(mListOffset),
-                    String.valueOf(mListLength));
+                // set the api function to call for loading the sollicitaties
+                Call<List<ApiSollicitatie>> call = mMakkelijkeMarktApi.getSollicitaties(
+                        String.valueOf(mMarktId),
+                        String.valueOf(mListOffset),
+                        String.valueOf(mListLength));
 
-            // call the api asynchronously
-            call.enqueue(this);
+                // call the api asynchronously
+                call.enqueue(this);
 
-        } else {
-            Utility.log(mContext, LOG_TAG, "Call failed, markt id not set!");
+            } else {
+                Utility.log(mContext, LOG_TAG, "Call failed, markt id not set!");
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     /**
