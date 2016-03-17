@@ -842,6 +842,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 // show progress bar
                 mProgressbar.setVisibility(View.VISIBLE);
 
+                // TODO: disable 'opslaan' button until conceptfactuur has returned (saw in fieldtest the toezichthouder did not wait for it)
+
                 // post the dagvergunning details to the api and retrieve a concept 'factuur'
                 ApiPostDagvergunningConcept postDagvergunningConcept = new ApiPostDagvergunningConcept(getContext());
                 postDagvergunningConcept.setPayload(dagvergunningToJson());
@@ -1406,6 +1408,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // from the nfc scan activity
 
             if (resultCode == Activity.RESULT_OK) {
+
                 String uid = data.getStringExtra(getString(R.string.scan_nfc_result_uid));
                 if (uid != null) {
 
@@ -1414,7 +1417,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // show a toast saying that we detected an nfc tag. this will come right after the toast
                     // saying 'NFC tag type not supported.' which can unfortunately not be suppressed
-                    //mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID: " + uid);
+                    //mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID hex: " + uid);
 
                     // find the koopman by querying for scanned nfc tag uid
                     Cursor koopman = getContext().getContentResolver().query(

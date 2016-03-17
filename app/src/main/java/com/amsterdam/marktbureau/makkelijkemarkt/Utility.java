@@ -195,11 +195,28 @@ public class Utility {
 
     /**
      * Convert a binary number to a hexadecimal number
-     * @param data binary number
+     * @param value binary number
      * @return hexadecimal number as string
      */
-    public static String bin2hex(byte[] data) {
-        return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
+    public static String binToHex(byte[] value) {
+        if (value != null) {
+            return String.format("%0" + (value.length * 2) + "X", new BigInteger(1, value));
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Convert a binary number to a decimal number string
+     * @param value binary number
+     * @return decimal number string
+     */
+    public static String binToDec(byte[] value) {
+        if (value != null) {
+            return new BigInteger(1, value).toString();
+        } else {
+            return "";
+        }
     }
 
     /**

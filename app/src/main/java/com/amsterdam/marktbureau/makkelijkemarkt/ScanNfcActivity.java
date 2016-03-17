@@ -77,10 +77,12 @@ public class ScanNfcActivity extends Activity {
         if (tag != null) {
             Intent returnIntent = new Intent();
 
+            // TODO: check if the device format is little or big-endian (we need little) and if big make a conversion?
+
             // if we found a tag and uid add it to the return intent to send it back to the caller
             byte[] uid = tag.getId();
             if (uid != null) {
-                returnIntent.putExtra(getString(R.string.scan_nfc_result_uid), Utility.bin2hex(uid));
+                returnIntent.putExtra(getString(R.string.scan_nfc_result_uid), Utility.binToHex(uid));
             }
 
             // add the result and exit the activity
