@@ -20,6 +20,7 @@
     <string name="sharedpreferences_key_markt_producten" translatable="false">marktProducten</string>
     <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
 
+    <string name="sharedpreferences_key_app_activity_timestamp" translatable="false">app-activity-timestamp</string>
     <string name="sharedpreferences_key_accounts_last_fetched" translatable="false">accounts-fetched</string>
     <string name="sharedpreferences_key_markten_last_fetched" translatable="false">markten-fetched</string>
     <string name="sharedpreferences_key_sollicitaties_last_fetched" translatable="false">sollicitaties-fetched-for-markt-</string>
@@ -31,8 +32,8 @@
 
     <string name="koopman_status_verwijderd" translatable="false">Verwijderd</string>
 
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>-->
-    <string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>
+    <string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/1.1.0/</string>-->
 
@@ -74,5 +75,8 @@
 
     <integer name="makkelijkemarkt_service_getdagvergunningen_interval_seconds">30</integer>
     <integer name="makkelijkemarkt_service_getnotities_interval_seconds">200</integer>
+
+    <integer name="app_activity_check_interval_seconds">10</integer>
+    <integer name="app_inactivity_logout_timeout_minutes">30</integer>
 
 </resources>

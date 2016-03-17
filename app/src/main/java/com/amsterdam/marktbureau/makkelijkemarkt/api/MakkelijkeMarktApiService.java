@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Service that will call the Makkelijke Markt Api on certain intervals
@@ -31,13 +32,17 @@ public class MakkelijkeMarktApiService extends Service {
     // keep a state indicating the service is started
     private boolean mIsStarted = false;
 
-    // timer object for loading the dagvergunningen on interval
+    // timer object for loading the dagvergunningen
     private Timer mGetDagvergunningenTimer;
     private int mGetDagvergunningenInterval;
 
-    // timer object for loading the notities on interval
+    // timer object for loading the notities
     private Timer mGetNotitiesTimer;
     private int mGetNotitiesInterval;
+
+    // timer object for checking app activity
+    private Timer mAppActivityTimer;
+    private int mCheckAppActivityInterval;
 
     /**
      * Called only once, upon initial creation
@@ -47,11 +52,18 @@ public class MakkelijkeMarktApiService extends Service {
 
         // create a timer instance for loading the dagvergunningen on interval
         mGetDagvergunningenTimer = new Timer();
-        mGetDagvergunningenInterval = getResources().getInteger(R.integer.makkelijkemarkt_service_getdagvergunningen_interval_seconds) * 1000;
+        mGetDagvergunningenInterval = getResources().getInteger(
+                R.integer.makkelijkemarkt_service_getdagvergunningen_interval_seconds) * 1000;
 
         // create a timer instance for loading the notities on interval
         mGetNotitiesTimer = new Timer();
-        mGetNotitiesInterval = getResources().getInteger(R.integer.makkelijkemarkt_service_getnotities_interval_seconds) * 1000;
+        mGetNotitiesInterval = getResources().getInteger(
+                R.integer.makkelijkemarkt_service_getnotities_interval_seconds) * 1000;
+
+        // create a timer instance for checking app activity on interval
+        mAppActivityTimer = new Timer();
+        mCheckAppActivityInterval = getResources().getInteger(
+                R.integer.app_activity_check_interval_seconds) * 1000;
 
         super.onCreate();
     }
@@ -140,8 +152,31 @@ public class MakkelijkeMarktApiService extends Service {
                 }
             }, mGetNotitiesInterval, mGetNotitiesInterval);
 
-            // TODO: add a timertask that will check if the app is actively being used and if not
+            // create a timertask that will check if the app is actively being used and if not
             // logout the user after a certain amount of time
+            mAppActivityTimer.scheduleAtFixedRate(new TimerTask() {
+                /**
+                 * Start a seperate thread that will check the app activity
+                 */
+                @Override
+                public void run() {
+
+                    Log.i(LOG_TAG, "=========> Checking app activity");
+
+                    // get the latest app activity timestamp from the shared preferences
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+                    long appActivityTimestamp = settings.getLong(ctx.getString(R.string.sharedpreferences_key_app_activity_timestamp), 0);
+                    long differenceMs  = new Date().getTime() - appActivityTimestamp;
+                    long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceMs);
+
+                    // check if inactivity is longer than timeout
+                    if (appActivityTimestamp > 0 && diffInMinutes >= getResources().getInteger(R.integer.app_inactivity_logout_timeout_minutes)) {
+
+                        // logout
+                        Utility.logout(ctx, false);
+                    }
+                }
+            }, mCheckAppActivityInterval, mCheckAppActivityInterval);
 
             // TODO: add a timertask that will download the sollicitaties:
             // - on a 1 hour interval
@@ -168,6 +203,7 @@ public class MakkelijkeMarktApiService extends Service {
         // stop the timers
         mGetDagvergunningenTimer.cancel();
         mGetNotitiesTimer.cancel();
+        mAppActivityTimer.cancel();
 
         super.onDestroy();
     }

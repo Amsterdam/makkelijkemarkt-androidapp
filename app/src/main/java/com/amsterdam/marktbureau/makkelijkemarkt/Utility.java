@@ -7,8 +7,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -280,9 +282,76 @@ public class Utility {
                 .remove(context.getString(R.string.sharedpreferences_key_markt_producten))
                 .apply();
 
-        // clear active activities and history stack and open mainactivity home screen
+        // clear activity history stack and open mainactivity home screen in new task
         Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    /**
+     * Helper to get the real readable android version codename
+     * @return string with android version codename
+     */
+    public static String getAndroidVersionCodename() {
+
+        String androidVersionCodename = Build.VERSION.CODENAME;
+        int androidVersionSdkLevel = Build.VERSION.SDK_INT;
+
+        if (androidVersionCodename.equals("REL")) {
+            Field[] fields = Build.VERSION_CODES.class.getFields();
+            for (Field field : fields) {
+                String fieldName = field.getName();
+                int fieldValue = -1;
+
+                try {
+                    fieldValue = field.getInt(new Object());
+                } catch (Exception e) {
+                    Log.e(Utility.class.getSimpleName(), "Could not find android version codename: " + e.getMessage());
+                }
+
+                if (fieldValue == androidVersionSdkLevel) {
+                    androidVersionCodename = fieldName;
+                }
+            }
+        }
+
+        return androidVersionCodename;
+    }
+
+    /**
+     * Get the name of the application and android version
+     */
+    public static String getAppName(Context context) {
+
+        String appTitle = context.getString(R.string.app_title);
+        String androidVersionCodename = Utility.getAndroidVersionCodename();
+        String androidVersionNumber = Build.VERSION.RELEASE;
+        int androidVersionSdkLevel = Build.VERSION.SDK_INT;
+
+        if (androidVersionCodename != null && androidVersionNumber != null && androidVersionSdkLevel > 0) {
+            return appTitle + " for Android (" + androidVersionCodename + " " + androidVersionNumber + " API level " + androidVersionSdkLevel + ")";
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+    public static String getAppVersion(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            int versionCode = info.versionCode;
+            String versionName = info.versionName;
+            if (versionCode > 0 && versionName != null) {
+                return versionName + " (" + versionCode + ")";
+            }
+        } catch (Exception e) {
+            Utility.log(context, Utility.class.getSimpleName(), "PackageInfo not found: " + e.getMessage());
+        }
+
+        return null;
     }
 }

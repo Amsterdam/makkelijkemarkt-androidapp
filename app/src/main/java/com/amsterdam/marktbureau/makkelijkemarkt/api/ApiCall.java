@@ -101,13 +101,6 @@ public class ApiCall {
         builder.baseUrl(mBaseUrl);
         builder.addConverterFactory(GsonConverterFactory.create());
 
-        // @todo add deviceUuid, clientApp, and clientVersion in the post request (see login/basicId api doc)
-
-        // @todo refactor to use real app version, app name, okhttp version, etc.
-        // @todo refactor to get api-key somewhere more central (constructor?)
-        // @todo refactor to create headers somewhere more central and only create an interceptor here and add all headers to it
-        // @todo add language header? (Accept-Language: nl-NL,en-US;q=0.8)
-
         // get api-key from shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
@@ -120,16 +113,16 @@ public class ApiCall {
             Interceptor addAuthorizationHeaderInterceptor = new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
-                    Request request = chain.request().newBuilder()
-                            .removeHeader(
-                                    mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name))
-                            .addHeader(
-                                    mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name),
-                                    "Android App Makkelijke Markt v1.0 (okhttp/3.0.0-RC1)")
-                            .addHeader(
-                                    mContext.getString(R.string.makkelijkemarkt_api_authorization_header_name),
-                                    authHeaderValue)
-                            .build();
+                    Request.Builder requestBuilder = chain.request().newBuilder();
+
+                    // add Authorisation header
+                    requestBuilder.addHeader(
+                            mContext.getString(R.string.makkelijkemarkt_api_authorization_header_name),
+                            authHeaderValue);
+
+                    // build the request
+                    Request request = requestBuilder.build();
+
                     return chain.proceed(request);
                 }};
             mClientBuilder.addInterceptor(addAuthorizationHeaderInterceptor);
@@ -161,6 +154,31 @@ public class ApiCall {
                 }};
             mClientBuilder.addInterceptor(handleUnauthorizedInterceptor);
         }
+
+        // add header interceptor to create our custom user-agent header
+        Interceptor addUserAgentHeaderInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+
+                // replace User-Agent header
+                String appName = Utility.getAppName(mContext);
+                String appVersion = Utility.getAppVersion(mContext);
+                String httpUserAgent = okhttp3.internal.Version.userAgent();
+                if (appName != null && appVersion != null) {
+                    requestBuilder.removeHeader(
+                            mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name));
+                    requestBuilder.addHeader(
+                            mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name),
+                            appName + " - Version " + appVersion + " - " + httpUserAgent);
+                }
+
+                // build the request
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }};
+        mClientBuilder.addInterceptor(addUserAgentHeaderInterceptor);
 
         // build and attach okhttpclient to retrofit
         builder.client(mClientBuilder.build());

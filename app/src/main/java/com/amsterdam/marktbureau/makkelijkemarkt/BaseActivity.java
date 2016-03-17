@@ -4,8 +4,10 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,8 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiCall;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -200,16 +204,26 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Register eventbus handlers
+     * On start of the activity log activity timestamp and register eventbus handlers
      */
     @Override
     public void onStart() {
         super.onStart();
+
+        // keep track of app activity
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong(
+                getString(R.string.sharedpreferences_key_app_activity_timestamp),
+                new Date().getTime());
+        editor.apply();
+
+        // register eventbus handlers
         EventBus.getDefault().register(this);
     }
 
     /**
-     * Unregister eventbus handlers
+     * On stop unregister eventbus handlers
      */
     @Override
     public void onStop() {

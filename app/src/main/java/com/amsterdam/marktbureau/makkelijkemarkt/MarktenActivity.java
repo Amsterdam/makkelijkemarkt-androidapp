@@ -4,13 +4,17 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -128,5 +132,21 @@ public class MarktenActivity extends AppCompatActivity {
 
         // logout of the app, and optionally the api
         Utility.logout(this, callApi);
+    }
+
+    /**
+     * On start of the activity log activity timestamp
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // keep track of app activity
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong(
+                getString(R.string.sharedpreferences_key_app_activity_timestamp),
+                new Date().getTime());
+        editor.apply();
     }
 }
