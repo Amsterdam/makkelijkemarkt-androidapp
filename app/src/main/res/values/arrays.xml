@@ -31,6 +31,13 @@
         <item>elektra</item>
         <item>afvaleiland</item>
     </string-array>
+    <string-array name="array_product_param">
+        <item>aantal3MeterKramen</item>
+        <item>aantal4MeterKramen</item>
+        <item>extraMeters</item>
+        <item>aantalElektra</item>
+        <item>afvaleiland</item>
+    </string-array>
     <string-array name="array_product_type">
         <item>integer</item>
         <item>integer</item>
@@ -44,20 +51,6 @@
         <item>Extra meters</item>
         <item>Elektra</item>
         <item>Afvaleiland</item>
-    </string-array>
-    <string-array name="array_product_column">
-        <item>aantal3meter_kramen</item>
-        <item>aantal4meter_kramen</item>
-        <item>extra_meters</item>
-        <item>aantal_elektra</item>
-        <item>afvaleiland</item>
-    </string-array>
-    <string-array name="array_product_param">
-        <item>aantal3MeterKramen</item>
-        <item>aantal4MeterKramen</item>
-        <item>extraMeters</item>
-        <item>aantalElektra</item>
-        <item>afvaleiland</item>
     </string-array>
 
 </resources>

@@ -21,14 +21,16 @@ public class ApiSollicitatie {
     private int sollicitatieNummer;
     private String status;
     private List<String> vastePlaatsen = new ArrayList<String>();
+    private boolean doorgehaald;
+    private String doorgehaaldReden;
+    private int koopmanId;
+
     private int aantal3MeterKramen;
     private int aantal4MeterKramen;
     private int aantalExtraMeters;
     private int aantalElektra;
     private int afvaleiland;
-    private boolean doorgehaald;
-    private String doorgehaaldReden;
-    private int koopmanId;
+
     private ApiMarkt markt;
     private ApiKoopman koopman;
 
@@ -248,12 +250,13 @@ public class ApiSollicitatie {
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_DOORGEHAALD, isDoorgehaald());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_DOORGEHAALD_REDEN, getDoorgehaaldReden());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_VASTE_PLAATSEN, getVastePlaatsenAsCsv());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KOOPMAN_ID, getKoopmanId());
+
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_3METER_KRAMEN, getAantal3MeterKramen());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_4METER_KRAMEN, getAantal4MeterKramen());
-        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS, getAantalExtraMeters());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_EXTRA_METERS, getAantalExtraMeters());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA, getAantalElektra());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AFVALEILAND, getAfvaleiland());
-        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KOOPMAN_ID, getKoopmanId());
 
         if (getMarkt() != null) {
             sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID, getMarkt().getId());

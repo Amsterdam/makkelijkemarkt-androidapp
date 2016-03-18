@@ -119,7 +119,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // log the user out
         if (id == R.id.action_logout) {
-            logout(true);
+            Utility.logout(this, true);
             return true;
         }
 
@@ -176,19 +176,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Log the user out by clearing the authentication details from the sharedpreferences,
-     * optionally sending a logout call to the api, and sending the user back to the main activity
-     * login screen
-     */
-    private void logout(boolean callApi) {
-
-        Utility.log(this, LOG_TAG, "Logging out...");
-
-        // logout of the app, and optionally the api
-        Utility.logout(this, callApi);
-    }
-
-    /**
      * Handle unauthorised event received from the api call unauthorised interceptor
      * @param event the received event
      */
@@ -199,7 +186,7 @@ public class BaseActivity extends AppCompatActivity {
         // the uuid token on the api has expired
         if (event.mCode == 401) {
             mToast = Utility.showToast(this, mToast, event.mMessage);
-            logout(false);
+            Utility.logout(this, false);
         }
     }
 

@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -97,11 +98,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     String mAanwezigSelectedValue;
 
     // sollicitatie default producten data
-    int mAantal3MeterKramenVast = -1;
-    int mAantal4MeterKramenVast = -1;
-    int mAantalExtraMetersVast = -1;
-    int mAantalElektraVast = -1;
-    int mAfvaleilandVast = -1;
+    public HashMap<String, Integer> mProducten = new HashMap<>();
 
     // meldingen
     boolean mMeldingMultipleDagvergunningen = false;
@@ -155,11 +152,10 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 mKoopmanSelectionMethod = KOOPMAN_SELECTION_METHOD_HANDMATIG;
 
                 // reset the default amount of products before loading the koopman
-                mAantal3MeterKramenVast = -1;
-                mAantal4MeterKramenVast = -1;
-                mAantalExtraMetersVast = -1;
-                mAantalElektraVast = -1;
-                mAfvaleilandVast = -1;
+                String[] productParams = getResources().getStringArray(R.array.array_product_param);
+                for (String product : productParams) {
+                    mProducten.put(product, -1);
+                }
 
                 // inform the dagvergunningfragment that the koopman has changed, get the new values,
                 // and populate our layout with the new koopman
@@ -205,6 +201,12 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // initialize the producten values
+        String[] productParams = getResources().getStringArray(R.array.array_product_param);
+        for (String product : productParams) {
+            mProducten.put(product, -1);
+        }
 
         Utility.log(getContext(), LOG_TAG, "onActivityCreated called");
 
@@ -358,11 +360,10 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
                     // get vaste producten for selected markt
                     if (marktId > 0 && marktId == data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID))) {
-                        mAantal3MeterKramenVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_3METER_KRAMEN));
-                        mAantal4MeterKramenVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_4METER_KRAMEN));
-                        mAantalExtraMetersVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_EXTRA_METERS));
-                        mAantalElektraVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA));
-                        mAfvaleilandVast = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_AFVALEILAND));
+                        String[] productParams = getResources().getStringArray(R.array.array_product_param);
+                        for (String product : productParams) {
+                            mProducten.put(product, data.getInt(data.getColumnIndex(product)));
+                        }
                     }
 
                     // inflate sollicitatie layout and populate its view items

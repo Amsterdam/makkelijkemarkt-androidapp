@@ -18,27 +18,30 @@ public class ApiDagvergunning {
 
     private int id;
     private String dag;
-    private int aantal3MeterKramen;
-    private int aantal4MeterKramen;
-    private int extraMeters;
     private int totaleLengte;
-    private int aantalElektra;
-    private int afvaleiland;
+    private int totaleLengteVast;
     private String erkenningsnummer;
     private String erkenningsnummerInvoerMethode;
     private String aanwezig;
     private String notitie;
-    private int aantal3meterKramenVast;
-    private int aantal4meterKramenVast;
-    private int aantalExtraMetersVast;
-    private int totaleLengteVast;
-    private int aantalElektraVast;
-    private int afvaleilandVast;
     private String status;
     private String registratieDatumtijd;
     private List<Float> registratieGeolocatie = new ArrayList<Float>();
     private String aanmaakDatumtijd;
     private boolean doorgehaald;
+
+    private int aantal3MeterKramen;
+    private int aantal4MeterKramen;
+    private int extraMeters;
+    private int aantalElektra;
+    private int afvaleiland;
+
+    private int aantal3meterKramenVast;
+    private int aantal4meterKramenVast;
+    private int aantalExtraMetersVast;
+    private int aantalElektraVast;
+    private int afvaleilandVast;
+
     private ApiAccount registratieAccount;
     private ApiMarkt markt;
     private ApiKoopman koopman;
@@ -431,26 +434,28 @@ public class ApiDagvergunning {
 
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ID, getId());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_DAG, getDag());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN, getAantal3MeterKramen());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN, getAantal4MeterKramen());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, getExtraMeters());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE, getTotaleLengte());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, getAantalElektra());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND, getAfvaleiland());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE_VAST, getTotaleLengteVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE, getErkenningsnummer());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_METHODE, getErkenningsnummerInvoerMethode());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANWEZIG, getAanwezig());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE, getNotitie());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, getAantal3meterKramenVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, getAantal4meterKramenVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, getAantalExtraMetersVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_TOTALE_LENGTE_VAST, getTotaleLengteVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, getAantalElektraVast());
-        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND_VAST, getAfvaleilandVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_STATUS_SOLLICITATIE, getStatus());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD, getRegistratieDatumtijd());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANMAAK_DATUMTIJD, getAanmaakDatumtijd());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_DOORGEHAALD, isDoorgehaald());
+
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_3METER_KRAMEN, getAantal3MeterKramen());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_4METER_KRAMEN, getAantal4MeterKramen());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, getExtraMeters());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, getAantalElektra());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND, getAfvaleiland());
+
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_3METER_KRAMEN_VAST, getAantal3meterKramenVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_4METER_KRAMEN_VAST, getAantal4meterKramenVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS_VAST, getAantalExtraMetersVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, getAantalElektraVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND_VAST, getAfvaleilandVast());
 
         if (getRegistratieGeolocatie() != null && getRegistratieGeolocatie().size() > 1) {
             dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT, getRegistratieGeolocatie().get(0));

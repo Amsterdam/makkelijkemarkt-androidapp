@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 
 import java.util.HashMap;
@@ -212,17 +213,19 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.TEXT)
         public static final String COL_VASTE_PLAATSEN = "vaste_plaatsen";
 
+
+        // producten
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_3METER_KRAMEN = "aantal_3meter_kramen";
+        public static final String COL_AANTAL_3METER_KRAMEN = "aantal3MeterKramen";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_4METER_KRAMEN = "aantal_4meter_kramen";
+        public static final String COL_AANTAL_4METER_KRAMEN = "aantal4MeterKramen";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_EXTRA_METERS = "aantal_extra_meters";
+        public static final String COL_EXTRA_METERS = "extraMeters";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_ELEKTRA = "aantal_elektra";
+        public static final String COL_AANTAL_ELEKTRA = "aantalElektra";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AFVALEILAND = "afvaleiland";
@@ -276,12 +279,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.INTEGER)
         public static final String COL_DOORGEHAALD = "doorgehaald";
 
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_EXTRA_METERS = "extra_meters";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_TOTALE_LENGTE = "totale_lengte";
-
         @Column(Column.FieldType.TEXT)
         public static final String COL_NOTITIE = "notitie";
 
@@ -289,34 +286,44 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         public static final String COL_AANMAAK_DATUMTIJD = "aanmaak_datumtijd";
 
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_ELEKTRA = "aantal_elektra";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AFVALEILAND = "afvaleiland";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL3METER_KRAMEN_VAST = "aantal3meter_kramen_vast";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL4METER_KRAMEN_VAST = "aantal4meter_kramen_vast";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_EXTRA_METERS_VAST = "aantal_extra_meters_vast";
+        public static final String COL_TOTALE_LENGTE = "totale_lengte";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_TOTALE_LENGTE_VAST = "totale_lengte_vast";
 
+
+        // producten
         @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL_ELEKTRA_VAST = "aantal_elektra_vast";
+        public static final String COL_AANTAL_3METER_KRAMEN = "aantal3MeterKramen";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_4METER_KRAMEN = "aantal4MeterKramen";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_EXTRA_METERS = "extraMeters";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_ELEKTRA = "aantalElektra";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AFVALEILAND = "afvaleiland";
+
+
+        // producten vast
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_3METER_KRAMEN_VAST = "aantal3MeterKramen_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_4METER_KRAMEN_VAST = "aantal4MeterKramen_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_EXTRA_METERS_VAST = "extraMeters_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_AANTAL_ELEKTRA_VAST = "aantalElektra_vast";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AFVALEILAND_VAST = "afvaleiland_vast";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL3METER_KRAMEN = "aantal3meter_kramen";
-
-        @Column(Column.FieldType.INTEGER)
-        public static final String COL_AANTAL4METER_KRAMEN = "aantal4meter_kramen";
     }
 
     /**
@@ -541,17 +548,17 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_STATUS_SOLLICITATIE, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_DOORGEHAALD, "dagvergunning_doorgehaald"));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANWEZIG, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL3METER_KRAMEN, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL3METER_KRAMEN_VAST, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL4METER_KRAMEN, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL4METER_KRAMEN_VAST, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_EXTRA_METERS, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL_EXTRA_METERS_VAST, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL_ELEKTRA, "dagvergunning_aantal_elektra"));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANTAL_ELEKTRA_VAST, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_NOTITIE, null));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AFVALEILAND, "dagvergunning_afvaleiland"));
-        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AFVALEILAND_VAST, null));
+
+        // producten en producten vast
+        if (getContext() != null) {
+            String[] productParams = getContext().getResources().getStringArray(R.array.array_product_param);
+            for (String product : productParams) {
+                columnMap.putAll(createProjectionMap(mTableDagvergunning, product, "dagvergunning_" + product));
+                columnMap.putAll(createProjectionMap(mTableDagvergunning, product + "_vast", null));
+            }
+        }
+
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "koopman_koopman_id"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_STATUS, "koopman_status"));
         columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
@@ -604,11 +611,15 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_DOORGEHAALD, null));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_STATUS, "sollicitatie_status"));
         columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_MARKT_ID, null));
-        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_3METER_KRAMEN, null));
-        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_4METER_KRAMEN, null));
-        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_EXTRA_METERS, null));
-        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AANTAL_ELEKTRA, null));
-        columnMap.putAll(createProjectionMap(mTableSollicitatie, Sollicitatie.COL_AFVALEILAND, null));
+
+        // producten
+        if (getContext() != null) {
+            String[] productParams = getContext().getResources().getStringArray(R.array.array_product_param);
+            for (String product : productParams) {
+                columnMap.putAll(createProjectionMap(mTableSollicitatie, product, null));
+            }
+        }
+
         columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_ID, "markt_markt_id"));
         columnMap.putAll(createProjectionMap(mTableMarkt, Markt.COL_AFKORTING, null));
         koopmanJoinedQueryBuilder.setProjectionMap(columnMap);

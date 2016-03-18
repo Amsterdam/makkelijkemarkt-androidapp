@@ -33,9 +33,9 @@
     <string name="koopman_status_verwijderd" translatable="false">Verwijderd</string>
 
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>-->
-    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>-->
+    <string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.b.nl/api/</string>-->
-    <string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/1.1.0/</string>
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/1.1.0/</string>-->
 
     <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
     <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>

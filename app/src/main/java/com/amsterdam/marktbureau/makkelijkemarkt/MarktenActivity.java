@@ -98,7 +98,7 @@ public class MarktenActivity extends AppCompatActivity {
 
         // log the user out
         if (id == R.id.action_logout) {
-            logout(true);
+            Utility.logout(this, true);
             return true;
         }
 
@@ -119,19 +119,6 @@ public class MarktenActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             mTitleView.setText(title);
         }
-    }
-
-    /**
-     * Log the user out by clearing the authentication details from the sharedpreferences,
-     * optionally sending a logout call to the api, and sending the user back to the main activity
-     * login screen
-     */
-    private void logout(boolean callApi) {
-
-        Utility.log(this, LOG_TAG, "Logging out...");
-
-        // logout of the app, and optionally the api
-        Utility.logout(this, callApi);
     }
 
     /**
