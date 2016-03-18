@@ -35,13 +35,13 @@
     <string name="scan_nfc_result_uid">nfctag-uid</string>
 
     <string name="length_meter">meter</string>
-    <string name="label_erkenningsnummer">Erkenningsnummer</string>
-    <string name="label_sollicitatienummer">Sollicitatienummer</string>
+    <string name="label_erkenningsnummer">Registernummer</string>
+    <string name="label_sollicitatienummer">Anciënniteitsnummer </string>
     <string name="label_notitie">Notitie</string>
     <string name="label_barcode_scannen">Barcode Scannen</string>
     <string name="label_nfc_scannen">NFC Scannen</string>
-    <string name="hint_erkenningsnummer">Erkenningsnummer</string>
-    <string name="hint_sollicitatienummer">Sollicitatienummer</string>
+    <string name="hint_erkenningsnummer">Registernummer</string>
+    <string name="hint_sollicitatienummer">Anciënniteitsnummer </string>
     <string name="hint_scan_barcode">Scan de barcode van een markt koopman pas</string>
 
     <string name="notice_login_enter_password">Please enter your password</string>
