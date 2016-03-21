@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="drawer_menu_options">
-        <item>Wissel van markt</item>
-        <item>Dagvergunningen</item>
-        <item>Notities</item>
-    </string-array>
+    <!--<string-array name="drawer_menu_options">-->
+        <!--<item>Wissel van markt</item>-->
+        <!--<item>Dagvergunningen</item>-->
+        <!--<item>Notities</item>-->
+    <!--</string-array>-->
 
     <!-- Aanwezig keys and titles -->
     <string-array name="array_aanwezig_key">
@@ -30,6 +30,9 @@
         <item>extraMeters</item>
         <item>elektra</item>
         <item>afvaleiland</item>
+        <item>krachtstroom</item>
+        <item>reiniging</item>
+        <item>eenmaligElektra</item>
     </string-array>
     <string-array name="array_product_param">
         <item>aantal3MeterKramen</item>
@@ -37,6 +40,9 @@
         <item>extraMeters</item>
         <item>aantalElektra</item>
         <item>afvaleiland</item>
+        <item>krachtstroom</item>
+        <item>reiniging</item>
+        <item>eenmaligElektra</item>
     </string-array>
     <string-array name="array_product_type">
         <item>integer</item>
@@ -44,6 +50,9 @@
         <item>integer</item>
         <item>integer</item>
         <item>integer</item>
+        <item>boolean</item>
+        <item>boolean</item>
+        <item>boolean</item>
     </string-array>
     <string-array name="array_product_title">
         <item>3m plaatsen</item>
@@ -51,6 +60,9 @@
         <item>Extra meters</item>
         <item>Elektra</item>
         <item>Afvaleiland</item>
+        <item>Krachtstroom</item>
+        <item>Reiniging</item>
+        <item>Eenmalig elektra</item>
     </string-array>
 
 </resources>

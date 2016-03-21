@@ -30,6 +30,9 @@ public class ApiSollicitatie {
     private int aantalExtraMeters;
     private int aantalElektra;
     private int afvaleiland;
+    private boolean krachtstroom;
+    private boolean reiniging;
+    private boolean eenmaligElektra;
 
     private ApiMarkt markt;
     private ApiKoopman koopman;
@@ -170,6 +173,48 @@ public class ApiSollicitatie {
     /**
      * @return
      */
+    public boolean getKrachtstroom() {
+        return krachtstroom;
+    }
+
+    /**
+     * @param krachtstroom
+     */
+    public void setKrachtstroom(boolean krachtstroom) {
+        this.krachtstroom = krachtstroom;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getEenmaligElektra() {
+        return eenmaligElektra;
+    }
+
+    /**
+     * @param eenmaligElektra
+     */
+    public void setEenmaligElektra(boolean eenmaligElektra) {
+        this.eenmaligElektra = eenmaligElektra;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getReiniging() {
+        return reiniging;
+    }
+
+    /**
+     * @param reiniging
+     */
+    public void setReiniging(boolean reiniging) {
+        this.reiniging = reiniging;
+    }
+
+    /**
+     * @return
+     */
     public boolean isDoorgehaald() {
         return doorgehaald;
     }
@@ -257,6 +302,9 @@ public class ApiSollicitatie {
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_EXTRA_METERS, getAantalExtraMeters());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AANTAL_ELEKTRA, getAantalElektra());
         sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_AFVALEILAND, getAfvaleiland());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_KRACHTSTROOM, getKrachtstroom());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_REINIGING, getReiniging());
+        sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_EENMALIG_ELEKTRA, getEenmaligElektra());
 
         if (getMarkt() != null) {
             sollicitatieValues.put(MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID, getMarkt().getId());

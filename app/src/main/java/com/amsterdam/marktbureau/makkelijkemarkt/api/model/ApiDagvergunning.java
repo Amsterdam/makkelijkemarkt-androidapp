@@ -35,12 +35,18 @@ public class ApiDagvergunning {
     private int extraMeters;
     private int aantalElektra;
     private int afvaleiland;
+    private boolean krachtstroom;
+    private boolean reiniging;
+    private boolean eenmaligElektra;
 
     private int aantal3meterKramenVast;
     private int aantal4meterKramenVast;
     private int aantalExtraMetersVast;
     private int aantalElektraVast;
     private int afvaleilandVast;
+    private boolean krachtstroomVast;
+    private boolean reinigingVast;
+    private boolean eenmaligElektraVast;
 
     private ApiAccount registratieAccount;
     private ApiMarkt markt;
@@ -157,6 +163,90 @@ public class ApiDagvergunning {
      */
     public void setAfvaleiland(int afvaleiland) {
         this.afvaleiland = afvaleiland;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getKrachtstroom() {
+        return krachtstroom;
+    }
+
+    /**
+     * @param krachtstroom
+     */
+    public void setKrachtstroom(boolean krachtstroom) {
+        this.krachtstroom = krachtstroom;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getReiniging() {
+        return reiniging;
+    }
+
+    /**
+     * @param reiniging
+     */
+    public void setReiniging(boolean reiniging) {
+        this.reiniging = reiniging;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getEenmaligElektra() {
+        return eenmaligElektra;
+    }
+
+    /**
+     * @param eenmaligElektra
+     */
+    public void setEenmaligElektra(boolean eenmaligElektra) {
+        this.eenmaligElektra = eenmaligElektra;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getReinigingVast() {
+        return reinigingVast;
+    }
+
+    /**
+     * @param reinigingVast
+     */
+    public void setReinigingVast(boolean reinigingVast) {
+        this.reinigingVast = reinigingVast;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getEenmaligElektraVast() {
+        return eenmaligElektraVast;
+    }
+
+    /**
+     * @param eenmaligElektraVast
+     */
+    public void setEenmaligElektraVast(boolean eenmaligElektraVast) {
+        this.eenmaligElektraVast = eenmaligElektraVast;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getKrachtstroomVast() {
+        return krachtstroomVast;
+    }
+
+    /**
+     * @param krachtstroomVast
+     */
+    public void setKrachtstroomVast(boolean krachtstroomVast) {
+        this.krachtstroomVast = krachtstroomVast;
     }
 
     /**
@@ -450,12 +540,18 @@ public class ApiDagvergunning {
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS, getExtraMeters());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA, getAantalElektra());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND, getAfvaleiland());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM, getKrachtstroom());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING, getReiniging());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EENMALIG_ELEKTRA, getEenmaligElektra());
 
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_3METER_KRAMEN_VAST, getAantal3meterKramenVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_4METER_KRAMEN_VAST, getAantal4meterKramenVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EXTRA_METERS_VAST, getAantalExtraMetersVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AANTAL_ELEKTRA_VAST, getAantalElektraVast());
         dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_AFVALEILAND_VAST, getAfvaleilandVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KRACHTSTROOM_VAST, getKrachtstroomVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REINIGING_VAST, getReinigingVast());
+        dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_EENMALIG_ELEKTRA_VAST, getEenmaligElektraVast());
 
         if (getRegistratieGeolocatie() != null && getRegistratieGeolocatie().size() > 1) {
             dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_GEOLOCATIE_LAT, getRegistratieGeolocatie().get(0));

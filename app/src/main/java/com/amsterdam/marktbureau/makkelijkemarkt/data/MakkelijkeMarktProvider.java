@@ -229,6 +229,15 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AFVALEILAND = "afvaleiland";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_KRACHTSTROOM = "krachtstroom";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_REINIGING = "reiniging";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_EENMALIG_ELEKTRA = "eenmaligElektra";
     }
 
     /**
@@ -308,6 +317,15 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AFVALEILAND = "afvaleiland";
 
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_KRACHTSTROOM = "krachtstroom";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_REINIGING = "reiniging";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_EENMALIG_ELEKTRA = "eenmaligElektra";
+
 
         // producten vast
         @Column(Column.FieldType.INTEGER)
@@ -324,6 +342,15 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_AFVALEILAND_VAST = "afvaleiland_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_KRACHTSTROOM_VAST = "krachtstroom_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_REINIGING_VAST = "reiniging_vast";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_EENMALIG_ELEKTRA_VAST = "eenmaligElektra_vast";
     }
 
     /**
