@@ -21,32 +21,28 @@ import retrofit2.Response;
 /**
  * @author marcolangebeeke
  */
-public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
+public class ApiGetKoopmanByPasUid extends ApiCall implements Callback<ApiKoopman> {
 
     // use classname when logging
-    private static final String LOG_TAG = ApiGetKoopman.class.getSimpleName();
+    private static final String LOG_TAG = ApiGetKoopmanByPasUid.class.getSimpleName();
 
-    // keep a reference from who called
-    private String mCaller;
-
-    // erkenningsnummer of the koopman we are looking for
-    private String mErkenningsnummer;
+    // pas uid of the koopman we are looking for
+    private String mPasUid;
 
     /**
      * Call the superclass constructor to set the context
      * @param context the context
      */
-    public ApiGetKoopman(Context context, String caller) {
+    public ApiGetKoopmanByPasUid(Context context) {
         super(context);
-        mCaller = caller;
     }
 
     /**
-     * Set the erkenningsnummer we need as path segment for calling the api
-     * @param erkenningsnummer the erkenningsnummer
+     * Set the pas uid we need as path segment for calling the api
+     * @param pasUid the pas uid
      */
-    public void setErkenningsnummer(String erkenningsnummer) {
-        mErkenningsnummer = erkenningsnummer;
+    public void setPasUid(String pasUid) {
+        mPasUid = pasUid;
     }
 
     /**
@@ -55,16 +51,16 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
     @Override
     public boolean enqueue() {
         if (super.enqueue()) {
-            if (mErkenningsnummer != null) {
+            if (mPasUid != null) {
 
                 // set the api function to call for loading the accounts
-                Call<ApiKoopman> call = mMakkelijkeMarktApi.getKoopman(mErkenningsnummer);
+                Call<ApiKoopman> call = mMakkelijkeMarktApi.getKoopmanByPasUid(mPasUid);
 
                 // call the api asynchronously
                 call.enqueue(this);
 
             } else {
-                Utility.log(mContext, LOG_TAG, "Call failed, erkenningsnummer not set");
+                Utility.log(mContext, LOG_TAG, "Call failed, pas UID not set");
             }
 
             return true;
@@ -105,13 +101,13 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
                     Utility.log(mContext, LOG_TAG, "Koopman inserted/updated with id: " + koopmanUri.getLastPathSegment());
 
                     // send event to subscribers that we retrieved the koopman succesfully
-                    EventBus.getDefault().post(new OnResponseEvent(response.body(), null, mCaller));
+                    EventBus.getDefault().post(new OnResponseEvent(response.body(), null));
                 }
             }
         } else {
 
             // on empty body send an error message
-            EventBus.getDefault().post(new OnResponseEvent(null, "Empty response body", mCaller));
+            EventBus.getDefault().post(new OnResponseEvent(null, "Empty response body"));
         }
     }
 
@@ -121,7 +117,7 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
      */
     @Override
     public void onFailure(Throwable t) {
-        EventBus.getDefault().post(new OnResponseEvent(null, t.getMessage(), mCaller));
+        EventBus.getDefault().post(new OnResponseEvent(null, t.getMessage()));
     }
 
     /**
@@ -130,12 +126,10 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
     public class OnResponseEvent {
         public final ApiKoopman mKoopman;
         public final String mMessage;
-        public final String mCaller;
 
-        public OnResponseEvent(ApiKoopman koopman, String message, String caller) {
+        public OnResponseEvent(ApiKoopman koopman, String message) {
             mKoopman = koopman;
             mMessage = message;
-            mCaller = caller;
         }
     }
 }

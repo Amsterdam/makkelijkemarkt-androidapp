@@ -36,7 +36,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiDeleteDagvergunning;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopmanByErkenningsnummer;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopmanByPasUid;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept;
@@ -1403,13 +1404,14 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         mKoopmanFragment.mKoopmanSelectionMethod =
                                 DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
                     } else {
-                        mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
 
-                        // TODO: hier zoeken in de Api, met nieuwe uid call
-                        // progressbar tonen
-                        // koopman + sollicitaties opslaan en selecteren indien gevonden
-                        // indien niet gevonden, toast met melding
+                        // show the progressbar
+                        mProgressbar.setVisibility(View.VISIBLE);
 
+                        // query api for koopman by pas uid
+                        ApiGetKoopmanByPasUid getKoopman = new ApiGetKoopmanByPasUid(getContext());
+                        getKoopman.setPasUid(uid);
+                        getKoopman.enqueue();
                     }
 
                     // close the cursor
@@ -1678,7 +1680,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // load the koopman details from the api (will get his sollicitaties at other markten)
             if (mErkenningsnummer != null && !mErkenningsnummer.equals("")) {
-                ApiGetKoopman getKoopman = new ApiGetKoopman(getContext(), LOG_TAG);
+                ApiGetKoopmanByErkenningsnummer getKoopman = new ApiGetKoopmanByErkenningsnummer(getContext(), LOG_TAG);
                 getKoopman.setErkenningsnummer(mErkenningsnummer);
                 getKoopman.enqueue();
             }
@@ -1701,7 +1703,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * @param event the received event
      */
     @Subscribe
-    public void onGetKoopmanResponseEvent(ApiGetKoopman.OnResponseEvent event) {
+    public void onGetKoopmanByErkenningsnummerResponseEvent(ApiGetKoopmanByErkenningsnummer.OnResponseEvent event) {
         if (event.mCaller.equals(LOG_TAG)) {
 
             // hide progressbar or show an error
@@ -1723,6 +1725,24 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mGetSollicitatiesProcessDialog.dismiss();
         if (event.mSollicitatiesCount == -1) {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_sollicitaties_fetch_failed) + ": " + event.mMessage);
+        }
+    }
+
+    /**
+     * Handle response event from api get koopman request onresponse method to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onGetKoopmanByPasUidResponseEvent(ApiGetKoopmanByPasUid.OnResponseEvent event) {
+
+        // hide progressbar
+        mProgressbar.setVisibility(View.GONE);
+
+        // select the found koopman, or show an error if nothing found
+        if (event.mKoopman != null) {
+            mKoopmanFragment.selectKoopman(event.mKoopman.getId(), DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC);
+        } else {
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_koopman_not_found));
         }
     }
 

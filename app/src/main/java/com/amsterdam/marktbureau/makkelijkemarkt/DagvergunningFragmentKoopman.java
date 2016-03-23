@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.ErkenningsnummerAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.SollicitatienummerAdapter;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopmanByErkenningsnummer;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
 
@@ -235,8 +235,8 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                     // show the progressbar
                     ((Callback) getActivity()).setProgressbarVisibility(View.VISIBLE);
 
-                    // query koopman + sollicitaties and store them
-                    ApiGetKoopman getKoopman = new ApiGetKoopman(getContext(), LOG_TAG);
+                    // query api for koopman by erkenningsnummer
+                    ApiGetKoopmanByErkenningsnummer getKoopman = new ApiGetKoopmanByErkenningsnummer(getContext(), LOG_TAG);
                     getKoopman.setErkenningsnummer(mErkenningsnummerEditText.getText().toString());
                     getKoopman.enqueue();
 
@@ -283,7 +283,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
      * @param koopmanId the id of the koopman
      * @param selectionMethod the method in which the koopman was selected
      */
-    private void selectKoopman(int koopmanId, String selectionMethod) {
+    public void selectKoopman(int koopmanId, String selectionMethod) {
         mKoopmanId = koopmanId;
         mKoopmanSelectionMethod = selectionMethod;
 
@@ -493,7 +493,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
      * @param event the received event
      */
     @Subscribe
-    public void onGetKoopmanResponseEvent(ApiGetKoopman.OnResponseEvent event) {
+    public void onGetKoopmanResponseEvent(ApiGetKoopmanByErkenningsnummer.OnResponseEvent event) {
         if (event.mCaller.equals(LOG_TAG)) {
 
             // hide progressbar

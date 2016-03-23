@@ -104,7 +104,15 @@ public interface MakkelijkeMarktApi {
      * @return an ApiKoopman object
      */
     @GET("koopman/erkenningsnummer/{erkenningsnummer}")
-    Call<ApiKoopman> getKoopman(@Path("erkenningsnummer") String erkenningsnummer);
+    Call<ApiKoopman> getKoopmanByErkenningsnummer(@Path("erkenningsnummer") String erkenningsnummer);
+
+    /**
+     * Get a koopman object, including sollicitaties, from the api
+     * @param pasUid the pas UID as a path segment parameter
+     * @return an ApiKoopman object
+     */
+    @GET("koopman/pasuid/{pasUid}")
+    Call<ApiKoopman> getKoopmanByPasUid(@Path("pasUid") String pasUid);
 
     /**
      * Get a list of sollicitaties for a given marktid from the Api
