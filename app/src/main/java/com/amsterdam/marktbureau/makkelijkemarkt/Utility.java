@@ -256,8 +256,6 @@ public class Utility {
      */
     public static void logout(Context context, boolean callApi) {
 
-        Utility.log(context, Utility.class.getSimpleName(), "Logging out...");
-
         // stop the api service
         Intent apiServiceIntent = new Intent(context, MakkelijkeMarktApiService.class);
         context.stopService(apiServiceIntent);

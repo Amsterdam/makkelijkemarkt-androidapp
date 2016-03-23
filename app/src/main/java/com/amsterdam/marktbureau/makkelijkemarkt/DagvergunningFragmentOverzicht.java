@@ -94,8 +94,6 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Utility.log(getContext(), LOG_TAG, "onActivityCreated called");
-
         // call the activity
         ((Callback) getActivity()).onOverzichtFragmentReady();
     }

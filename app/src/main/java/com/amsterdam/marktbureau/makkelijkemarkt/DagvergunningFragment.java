@@ -353,8 +353,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             if (mViewPager.getCurrentItem() != mCurrentTab) {
                 mViewPager.setCurrentItem(mCurrentTab);
             }
-
-            Utility.log(getContext(), LOG_TAG, "State restored!");
         }
 
         // set the right wizard menu depending on the current tab position
@@ -404,8 +402,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         getChildFragmentManager().putFragment(outState, KOOPMAN_FRAGMENT_TAG, mKoopmanFragment);
         getChildFragmentManager().putFragment(outState, PRODUCT_FRAGMENT_TAG, mProductFragment);
         getChildFragmentManager().putFragment(outState, OVERZICHT_FRAGMENT_TAG, mOverzichtFragment);
-
-        Utility.log(getContext(), LOG_TAG, "State saved!");
     }
 
     /**
@@ -447,8 +443,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 Utility.collapseView(mMeldingenContainer, false);
             }
         }
-
-        Utility.log(getContext(), LOG_TAG, "Meldingen populated!");
     }
 
     /**
@@ -513,8 +507,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             if (mKoopmanAanwezig != null) {
                 mKoopmanFragment.setAanwezig(mKoopmanAanwezig);
             }
-
-            Utility.log(getContext(), LOG_TAG, "Koopman populated!");
         }
     }
 
@@ -559,8 +551,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                             mProducten.put(product, mKoopmanFragment.mProducten.get(product));
                         }
                     }
-
-                    Utility.log(getContext(), LOG_TAG, "Koopman id changed from: " + mKoopmanId + " to: " + mKoopmanFragment.mKoopmanId);
                 }
 
                 // get koopman erkenningsnummer from selected koopman
@@ -573,12 +563,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                 // get koopman id and update local member var
                 mKoopmanId = mKoopmanFragment.mKoopmanId;
-
-                Utility.log(getContext(), LOG_TAG, "Koopman id set: " + mKoopmanId);
             }
         }
-
-        Utility.log(getContext(), LOG_TAG, "getKoopmanFragmentValues called!");
     }
 
     /**
@@ -651,8 +637,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             if (mNotitie != null) {
                 mProductFragment.mNotitie.setText(mNotitie);
             }
-
-            Utility.log(getContext(), LOG_TAG, "Product populated!");
         }
     }
 
@@ -725,8 +709,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 mNotitie = null;
             }
         }
-
-        Utility.log(getContext(), LOG_TAG, "getProductFragmentValues called!");
     }
 
     /**
@@ -937,11 +919,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     }
                     @Override
                     public void onFailure(Throwable t) {
-
-                        // hide progress bar
                         mProgressbar.setVisibility(View.GONE);
-
-                        Utility.log(getContext(), LOG_TAG, "Failed to load dagvergunning concept!");
                     }
                 });
             } else {
@@ -951,8 +929,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     mOverzichtFragment.mProductenEmptyTextView.setVisibility(View.VISIBLE);
                 }
             }
-
-            Utility.log(getContext(), LOG_TAG, "Overzicht populated!");
         }
     }
 
@@ -1378,10 +1354,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     // lowercase the scanned uid
                     uid = uid.toLowerCase();
 
-                    // show a toast saying that we detected an nfc tag. this will come right after the toast
-                    // saying 'NFC tag type not supported.' which can unfortunately not be suppressed
-                    //mToast = Utility.showToast(getContext(), mToast, "NFC tag detected with UID hex: " + uid);
-
                     // find the koopman by querying for scanned nfc tag uid
                     Cursor koopman = getContext().getContentResolver().query(
                             MakkelijkeMarktProvider.mUriKoopman,
@@ -1647,8 +1619,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-
-            Utility.log(getContext(), LOG_TAG, "dagvergunning loaded!");
 
             // dagvergunning values
             mErkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_ERKENNINGSNUMMER_INVOER_WAARDE));

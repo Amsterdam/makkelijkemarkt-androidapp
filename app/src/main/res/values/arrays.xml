@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--<string-array name="drawer_menu_options">-->
-        <!--<item>Wissel van markt</item>-->
-        <!--<item>Dagvergunningen</item>-->
-        <!--<item>Notities</item>-->
-    <!--</string-array>-->
-
     <!-- Aanwezig keys and titles -->
     <string-array name="array_aanwezig_key" translatable="false">
         <item>zelf</item>

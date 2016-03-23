@@ -201,8 +201,6 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             mProducten.put(product, -1);
         }
 
-        Utility.log(getContext(), LOG_TAG, "onActivityCreated called");
-
         // call the activity
         ((Callback) getActivity()).onKoopmanFragmentReady();
     }

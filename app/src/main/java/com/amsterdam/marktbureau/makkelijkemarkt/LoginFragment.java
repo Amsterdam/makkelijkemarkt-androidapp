@@ -307,10 +307,7 @@ public class LoginFragment extends Fragment implements
 
         // hide progress dialog
         mLoginProcessDialog.dismiss();
-
         mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_failed_connect));
-
-        Utility.log(getContext(), LOG_TAG, "onFailure message: "+ t.getMessage());
     }
 
     /**

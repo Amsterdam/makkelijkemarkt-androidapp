@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetMarkten;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiMarkt;
@@ -54,6 +55,9 @@ public class MarktenFragment extends Fragment implements
 
     // cursoradapter for populating the markten litsview with markten from the database
     private SimpleCursorAdapter mMarktenAdapter;
+
+    // common toast object
+    protected Toast mToast;
 
     /**
      * Constructor
@@ -234,7 +238,6 @@ public class MarktenFragment extends Fragment implements
 
         // hide progressbar
         mMarktenProgressBar.setVisibility(View.GONE);
-
-        Utility.log(getContext(), LOG_TAG, "onFailure message: " + t.getMessage());
+        mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_markets_fetch_failed) + ": " + t.getMessage());
     }
 }

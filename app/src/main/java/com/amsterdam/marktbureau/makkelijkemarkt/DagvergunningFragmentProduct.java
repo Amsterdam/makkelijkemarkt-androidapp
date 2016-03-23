@@ -161,8 +161,6 @@ public class DagvergunningFragmentProduct extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Utility.log(getContext(), LOG_TAG, "onActivityCreated called");
-
         // call the activity
         ((Callback) getActivity()).onProductFragmentReady();
     }
