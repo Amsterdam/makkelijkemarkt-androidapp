@@ -26,6 +26,9 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
     // use classname when logging
     private static final String LOG_TAG = ApiGetKoopman.class.getSimpleName();
 
+    // keep a reference from who called
+    private String mCaller;
+
     // erkenningsnummer of the koopman we are looking for
     private String mErkenningsnummer;
 
@@ -33,8 +36,9 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
      * Call the superclass constructor to set the context
      * @param context the context
      */
-    public ApiGetKoopman(Context context) {
+    public ApiGetKoopman(Context context, String caller) {
         super(context);
+        mCaller = caller;
     }
 
     /**
@@ -101,13 +105,13 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
                     Utility.log(mContext, LOG_TAG, "Koopman inserted/updated with id: " + koopmanUri.getLastPathSegment());
 
                     // send event to subscribers that we retrieved the koopman succesfully
-                    EventBus.getDefault().post(new OnResponseEvent(response.body(), null));
+                    EventBus.getDefault().post(new OnResponseEvent(response.body(), null, mCaller));
                 }
             }
         } else {
 
             // on empty body send an error message
-            EventBus.getDefault().post(new OnResponseEvent(null, "Empty response body"));
+            EventBus.getDefault().post(new OnResponseEvent(null, "Empty response body", mCaller));
         }
     }
 
@@ -117,7 +121,7 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
      */
     @Override
     public void onFailure(Throwable t) {
-        EventBus.getDefault().post(new OnResponseEvent(null, t.getMessage()));
+        EventBus.getDefault().post(new OnResponseEvent(null, t.getMessage(), mCaller));
     }
 
     /**
@@ -126,10 +130,12 @@ public class ApiGetKoopman extends ApiCall implements Callback<ApiKoopman> {
     public class OnResponseEvent {
         public final ApiKoopman mKoopman;
         public final String mMessage;
+        public final String mCaller;
 
-        public OnResponseEvent(ApiKoopman koopman, String message) {
+        public OnResponseEvent(ApiKoopman koopman, String message, String caller) {
             mKoopman = koopman;
             mMessage = message;
+            mCaller = caller;
         }
     }
 }

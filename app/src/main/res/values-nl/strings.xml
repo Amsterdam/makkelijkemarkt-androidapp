@@ -76,5 +76,6 @@
     <string name="product">Producten</string>
     <string name="save">Opslaan</string>
     <string name="scan_nfc_text">Houdt een markt koopman pas tegen de achterkant van het toestel</string>
+    <string name="notice_koopman_not_found_on_selected_markt">Geen koopman gevonden met een sollicitatie op de geselecteerde markt! Voer het complete Registernummer in om de sollicitaties op alle markten te doorzoeken</string>
 
 </resources>

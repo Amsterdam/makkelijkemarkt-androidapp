@@ -1577,6 +1577,15 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
+     * Set the visibility of the progressbar. This is accessed through the activity from the
+     * pager fragments
+     * @param visibility the visibility as View.VISIBLE | View.GONE | View.INVISIBLE
+     */
+    public void setProgressbarVisibility(int visibility) {
+        mProgressbar.setVisibility(visibility);
+    }
+
+    /**
      * On click on the previous-button, switch to the previous step
      */
     @OnClick(R.id.wizard_previous)
@@ -1669,7 +1678,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // load the koopman details from the api (will get his sollicitaties at other markten)
             if (mErkenningsnummer != null && !mErkenningsnummer.equals("")) {
-                ApiGetKoopman getKoopman = new ApiGetKoopman(getContext());
+                ApiGetKoopman getKoopman = new ApiGetKoopman(getContext(), LOG_TAG);
                 getKoopman.setErkenningsnummer(mErkenningsnummer);
                 getKoopman.enqueue();
             }
@@ -1693,11 +1702,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      */
     @Subscribe
     public void onGetKoopmanResponseEvent(ApiGetKoopman.OnResponseEvent event) {
+        if (event.mCaller.equals(LOG_TAG)) {
 
-        // hide progressbar or show an error
-        mProgressbar.setVisibility(View.GONE);
-        if (event.mKoopman == null) {
-            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_koopman_fetch_failed) + ": " + event.mMessage);
+            // hide progressbar or show an error
+            mProgressbar.setVisibility(View.GONE);
+            if (event.mKoopman == null) {
+                mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_koopman_fetch_failed) + ": " + event.mMessage);
+            }
         }
     }
 

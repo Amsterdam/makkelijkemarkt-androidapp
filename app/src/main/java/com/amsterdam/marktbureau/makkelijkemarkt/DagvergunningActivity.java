@@ -218,4 +218,12 @@ public class DagvergunningActivity extends BaseActivity implements
     public void onOverzichtFragmentReady() {
         mDagvergunningFragment.overzichtFragmentReady();
     }
+
+    /**
+     * Set the visibility of the progressbar in the dagvergunningfragment
+     * @param visibility the visibility as View.VISIBLE | View.GONE | View.INVISIBLE
+     */
+    public void setProgressbarVisibility(int visibility){
+        mDagvergunningFragment.setProgressbarVisibility(visibility);
+    }
 }

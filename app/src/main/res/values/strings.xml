@@ -41,7 +41,7 @@
     <string name="label_barcode_scannen">Barcode Scannen</string>
     <string name="label_nfc_scannen">NFC Scannen</string>
     <string name="hint_erkenningsnummer">Registernummer</string>
-    <string name="hint_sollicitatienummer">Anciënniteitsnummer </string>
+    <string name="hint_sollicitatienummer">Anciënniteitsnummer</string>
     <string name="hint_scan_barcode">Scan de barcode van een markt koopman pas</string>
 
     <string name="notice_login_enter_password">Please enter your password</string>
@@ -63,6 +63,7 @@
     <string name="notice_dagvergunning_delete_failed">Er is iets mis gegaan bij het verwijderen, probeer het nog een keer</string>
     <string name="notice_scan_barcode_cancelled">Barcode Scan geannuleerd</string>
     <string name="notice_koopman_not_found">Koopman niet gevonden</string>
+    <string name="notice_koopman_not_found_on_selected_markt">Geen koopman gevonden met een sollicitatie op de geselecteerde markt! Voer het complete Registernummer in om de sollicitaties op alle markten te doorzoeken</string>
     <string name="notice_koopman_not_selected">Geen koopman geselecteerd</string>
     <string name="notice_producten_not_selected">Geen producten geselecteerd</string>
     <string name="notice_scan_nfc_cancelled">NFC Scan geannuleerd</string>

@@ -32,8 +32,12 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.ErkenningsnummerAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.SollicitatienummerAdapter;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import com.bumptech.glide.Glide;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -123,6 +127,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
         void onKoopmanFragmentReady();
         void onKoopmanFragmentUpdated();
         void onMeldingenUpdated();
+        void setProgressbarVisibility(int visibility);
     }
 
     /**
@@ -146,23 +151,11 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor koopman = (Cursor) parent.getAdapter().getItem(position);
-                mKoopmanId = koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID));
 
-                // set the koopman selection method to handmatig
-                mKoopmanSelectionMethod = KOOPMAN_SELECTION_METHOD_HANDMATIG;
-
-                // reset the default amount of products before loading the koopman
-                String[] productParams = getResources().getStringArray(R.array.array_product_param);
-                for (String product : productParams) {
-                    mProducten.put(product, -1);
-                }
-
-                // inform the dagvergunningfragment that the koopman has changed, get the new values,
-                // and populate our layout with the new koopman
-                ((Callback) getActivity()).onKoopmanFragmentUpdated();
-
-                // hide the keyboard on item selection
-                Utility.hideKeyboard(getActivity());
+                // select the koopman and update the fragment
+                selectKoopman(
+                        koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)),
+                        KOOPMAN_SELECTION_METHOD_HANDMATIG);
             }
         };
 
@@ -215,20 +208,46 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     }
 
     /**
-     * Trigger the autocomplete onclick on the erkennings- en sollicitatenummer search buttons
+     * Trigger the autocomplete onclick on the erkennings- en sollicitatenummer search buttons, or
+     * query api with full erkenningsnummer if nothing found in selected markt
      * @param view the clicked button
      */
     @OnClick({ R.id.search_erkenningsnummer_button, R.id.search_sollicitatienummer_button })
     public void onClick(ImageButton view) {
         if (view.getId() == R.id.search_erkenningsnummer_button) {
-            showDropdown(mErkenningsnummerEditText);
 
-            // TODO: hier zoeken in de Api, indien 10 cijfers ingevoerd, anders toast met melding
-            // progressbar tonen
-            // koopman + sollicitaties opslaan en selecteren indien gevonden (bestaat al een call voor)
-            // indien niet gevonden, toast met melding
+            // erkenningsnummer
+            if (mErkenningsnummerEditText.getText().toString().length() < mErkenningsnummerEditText.getThreshold()) {
+
+                // enter minimum 2 digits
+                Utility.showToast(getContext(), mToast, getString(R.string.notice_autocomplete_minimum));
+
+            } else if (mErkenningsnummerEditText.getAdapter().getCount() > 0) {
+
+                // show results found in selected markt
+                showDropdown(mErkenningsnummerEditText);
+
+            } else {
+
+                // query api in all markten
+                if (mErkenningsnummerEditText.getText().toString().length() == getResources().getInteger(R.integer.erkenningsnummer_maxlength)) {
+
+                    // show the progressbar
+                    ((Callback) getActivity()).setProgressbarVisibility(View.VISIBLE);
+
+                    // query koopman + sollicitaties and store them
+                    ApiGetKoopman getKoopman = new ApiGetKoopman(getContext(), LOG_TAG);
+                    getKoopman.setErkenningsnummer(mErkenningsnummerEditText.getText().toString());
+                    getKoopman.enqueue();
+
+                } else {
+                    Utility.showToast(getContext(), mToast, getString(R.string.notice_koopman_not_found_on_selected_markt));
+                }
+            }
 
         } else if (view.getId() == R.id.search_sollicitatienummer_button) {
+
+            // sollicitatienummer
             showDropdown(mSollicitatienummerEditText);
         }
     }
@@ -260,15 +279,26 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     }
 
     /**
-     * Show the autocomplete dropdown or a notice when the entered text is smaller then the threshold
-     * @param view autocomplete textview
+     * Select the koopman and update the fragment
+     * @param koopmanId the id of the koopman
+     * @param selectionMethod the method in which the koopman was selected
      */
-    public void showDropdown(AutoCompleteTextView view) {
-        if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() >= view.getThreshold()) {
-            view.showDropDown();
-        } else {
-            Utility.showToast(getContext(), mToast, getString(R.string.notice_autocomplete_minimum));
+    private void selectKoopman(int koopmanId, String selectionMethod) {
+        mKoopmanId = koopmanId;
+        mKoopmanSelectionMethod = selectionMethod;
+
+        // reset the default amount of products before loading the koopman
+        String[] productParams = getResources().getStringArray(R.array.array_product_param);
+        for (String product : productParams) {
+            mProducten.put(product, -1);
         }
+
+        // inform the dagvergunningfragment that the koopman has changed, get the new values,
+        // and populate our layout with the new koopman
+        ((Callback) getActivity()).onKoopmanFragmentUpdated();
+
+        // hide the keyboard on item selection
+        Utility.hideKeyboard(getActivity());
     }
 
     /**
@@ -291,6 +321,18 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 mAanwezigSpinner.setSelection(i);
                 break;
             }
+        }
+    }
+
+    /**
+     * Show the autocomplete dropdown or a notice when the entered text is smaller then the threshold
+     * @param view autocomplete textview
+     */
+    public void showDropdown(AutoCompleteTextView view) {
+        if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() >= view.getThreshold()) {
+            view.showDropDown();
+        } else {
+            Utility.showToast(getContext(), mToast, getString(R.string.notice_autocomplete_minimum));
         }
     }
 
@@ -445,4 +487,42 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
+
+    /**
+     * Handle response event from api get koopman request onresponse method to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onGetKoopmanResponseEvent(ApiGetKoopman.OnResponseEvent event) {
+        if (event.mCaller.equals(LOG_TAG)) {
+
+            // hide progressbar
+            ((Callback) getActivity()).setProgressbarVisibility(View.GONE);
+
+            // select the found koopman, or show an error if nothing found
+            if (event.mKoopman != null) {
+                selectKoopman(event.mKoopman.getId(), KOOPMAN_SELECTION_METHOD_HANDMATIG);
+            } else {
+                mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_koopman_not_found));
+            }
+        }
+    }
+
+    /**
+     * Register eventbus handlers
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Unregister eventbus handlers
+     */
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 }
