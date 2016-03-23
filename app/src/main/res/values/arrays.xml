@@ -8,14 +8,14 @@
     <!--</string-array>-->
 
     <!-- Aanwezig keys and titles -->
-    <string-array name="array_aanwezig_key">
+    <string-array name="array_aanwezig_key" translatable="false">
         <item>zelf</item>
         <item>partner</item>
         <item>vervanger_met_toestemming</item>
         <item>vervanger_zonder_toestemming</item>
         <item>vervanger_met_ontheffing</item>
     </string-array>
-    <string-array name="array_aanwezig_title">
+    <string-array name="array_aanwezig_title" translatable="false">
         <item>Zelf aanwezig</item>
         <item>Partner aanwezig</item>
         <item>Vervanger met toestemming aanwezig</item>
@@ -24,7 +24,7 @@
     </string-array>
 
     <!--Product keys, titles, db column, and payload param names -->
-    <string-array name="array_product_key">
+    <string-array name="array_product_key" translatable="false">
         <item>3mKramen</item>
         <item>4mKramen</item>
         <item>extraMeters</item>
@@ -34,7 +34,7 @@
         <item>reiniging</item>
         <item>eenmaligElektra</item>
     </string-array>
-    <string-array name="array_product_param">
+    <string-array name="array_product_param" translatable="false">
         <item>aantal3MeterKramen</item>
         <item>aantal4MeterKramen</item>
         <item>extraMeters</item>
@@ -44,7 +44,7 @@
         <item>reiniging</item>
         <item>eenmaligElektra</item>
     </string-array>
-    <string-array name="array_product_type">
+    <string-array name="array_product_type" translatable="false">
         <item>integer</item>
         <item>integer</item>
         <item>integer</item>
@@ -54,7 +54,7 @@
         <item>boolean</item>
         <item>boolean</item>
     </string-array>
-    <string-array name="array_product_title">
+    <string-array name="array_product_title" translatable="false">
         <item>3m plaatsen</item>
         <item>4m plaatsen</item>
         <item>Extra meters</item>

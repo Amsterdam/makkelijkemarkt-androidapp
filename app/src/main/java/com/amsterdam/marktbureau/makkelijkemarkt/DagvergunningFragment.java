@@ -1404,6 +1404,12 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                 DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
                     } else {
                         mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
+
+                        // TODO: hier zoeken in de Api, met nieuwe uid call
+                        // progressbar tonen
+                        // koopman + sollicitaties opslaan en selecteren indien gevonden
+                        // indien niet gevonden, toast met melding
+
                     }
 
                     // close the cursor

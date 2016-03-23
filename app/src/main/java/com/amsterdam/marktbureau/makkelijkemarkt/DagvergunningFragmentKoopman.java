@@ -222,6 +222,12 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     public void onClick(ImageButton view) {
         if (view.getId() == R.id.search_erkenningsnummer_button) {
             showDropdown(mErkenningsnummerEditText);
+
+            // TODO: hier zoeken in de Api, indien 10 cijfers ingevoerd, anders toast met melding
+            // progressbar tonen
+            // koopman + sollicitaties opslaan en selecteren indien gevonden (bestaat al een call voor)
+            // indien niet gevonden, toast met melding
+
         } else if (view.getId() == R.id.search_sollicitatienummer_button) {
             showDropdown(mSollicitatienummerEditText);
         }

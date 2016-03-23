@@ -32,7 +32,7 @@
     <string name="app_login_description">Select an account to continue</string>
 
     <string name="scan_nfc_text">Houdt een markt koopman pas tegen de achterkant van het toestel</string>
-    <string name="scan_nfc_result_uid">nfctag-uid</string>
+    <string name="scan_nfc_result_uid" translatable="false">nfctag-uid</string>
 
     <string name="length_meter">meter</string>
     <string name="label_erkenningsnummer">Registernummer</string>
