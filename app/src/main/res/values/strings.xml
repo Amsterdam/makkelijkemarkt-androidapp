@@ -25,6 +25,7 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_permit_count_label">Permits</string>
 
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>

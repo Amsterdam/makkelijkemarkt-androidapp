@@ -169,7 +169,7 @@ public class DrawerFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.getCount() > 0) {
-            mDagvergunningenUitgegeven.setText("Uitgegeven: " + data.getCount() + " totaal");
+            mDagvergunningenUitgegeven.setText(getString(R.string.drawer_permit_count_label) + ": " + data.getCount() + " totaal");
         }
     }
 

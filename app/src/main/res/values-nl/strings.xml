@@ -78,5 +78,6 @@
     <string name="scan_nfc_text">Houdt een markt koopman pas tegen de achterkant van het toestel</string>
     <string name="notice_koopman_not_found_on_selected_markt">Geen koopman gevonden met een sollicitatie op de geselecteerde markt! Voer het complete Registernummer in om de sollicitaties op alle markten te doorzoeken</string>
     <string name="error_markets_fetch_failed">Er is iets mis gegaan bij het ophalen van de markten</string>
+    <string name="drawer_permit_count_label">Uitgegeven</string>
 
 </resources>

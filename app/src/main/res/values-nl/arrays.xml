@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Aanwezig titles -->
+    <string-array name="array_aanwezig_title">
+        <item>Zelf aanwezig</item>
+        <item>Partner aanwezig</item>
+        <item>Vervanger met toestemming aanwezig</item>
+        <item>Vervanger zonder toestemming aanwezig</item>
+        <item>Vervanger met ontheffing aanwezig</item>
+    </string-array>
+
+    <!--Product titles -->
+    <string-array name="array_product_title">
+        <item>3m plaatsen</item>
+        <item>4m plaatsen</item>
+        <item>Extra meters</item>
+        <item>Elektra</item>
+        <item>Afvaleiland</item>
+        <item>Krachtstroom</item>
+        <item>Reiniging</item>
+        <item>Eenmalig elektra</item>
+    </string-array>
+
+</resources>

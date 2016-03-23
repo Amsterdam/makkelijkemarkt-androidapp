@@ -65,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
+            android:padding="@dimen/margin"
             android:visibility="gone"
             android:text="@string/notice_koopman_not_selected"
             />
@@ -103,6 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
+            android:padding="@dimen/margin"
             android:visibility="gone"
             android:text="@string/notice_producten_not_selected"
             />

@@ -58,7 +58,6 @@
         android:paddingEnd="@dimen/small_margin"
         android:textSize="@dimen/textsize_title_large"
         android:ems="10"
-        android:text="1234"
         />
 
     <!-- Inloggen -->
