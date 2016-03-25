@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -24,17 +26,29 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *
+ * Utility class containing various commonly used static helper functions
  * @author marcolangebeeke
  */
 public class Utility {
+
+    /**
+     * Log helper to show the package name, component name, and message
+     * @param context a context needed for retrieving the app name from the strings resource
+     * @param logTag the name of the component
+     * @param message the message we want to log
+     */
+    public static void log(Context context, String logTag, String message) {
+        Log.d(context.getString(R.string.log_tag_package), logTag + " " + context.getString(R.string.log_tag_separator) + " " + message);
+    }
 
     /**
      * Show a toast for a short while
@@ -75,6 +89,24 @@ public class Utility {
     }
 
     /**
+     * Check if we are connected to a wifi connection
+     * @return boolean indicating if we are connected
+     */
+    public static boolean isWifiConnected(Context context) {
+        boolean isConnected = false;
+
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (manager.isWifiEnabled()) {
+            WifiInfo info = manager.getConnectionInfo();
+            if (info.getNetworkId() != -1) {
+                isConnected = true;
+            }
+        }
+
+        return isConnected;
+    }
+
+    /**
      * Hide the softkeyboard from an activity
      * @param activity Activity
      */
@@ -93,30 +125,6 @@ public class Utility {
 
         // and hide the keyboard
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    /**
-     * Hide the softkeyboard from a context (usually fragment)
-     * @param context Context
-     * @param view View
-     */
-    public static void hideKeyboard(Context context, View view) {
-
-        // get the inputmanager from the given context
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-
-        // and hide the keyboard
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    /**
-     * Log helper to show the package name, component name, and message
-     * @param context a context needed for retrieving the app name from the strings resource
-     * @param logTag the name of the component
-     * @param message the message we want to log
-     */
-    public static void log(Context context, String logTag, String message) {
-        Log.d(context.getString(R.string.log_tag_package), logTag + " " + context.getString(R.string.log_tag_separator) + " " + message);
     }
 
     /**
@@ -248,6 +256,25 @@ public class Utility {
     }
 
     /**
+     * Check if the timestamp in a given shared preferences key is older than given timeout
+     * @param key the shared preferences key
+     * @param timeout the timeout in milliseconds
+     * @return boolean
+     */
+    public static boolean isTimedOut(Context context, String key, int timeout) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        long diffInHours = context.getResources().getInteger(timeout);
+        if (sharedPreferences.contains(key)) {
+            long lastFetchTimestamp = sharedPreferences.getLong(key, 0);
+            long differenceMs = new Date().getTime() - lastFetchTimestamp;
+            diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+        }
+
+        return diffInHours >= context.getResources().getInteger(timeout);
+    }
+
+    /**
      * Log the user out by clearing the authentication details from the sharedpreferences,
      * optionally sending a logout call to the api, and sending the user back to the main activity
      * login screen
@@ -336,9 +363,7 @@ public class Utility {
     }
 
     /**
-     *
-     * @param context
-     * @return
+     * Get the version code and name of the application package
      */
     public static String getAppVersion(Context context) {
         try {
