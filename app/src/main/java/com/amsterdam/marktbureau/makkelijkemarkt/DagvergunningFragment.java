@@ -44,6 +44,8 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPutDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -172,6 +174,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
         // bind the elements to the view
         ButterKnife.bind(this, view);
+
+        // crashlytics
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName(LOG_TAG));
 
         // create the tabs in the tablayout
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.koopman)));

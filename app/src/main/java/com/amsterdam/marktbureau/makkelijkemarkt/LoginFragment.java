@@ -28,6 +28,8 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostLoginBasicId;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
@@ -236,8 +238,8 @@ public class LoginFragment extends Fragment implements
 
         // get the id of previously selected account from the shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
-        int accountId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_account_id), 0);
-        if (accountId != 0) {
+        int accountId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_account_id), -1);
+        if (accountId != -1) {
 
             // update selected account id member var
             mSelectedAccountId = accountId;
@@ -289,12 +291,21 @@ public class LoginFragment extends Fragment implements
             Intent apiServiceIntent = new Intent(getContext(), MakkelijkeMarktApiService.class);
             getContext().startService(apiServiceIntent);
 
+            // crashlytics
+            Utility.crashlyticsLogUser(getContext());
+            Answers.getInstance().logLogin(new LoginEvent()
+                    .putSuccess(true));
+
             // open the markten activity
             Intent intent = new Intent(getActivity(), MarktenActivity.class);
             startActivity(intent);
 
         } else {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_password_invalid));
+
+            // crashlytics
+            Answers.getInstance().logLogin(new LoginEvent()
+                    .putSuccess(false));
         }
     }
 

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
+import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
 import java.math.BigInteger;
@@ -378,5 +379,26 @@ public class Utility {
         }
 
         return null;
+    }
+
+    /**
+     * Set the account naam and id for Crashlytics reporting
+     */
+    public static void crashlyticsLogUser(Context context) {
+
+        // get the shared preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // get the current user account id
+        int accountId = preferences.getInt(context.getString(R.string.sharedpreferences_key_account_id), -1);
+        if (accountId != -1) {
+            Crashlytics.setUserIdentifier(String.valueOf(accountId));
+        }
+
+        // get the current user account naam
+        String accountNaam = preferences.getString(context.getString(R.string.sharedpreferences_key_account_naam), null);
+        if (accountNaam != null) {
+            Crashlytics.setUserName(accountNaam);
+        }
     }
 }
