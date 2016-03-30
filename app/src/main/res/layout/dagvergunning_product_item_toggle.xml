@@ -37,7 +37,10 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
             android:paddingRight="48dp"
+            android:paddingEnd="48dp"
             android:layout_marginBottom="@dimen/large_margin"
             />
 

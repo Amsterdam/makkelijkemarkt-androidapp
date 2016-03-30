@@ -2,9 +2,11 @@
     android:id="@+id/sollicitatie_markten_list"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
+    android:paddingStart="0dp"
     android:paddingRight="@dimen/micro_margin"
     android:paddingEnd="@dimen/micro_margin"
-    android:gravity="right"
+    android:gravity="end"
     >
 
     <!-- Markt afkorting -->

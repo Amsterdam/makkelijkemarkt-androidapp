@@ -48,9 +48,6 @@
     <string name="makkelijkemarkt_api_login_payload_client_app_name" translatable="false">clientApp</string>
     <string name="makkelijkemarkt_api_login_payload_client_version_name" translatable="false">clientVersion</string>
 
-    <string name="makkelijkemarkt_api_dagvergunning_query_param_markt_id" translatable="false">marktId</string>
-    <string name="makkelijkemarkt_api_dagvergunning_query_param_dag" translatable="false">dag</string>
-
     <string name="makkelijkemarkt_api_dagvergunning_payload_markt_id" translatable="false">marktId</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_dag" translatable="false">dag</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer" translatable="false">erkenningsnummer</string>
@@ -59,8 +56,6 @@
     <string name="makkelijkemarkt_api_dagvergunning_payload_notitie" translatable="false">notitie</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd" translatable="false">registratieDatumtijd</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie" translatable="false">registratieGeolocatie</string>
-    <string name="makkelijkemarkt_api_dagvergunning_payload_doorgehaald_datumtijd" translatable="false">doorgehaaldDatumtijd</string>
-    <string name="makkelijkemarkt_api_dagvergunning_payload_doorgehaald_geolocatie" translatable="false">doorgehaaldGeolocatie</string>
 
     <string name="makkelijkemarkt_api_dagvergunning_concept_producten" translatable="false">producten</string>
 

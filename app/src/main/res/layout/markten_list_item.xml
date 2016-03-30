@@ -2,6 +2,8 @@
     android:id="@+id/markten_list_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingStart="0dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin"
     android:minHeight="?android:attr/listPreferredItemHeight"
