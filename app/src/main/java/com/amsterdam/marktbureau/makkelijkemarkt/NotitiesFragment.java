@@ -56,7 +56,7 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
     private NotitiesAdapter mNotitiesAdapter;
 
     // common toast object
-    protected Toast mToast;
+    private Toast mToast;
 
     /**
      * Constructor
@@ -101,7 +101,7 @@ public class NotitiesFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         // create an adapter for the notities listview
-        mNotitiesAdapter = new NotitiesAdapter(getActivity(), null, 0);
+        mNotitiesAdapter = new NotitiesAdapter(getActivity());
         mNotitiesListView.setAdapter(mNotitiesAdapter);
 
         // pass markt id and dag as arguments bundle to the cursorloader

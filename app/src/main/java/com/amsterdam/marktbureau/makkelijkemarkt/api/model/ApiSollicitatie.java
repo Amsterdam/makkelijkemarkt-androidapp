@@ -20,7 +20,7 @@ public class ApiSollicitatie {
     private int id;
     private int sollicitatieNummer;
     private String status;
-    private List<String> vastePlaatsen = new ArrayList<String>();
+    private List<String> vastePlaatsen = new ArrayList<>();
     private boolean doorgehaald;
     private String doorgehaaldReden;
     private int koopmanId;

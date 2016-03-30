@@ -57,7 +57,7 @@ public class MainFragment extends Fragment {
         // bind the elements to the view
         ButterKnife.bind(this, mainView);
 
-        // disable allcaps for the button title
+        // disable all caps for the button title
         mLoginButton.setTransformationMethod(null);
 
         return mainView;

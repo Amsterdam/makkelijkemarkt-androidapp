@@ -40,11 +40,9 @@ public class ErkenningsnummerAdapter extends CursorAdapter implements Filterable
     /**
      *
      * @param context
-     * @param c
-     * @param flags
      */
-    public ErkenningsnummerAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    public ErkenningsnummerAdapter(Context context) {
+        super(context, null, 0);
 
         mContext = context;
 
@@ -108,14 +106,13 @@ public class ErkenningsnummerAdapter extends CursorAdapter implements Filterable
 
     /**
      * Return what we want to show in the textview after selection from the list
-     * @param cursor
-     * @return
+     * @param cursor the cursor on the selected position
+     * @return a string containing the erkenningsnummer
      */
     @Override
     public CharSequence convertToString(Cursor cursor) {
-        String erkenningsnummer = cursor.getString(
-                cursor.getColumnIndexOrThrow(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
-        return erkenningsnummer;
+        return cursor.getString(cursor.getColumnIndexOrThrow(
+                MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
     }
 
     /**

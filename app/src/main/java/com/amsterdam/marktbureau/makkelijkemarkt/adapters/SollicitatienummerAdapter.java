@@ -40,11 +40,9 @@ public class SollicitatienummerAdapter extends CursorAdapter implements Filterab
     /**
      *
      * @param context
-     * @param c
-     * @param flags
      */
-    public SollicitatienummerAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    public SollicitatienummerAdapter(Context context) {
+        super(context, null, 0);
 
         mContext = context;
 
@@ -108,14 +106,13 @@ public class SollicitatienummerAdapter extends CursorAdapter implements Filterab
 
     /**
      * Return what we want to show in the textview after selection from the list
-     * @param cursor
-     * @return
+     * @param cursor the cursor on the selected position
+     * @return a string containing the sollicitatienummer
      */
     @Override
     public CharSequence convertToString(Cursor cursor) {
-        String sollicitatienummer = cursor.getString(
-                cursor.getColumnIndexOrThrow(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
-        return sollicitatienummer;
+        return cursor.getString(cursor.getColumnIndexOrThrow(
+                MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
     }
 
     /**

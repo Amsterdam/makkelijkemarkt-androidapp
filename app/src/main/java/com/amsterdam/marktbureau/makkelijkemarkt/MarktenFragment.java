@@ -57,7 +57,7 @@ public class MarktenFragment extends Fragment implements
     private SimpleCursorAdapter mMarktenAdapter;
 
     // common toast object
-    protected Toast mToast;
+    private Toast mToast;
 
     /**
      * Constructor

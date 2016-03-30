@@ -181,7 +181,7 @@ public class DagvergunningFragmentProduct extends Fragment {
             if (clickedProductText != null) {
                 int clickedCount = Integer.valueOf(clickedProductText.getText().toString());
                 if (!up && clickedCount > 0) {
-                    // descrease value, if larger then 0
+                    // decrease value, if larger then 0
                     clickedProductText.setText(String.valueOf(clickedCount - 1));
                 } else if (up && clickedCount < 99) {
                     // increase value, if smaller then 99

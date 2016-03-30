@@ -56,7 +56,7 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
     private DagvergunningenAdapter mDagvergunningenAdapter;
 
     // common toast object
-    protected Toast mToast;
+    private Toast mToast;
 
     /**
      * Constructor
@@ -103,7 +103,7 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         }
 
         // create an adapter for the dagvergunningen listview
-        mDagvergunningenAdapter = new DagvergunningenAdapter(getActivity(), null, 0);
+        mDagvergunningenAdapter = new DagvergunningenAdapter(getActivity());
         mDagvergunningenListView.setAdapter(mDagvergunningenAdapter);
 
         // pass markt id and dag as arguments bundle to the cursorloader

@@ -92,7 +92,7 @@ public class ApiGetKoopmanByErkenningsnummer extends ApiCall implements Callback
 
                 // use bulkinsert to insert/update sollicitaties in db
                 if (sollicitatieValues.length > 0) {
-                    int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
                 }
             }
 

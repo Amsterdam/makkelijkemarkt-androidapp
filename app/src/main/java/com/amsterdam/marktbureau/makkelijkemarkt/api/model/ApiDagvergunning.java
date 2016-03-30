@@ -26,7 +26,7 @@ public class ApiDagvergunning {
     private String notitie;
     private String status;
     private String registratieDatumtijd;
-    private List<Float> registratieGeolocatie = new ArrayList<Float>();
+    private List<Float> registratieGeolocatie = new ArrayList<>();
     private String aanmaakDatumtijd;
     private boolean doorgehaald;
 

@@ -21,7 +21,7 @@ public class ApiAccount {
     private String email;
     private String naam;
     private String username;
-    private List<String> roles = new ArrayList<String>();
+    private List<String> roles = new ArrayList<>();
 
     /**
      * @return the id

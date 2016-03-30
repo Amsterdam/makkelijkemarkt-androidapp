@@ -53,7 +53,7 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
     @Bind(R.id.producten_empty) TextView mProductenEmptyTextView;
 
     // koopman id
-    public int mKoopmanId = -1;
+    private int mKoopmanId = -1;
 
     /**
      * Constructor

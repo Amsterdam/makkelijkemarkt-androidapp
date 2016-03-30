@@ -38,11 +38,9 @@ public class DagvergunningenAdapter extends CursorAdapter {
     /**
      * Constructor
      * @param context
-     * @param cursor
-     * @param flags
      */
-    public DagvergunningenAdapter(Context context, Cursor cursor, int flags) {
-        super(context, cursor, flags);
+    public DagvergunningenAdapter(Context context) {
+        super(context, null, 0);
     }
 
     /**

@@ -27,7 +27,7 @@ public class ApiKoopman {
     private String status;
     private int perfectViewNummer;
     private String pasUid;
-    private List<ApiSollicitatie> sollicitaties = new ArrayList<ApiSollicitatie>();
+    private List<ApiSollicitatie> sollicitaties = new ArrayList<>();
 
     /**
      * @return

@@ -32,10 +32,10 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     private static final String LOG_TAG = MakkelijkeMarktProvider.class.getSimpleName();
 
     // get package name
-    public static final String mPackageName = MakkelijkeMarktProvider.class.getPackage().getName();
+    private static final String mPackageName = MakkelijkeMarktProvider.class.getPackage().getName();
 
     // create a base uri from the package name
-    public static final Uri mBaseUri = Uri.parse("content://" + mPackageName);
+    private static final Uri mBaseUri = Uri.parse("content://" + mPackageName);
 
     // table names
     public static final String mTableAccount = "account";
@@ -411,10 +411,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         }
 
         // try to insert or replace record
-        long rowId = 0;
         mDatabase.beginTransaction();
         try {
-            rowId = mDatabase.insertWithOnConflict(
+            long rowId = mDatabase.insertWithOnConflict(
                     segments.get(0),
                     null,
                     values,

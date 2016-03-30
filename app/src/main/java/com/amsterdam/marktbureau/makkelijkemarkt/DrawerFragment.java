@@ -89,7 +89,7 @@ public class DrawerFragment extends Fragment implements LoaderManager.LoaderCall
                         getString(R.string.dagvergunningen),
                         getString(R.string.notities)}));
 
-        // inititate loading the dagvergunningen from the database
+        // initiate loading the dagvergunningen from the database
         getLoaderManager().initLoader(DAGVERGUNNINGEN_LOADER, null, this);
 
         return view;

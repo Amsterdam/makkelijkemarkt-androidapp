@@ -88,7 +88,7 @@ public class ApiGetKoopmanByPasUid extends ApiCall implements Callback<ApiKoopma
 
                 // use bulkinsert to insert/update sollicitaties in db
                 if (sollicitatieValues.length > 0) {
-                    int inserted = mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
                 }
             }
 
@@ -98,7 +98,7 @@ public class ApiGetKoopmanByPasUid extends ApiCall implements Callback<ApiKoopma
                 Uri koopmanUri = mContext.getContentResolver().insert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues);
                 if (koopmanUri != null) {
 
-                    // send event to subscribers that we retrieved the koopman succesfully
+                    // send event to subscribers that we retrieved the koopman successful
                     EventBus.getDefault().post(new OnResponseEvent(response.body(), null));
                 }
             }

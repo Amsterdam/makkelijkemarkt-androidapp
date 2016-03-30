@@ -45,9 +45,9 @@ public class DagvergunningActivity extends BaseActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     /**
-     * Get markt naam from the shared prefs, set the title and subtile, and instantiate the
+     * Get markt naam from the shared prefs, set the title and subtitle, and instantiate the
      * dagvergunning fragment
-     * @param savedInstanceState the saved activity statew
+     * @param savedInstanceState the saved activity state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

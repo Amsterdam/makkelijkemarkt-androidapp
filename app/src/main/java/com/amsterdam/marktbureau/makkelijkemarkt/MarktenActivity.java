@@ -119,7 +119,7 @@ public class MarktenActivity extends AppCompatActivity {
      * Set the title in the textview of the custom toolbar layout
      * @param title string containing the title
      */
-    protected void setToolbarTitle(String title) {
+    private void setToolbarTitle(String title) {
         if (getSupportActionBar() != null) {
             mTitleView.setText(title);
         }

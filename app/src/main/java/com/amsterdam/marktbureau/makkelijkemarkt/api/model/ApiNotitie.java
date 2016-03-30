@@ -24,7 +24,7 @@ public class ApiNotitie {
     private String aangemaaktDatumtijd;
     private String afgevinktDatumtijd;
     private String verwijderdDatumtijd;
-    private List<Float> aangemaaktGeolocatie = new ArrayList<Float>();
+    private List<Float> aangemaaktGeolocatie = new ArrayList<>();
 
     /**
      *

@@ -22,10 +22,10 @@ public class ApiMarkt {
     private String naam;
     private String geoArea;
     private String soort;
-    private List<String> marktDagen = new ArrayList<String>();
+    private List<String> marktDagen = new ArrayList<>();
     private int standaardKraamAfmeting;
     private boolean extraMetersMogelijk;
-    private List<String> aanwezigeOpties = new ArrayList<String>();
+    private List<String> aanwezigeOpties = new ArrayList<>();
     private int perfectViewNummer;
 
     /**

@@ -32,7 +32,7 @@ public class AboutFragment extends Fragment {
 
     /**
      * Inflate the about_fragment layout containing the about text from strings resource
-     * @param inflater LayoutInflator
+     * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState Bundle
      * @return View

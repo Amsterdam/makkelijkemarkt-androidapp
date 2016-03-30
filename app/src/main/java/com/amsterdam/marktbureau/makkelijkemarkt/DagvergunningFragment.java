@@ -152,7 +152,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private ProgressDialog mGetSollicitatiesProcessDialog;
 
     // common toast object
-    protected Toast mToast;
+    private Toast mToast;
 
     /**
      * Constructor
@@ -517,7 +517,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     /**
      * Get koopman fragment values and update local member vars
      */
-    public void getKoopmanFragmentValues() {
+    private void getKoopmanFragmentValues() {
         if (mKoopmanFragmentReady) {
 
             // get the vaste producten for selected koopman sollicitatie
@@ -573,7 +573,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
     /**
      * Get the values from the selected koopman in the koopman fragment, and populate the view with
-     * selected values. This is called using a activity callback when a(nother) koopman is selected
+     * selected values. This is called using a activity callback when an(other) koopman is selected
      * in the koopman fragment
      */
     public void getAndSetKoopmanFragmentValues() {
@@ -587,7 +587,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private void populateProductFragment() {
         if (mProductFragmentReady) {
 
-            // get the product list for selected martk from the shared prefs
+            // get the product list for selected markt from the shared prefs
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
             String producten = settings.getString(getContext().getString(R.string.sharedpreferences_key_markt_producten), null);
             if (producten != null) {
@@ -650,7 +650,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private void getProductFragmentValues() {
         if (mProductFragmentReady) {
 
-            // get the product list for selected martk from the shared prefs
+            // get the product list for selected markt from the shared prefs
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
             String producten = settings.getString(getContext().getString(R.string.sharedpreferences_key_markt_producten), null);
             if (producten != null) {
@@ -792,7 +792,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 // show progress bar
                 mProgressbar.setVisibility(View.VISIBLE);
 
-                // TODO: disable 'opslaan' button until conceptfactuur has returned (saw in fieldtest the toezichthouder did not wait for it)
+                // TODO: disable 'opslaan' button until conceptfactuur has returned (saw in field test the toezichthouder did not wait for it)
 
                 // post the dagvergunning details to the api and retrieve a concept 'factuur'
                 ApiPostDagvergunningConcept postDagvergunningConcept = new ApiPostDagvergunningConcept(getContext());
@@ -905,7 +905,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                                         exclusiefText.setText(String.format("€ %.2f", exclusief));
                                         placeholderLayout.addView(totaalLayout, rowCount++);
 
-                                        // seperator
+                                        // separator
                                         View emptyLayout = layoutInflater.inflate(R.layout.dagvergunning_overzicht_product_item, null);
                                         placeholderLayout.addView(emptyLayout, rowCount++);
 
@@ -940,7 +940,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * Get overzicht fragment values and update local member vars
      */
     private void getOverzichtFragmentValues() {
-        if (mOverzichtFragmentReady) {}
+        if (mOverzichtFragmentReady) {
+            // nothing to get
+        }
     }
 
     /**
@@ -1066,7 +1068,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * Check if at least one product has been selected
      * @return true if a product has been selected, false if not
      */
-    public boolean isProductSelected() {
+    private boolean isProductSelected() {
         String[] productParams = getResources().getStringArray(R.array.array_product_param);
         for(String product: productParams) {
             if (mProducten.get(product) > 0) {
@@ -1080,7 +1082,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * Create a json object from the dagvergunning values
      * @return json object
      */
-    public JsonObject dagvergunningToJson() {
+    private JsonObject dagvergunningToJson() {
 
         JsonObject dagvergunningPayload = new JsonObject();
         dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer), mErkenningsnummer);
@@ -1437,7 +1439,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * tabmenu and wizardmenu to the new state
      * @param newTabPosition the new tab position
      */
-    public void switchTab(int newTabPosition) {
+    private void switchTab(int newTabPosition) {
         if (newTabPosition != mCurrentTab) {
 
             // get the possibly changed values from the currently active pager fragment before switching pages
@@ -1457,7 +1459,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
      * Set the state of the buttons of the wizard menu depending on the selected tab
      * @param tabPosition position of the tab
      */
-    public void setWizardMenu(int tabPosition) {
+    private void setWizardMenu(int tabPosition) {
 
         // button background colors
         int accentColor = ContextCompat.getColor(getContext(), R.color.accent);

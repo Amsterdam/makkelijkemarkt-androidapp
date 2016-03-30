@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment implements
     private static final String LOG_TAG = LoginFragment.class.getSimpleName();
 
     // bind layout elements
-    @Bind(R.id.account) Spinner mAcount;
+    @Bind(R.id.account) Spinner mAccount;
     @Bind(R.id.password) TextView mPassword;
     @Bind(R.id.login_button) Button mLoginButton;
     @Bind(R.id.progressbar_accounts) ProgressBar mAccountsProgressBar;
@@ -134,12 +134,12 @@ public class LoginFragment extends Fragment implements
                 0);
 
         // attach the adapter to the account spinner
-        mAcount.setAdapter(mAccountsAdapter);
+        mAccount.setAdapter(mAccountsAdapter);
 
-        // inititate loading the accounts from the database
+        // initiate loading the accounts from the database
         getLoaderManager().initLoader(ACCOUNTS_LOADER, null, this);
 
-        // disable allcaps for the button title
+        // disable all caps for the button title
         mLoginButton.setTransformationMethod(null);
 
         // create the login progress dialog
@@ -246,7 +246,7 @@ public class LoginFragment extends Fragment implements
             if (data.moveToFirst()) {
                 while (!data.isAfterLast()) {
                     if (data.getLong(data.getColumnIndex(MakkelijkeMarktProvider.Account.COL_ID)) == mSelectedAccountId) {
-                        mAcount.setSelection(data.getPosition());
+                        mAccount.setSelection(data.getPosition());
                         break;
                     }
                     data.moveToNext();

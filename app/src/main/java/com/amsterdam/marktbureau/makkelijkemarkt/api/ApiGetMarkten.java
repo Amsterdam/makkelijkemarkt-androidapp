@@ -71,7 +71,7 @@ public class ApiGetMarkten extends ApiCall {
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 okhttp3.Response response = chain.proceed(chain.request());
 
-                // if we have a successful response modifiy it
+                // if we have a successful response modify it
                 if (response.isSuccessful()) {
                     final String aanwezigeOptiesObjectName = "aanwezigeOpties";
                     try {

@@ -26,7 +26,7 @@ public class DagvergunningFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String LOG_TAG = DagvergunningFragment.class.getSimpleName();
 
     // the amount of fragments
-    int mNumOfFragments;
+    private int mNumOfFragments;
 
     // keep a local reference to the pager fragments
     private DagvergunningFragmentKoopman mKoopmanFragment;

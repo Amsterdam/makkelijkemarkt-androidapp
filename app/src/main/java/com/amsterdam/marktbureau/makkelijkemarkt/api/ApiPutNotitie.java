@@ -76,7 +76,7 @@ public class ApiPutNotitie extends ApiCall implements Callback<ApiNotitie> {
             Uri notitieUri = mContext.getContentResolver().insert(MakkelijkeMarktProvider.mUriNotitie, response.body().toContentValues());
             if (notitieUri != null) {
 
-                // send event to subscribers that the notitie updated succesfully
+                // send event to subscribers that the notitie updated successful
                 EventBus.getDefault().post(new OnResponseEvent(response.body(), null));
             }
         } else {

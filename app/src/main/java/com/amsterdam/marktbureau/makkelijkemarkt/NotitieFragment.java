@@ -50,7 +50,7 @@ public class NotitieFragment extends Fragment implements Callback<ApiNotitie> {
     private ProgressDialog mProgressDialog;
 
     // common toast object
-    protected Toast mToast;
+    private Toast mToast;
 
     /**
      * Constructor

@@ -81,11 +81,7 @@ public class Utility {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         // return true if we have networkinfo and are connected
-        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-            return true;
-        }  else {
-            return false;
-        }
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
     }
 
     /**
@@ -134,7 +130,7 @@ public class Utility {
      * @return string containing <separator> separated items
      */
     public static String listToCsv(List<String> list, String separator) {
-        List<String> rolesCopy = new ArrayList<String>(list);
+        List<String> rolesCopy = new ArrayList<>(list);
 
         StringBuilder builder = new StringBuilder();
 

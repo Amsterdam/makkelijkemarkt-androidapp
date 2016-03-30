@@ -112,7 +112,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     // TODO: melding toevoegen wanneer een koopman vandaag al een vergunning heeft op een andere dan de geselecteerde markt
 
     // common toast object
-    protected Toast mToast;
+    private Toast mToast;
 
     /**
      * Constructor
@@ -160,12 +160,12 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
         };
 
         // create the custom cursor adapter that will query for an erkenningsnummer and show an autocomplete list
-        ErkenningsnummerAdapter searchErkenningAdapter = new ErkenningsnummerAdapter(getContext(), null, 0);
+        ErkenningsnummerAdapter searchErkenningAdapter = new ErkenningsnummerAdapter(getContext());
         mErkenningsnummerEditText.setAdapter(searchErkenningAdapter);
         mErkenningsnummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
         // create the custom cursor adapter that will query for a sollicitatienummer and show an autocomplete list
-        SollicitatienummerAdapter searchSollicitatieAdapter = new SollicitatienummerAdapter(getContext(), null, 0);
+        SollicitatienummerAdapter searchSollicitatieAdapter = new SollicitatienummerAdapter(getContext());
         mSollicitatienummerEditText.setAdapter(searchSollicitatieAdapter);
         mSollicitatienummerEditText.setOnItemClickListener(autoCompleteItemClickListener);
 
@@ -326,7 +326,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
      * Show the autocomplete dropdown or a notice when the entered text is smaller then the threshold
      * @param view autocomplete textview
      */
-    public void showDropdown(AutoCompleteTextView view) {
+    private void showDropdown(AutoCompleteTextView view) {
         if (view.getText() != null && !view.getText().toString().trim().equals("") && view.getText().toString().length() >= view.getThreshold()) {
             view.showDropDown();
         } else {
@@ -401,7 +401,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 LinearLayout placeholderLayout = (LinearLayout) view.findViewById(R.id.sollicitaties_placeholder);
                 placeholderLayout.removeAllViews();
 
-                // get vaste producten for selectd markt, and add multiple markt sollicitatie views to the koopman items
+                // get vaste producten for selected markt, and add multiple markt sollicitatie views to the koopman items
                 while (!data.isAfterLast()) {
 
                     // get vaste producten for selected markt
