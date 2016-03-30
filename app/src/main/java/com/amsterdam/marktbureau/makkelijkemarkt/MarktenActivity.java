@@ -14,9 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-
 import java.util.Date;
 
 import butterknife.Bind;
@@ -49,9 +46,9 @@ public class MarktenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // crashlytics
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName(LOG_TAG));
+//        // crashlytics
+//        Answers.getInstance().logContentView(new ContentViewEvent()
+//                .putContentName(LOG_TAG));
 
         // set the base activity layout containing the toolbar
         setContentView(R.layout.markten_activity);

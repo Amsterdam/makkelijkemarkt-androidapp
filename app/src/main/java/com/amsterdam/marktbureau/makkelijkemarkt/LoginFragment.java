@@ -28,8 +28,6 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostLoginBasicId;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.LoginEvent;
 import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
@@ -291,10 +289,10 @@ public class LoginFragment extends Fragment implements
             Intent apiServiceIntent = new Intent(getContext(), MakkelijkeMarktApiService.class);
             getContext().startService(apiServiceIntent);
 
-            // crashlytics
-            Utility.crashlyticsLogUser(getContext());
-            Answers.getInstance().logLogin(new LoginEvent()
-                    .putSuccess(true));
+//            // crashlytics
+//            Utility.crashlyticsLogUser(getContext());
+//            Answers.getInstance().logLogin(new LoginEvent()
+//                    .putSuccess(true));
 
             // open the markten activity
             Intent intent = new Intent(getActivity(), MarktenActivity.class);
@@ -303,9 +301,9 @@ public class LoginFragment extends Fragment implements
         } else {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_password_invalid));
 
-            // crashlytics
-            Answers.getInstance().logLogin(new LoginEvent()
-                    .putSuccess(false));
+//            // crashlytics
+//            Answers.getInstance().logLogin(new LoginEvent()
+//                    .putSuccess(false));
         }
     }
 

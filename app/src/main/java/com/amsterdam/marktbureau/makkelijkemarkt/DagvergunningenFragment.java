@@ -23,8 +23,6 @@ import android.widget.Toast;
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.DagvergunningenAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetDagvergunningen;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,10 +84,10 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         int marktId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_markt_id), 0);
 
-        // crashlytics
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName(LOG_TAG)
-                .putContentId(String.valueOf(marktId)));
+//        // crashlytics
+//        Answers.getInstance().logContentView(new ContentViewEvent()
+//                .putContentName(LOG_TAG)
+//                .putContentId(String.valueOf(marktId)));
 
         // get the date of today for the dag param
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));

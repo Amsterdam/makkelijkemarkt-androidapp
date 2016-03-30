@@ -17,11 +17,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
-import com.crashlytics.android.Crashlytics;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * MainActivity of the application that presents the home and loginscreen
@@ -52,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // crashlytics
-        Fabric.with(this, new Crashlytics());
+//        // crashlytics
+//        Fabric.with(this, new Crashlytics());
 
         // set the used layout
         setContentView(R.layout.main_activity);
