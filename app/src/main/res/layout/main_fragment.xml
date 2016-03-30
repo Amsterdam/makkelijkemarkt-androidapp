@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:contentDescription="@string/app_logo_description"
+        android:contentDescription="@string/contentdescription_app_logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"

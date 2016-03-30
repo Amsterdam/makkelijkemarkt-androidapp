@@ -12,6 +12,7 @@
         android:layout_height="200dp"
         android:src="@drawable/scan_card"
         android:scaleType="fitCenter"
+        android:contentDescription="@string/contentdescription_scan_nfc_logo"
         />
 
     <TextView

@@ -12,6 +12,11 @@
     <string name="app_login_title">Welkom bij de Makkelijke Markt</string>
     <string name="app_login_description">Selecteer een account om verder te gaan</string>
 
+    <string name="contentdescription_koopman_photo">Koopman foto</string>
+    <string name="contentdescription_scan_nfc_logo">NFC scannen logo</string>
+    <string name="contentdescription_search_erkenningsnummer">Zoeken op registernummer</string>
+    <string name="contentdescription_search_ancienniteitnummer">Zoeken op anciënniteitnummer</string>
+
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
     <string name="notice_login_password_invalid">Wachtwoord ongeldig</string>
     <string name="notice_network_required">Internet verbinding vereist, controleer je netwerk instellingen</string>
@@ -55,7 +60,7 @@
     <string name="notice_koopman_not_selected">Geen koopman geselecteerd</string>
     <string name="notice_koopman_verwijderd">Let op: Koopman verwijderd!</string>
     <string name="notice_login_failed_connect">Geen verbinding met de server, neem contact op met de beheerder of probeer het nog een keer</string>
-    <string name="notice_markten_empty">Markten worden geladen...</string>
+    <string name="notice_markten_empty">Markten worden geladen&#8230;</string>
     <string name="notice_notitie_enter_text">Voer eerst een bericht in</string>
     <string name="notice_notitie_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
     <string name="notice_notitie_save_success">Notitie opgeslagen</string>
@@ -79,5 +84,6 @@
     <string name="notice_koopman_not_found_on_selected_markt">Geen koopman gevonden met een sollicitatie op de geselecteerde markt! Voer het complete Registernummer in om de sollicitaties op alle markten te doorzoeken</string>
     <string name="error_markets_fetch_failed">Er is iets mis gegaan bij het ophalen van de markten</string>
     <string name="drawer_permit_count_label">Uitgegeven</string>
+    <string name="drawer_permit_count_label_none">Uitgegeven: Geen</string>
 
 </resources>

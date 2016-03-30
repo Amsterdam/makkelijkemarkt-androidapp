@@ -1,7 +1,6 @@
 <resources>
 
     <string name="app_title" translatable="false">Makkelijke Markt</string>
-    <string name="app_logo_description" translatable="false">Makkelijke Markt logo</string>
     <string name="app_background_description">Market photo</string>
     <string name="app_sub_title">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
     <string name="login">Login</string>
@@ -23,9 +22,16 @@
     <string name="notitie_add">New note</string>
     <string name="notitie_edit">Edit note</string>
 
+    <string name="contentdescription_app_logo" translatable="false">Makkelijke Markt logo</string>
+    <string name="contentdescription_koopman_photo">Merchant photo</string>
+    <string name="contentdescription_scan_nfc_logo">NFC scanning logo</string>
+    <string name="contentdescription_search_erkenningsnummer">Find by registry number</string>
+    <string name="contentdescription_search_ancienniteitnummer">Find by anciënniteit number</string>
+
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_permit_count_label">Permits</string>
+    <string name="drawer_permit_count_label_none">Permits: None</string>
 
     <string name="app_login_title">Welcome to the Makkelijke Markt</string>
     <string name="app_login_description">Select an account to continue</string>
@@ -69,7 +75,7 @@
     <string name="notice_sollicitaties_loading">Please be patient, applicants for selected market are being loaded</string>
     <string name="notice_sollicitaties_empty">No applicants found for selected market</string>
     <string name="notice_dagvergunningen_empty">No permits created on selected market for today</string>
-    <string name="notice_markten_empty">Loading markets...</string>
+    <string name="notice_markten_empty">Loading markets…</string>
     <string name="notice_notities_empty">No notes created on selected market for today</string>
     <string name="notice_notitie_enter_text">Please enter a comment</string>
     <string name="notice_notitie_saving">Saving note</string>

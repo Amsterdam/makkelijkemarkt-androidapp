@@ -11,13 +11,14 @@
         android:layout_alignParentTop="true"
         >
 
-        <!-- MM icon -->
+        <!-- MM logo -->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/mm_orange_wide"
+            android:contentDescription="@string/contentdescription_app_logo"
             />
 
         <!-- Account naam -->
@@ -85,7 +86,7 @@
             android:background="?android:attr/activatedBackgroundIndicator"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
             android:textColor="@color/primary_text"
-            android:text="Uitgegeven: Geen"
+            android:text="@string/drawer_permit_count_label_none"
             />
         <View
             android:layout_width="match_parent"

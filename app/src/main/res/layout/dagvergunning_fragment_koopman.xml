@@ -53,6 +53,7 @@
                 android:layout_alignParentEnd="true"
                 style="?android:attr/buttonBarButtonStyle"
                 android:src="@drawable/ic_action_search"
+                android:contentDescription="@string/contentdescription_search_erkenningsnummer"
                 />
 
         </RelativeLayout>
@@ -98,6 +99,7 @@
                 android:layout_alignParentEnd="true"
                 style="?android:attr/buttonBarButtonStyle"
                 android:src="@drawable/ic_action_search"
+                android:contentDescription="@string/contentdescription_search_ancienniteitnummer"
                 />
 
         </RelativeLayout>

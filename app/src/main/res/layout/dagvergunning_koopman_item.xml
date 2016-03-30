@@ -14,6 +14,7 @@
         android:layout_height="100dp"
         android:scaleType="fitStart"
         android:src="@drawable/no_koopman_image"
+        android:contentDescription="@string/contentdescription_koopman_photo"
         />
 
     <RelativeLayout

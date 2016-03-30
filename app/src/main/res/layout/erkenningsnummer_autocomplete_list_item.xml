@@ -19,6 +19,7 @@
         android:scaleType="fitStart"
         android:src="@drawable/no_koopman_image"
         android:background="@android:color/white"
+        android:contentDescription="@string/contentdescription_koopman_photo"
         />
 
     <RelativeLayout
