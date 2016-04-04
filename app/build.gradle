@@ -26,8 +26,8 @@ android {
         applicationId "com.amsterdam.marktbureau.makkelijkemarkt"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 2016030105
-        versionName "1.0.0"
+        versionCode 2016040106
+        versionName "1.0.1"
     }
 
     buildTypes {
@@ -59,8 +59,9 @@ dependencies {
     // Glide for image loading and caching
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    // Google Play Services - location
+    // Google Play Services
     compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services-analytics:8.4.0'
 
     // ZXing Android Embedded
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
