@@ -289,21 +289,12 @@ public class LoginFragment extends Fragment implements
             Intent apiServiceIntent = new Intent(getContext(), MakkelijkeMarktApiService.class);
             getContext().startService(apiServiceIntent);
 
-//            // crashlytics
-//            Utility.crashlyticsLogUser(getContext());
-//            Answers.getInstance().logLogin(new LoginEvent()
-//                    .putSuccess(true));
-
             // open the markten activity
             Intent intent = new Intent(getActivity(), MarktenActivity.class);
             startActivity(intent);
 
         } else {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_password_invalid));
-
-//            // crashlytics
-//            Answers.getInstance().logLogin(new LoginEvent()
-//                    .putSuccess(false));
         }
     }
 

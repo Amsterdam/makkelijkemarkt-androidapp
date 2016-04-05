@@ -6,4 +6,4 @@
 .DS_Store
 /build
 /captures
-crashlytics.properties
+/app/src/main/res/xml/analytics_tracker_config.xml

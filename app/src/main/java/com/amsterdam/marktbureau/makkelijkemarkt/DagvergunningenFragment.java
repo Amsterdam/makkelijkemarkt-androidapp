@@ -84,11 +84,6 @@ public class DagvergunningenFragment extends Fragment implements LoaderManager.L
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         int marktId = settings.getInt(getContext().getString(R.string.sharedpreferences_key_markt_id), 0);
 
-//        // crashlytics
-//        Answers.getInstance().logContentView(new ContentViewEvent()
-//                .putContentName(LOG_TAG)
-//                .putContentId(String.valueOf(marktId)));
-
         // get the date of today for the dag param
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format_dag));
         String dag = sdf.format(new Date());

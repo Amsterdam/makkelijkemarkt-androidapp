@@ -46,10 +46,6 @@ public class MarktenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        // crashlytics
-//        Answers.getInstance().logContentView(new ContentViewEvent()
-//                .putContentName(LOG_TAG));
-
         // set the base activity layout containing the toolbar
         setContentView(R.layout.markten_activity);
 

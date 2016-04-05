@@ -173,10 +173,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         // bind the elements to the view
         ButterKnife.bind(this, view);
 
-//        // crashlytics
-//        Answers.getInstance().logContentView(new ContentViewEvent()
-//                .putContentName(LOG_TAG));
-
         // create the tabs in the tablayout
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.koopman)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.product)));

@@ -14,6 +14,12 @@ import com.google.android.gms.analytics.Tracker;
  */
 public class MakkelijkeMarktApplication extends Application {
 
+    // google analytics object
+    private static GoogleAnalytics mAnalytics;
+
+    // google analytics tracker object
+    private static Tracker mTracker;
+
     /**
      * Create the Google Analytics tracker
      */
@@ -21,18 +27,12 @@ public class MakkelijkeMarktApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+        // instantiate the google analytics object
+        GoogleAnalytics mAnalytics = GoogleAnalytics.getInstance(this);
 
-        // create tracker with our tracker id
-        Tracker tracker = analytics.newTracker("UA-75939009-1");
-
-        // provide unhandled exceptions reports
-        tracker.enableExceptionReporting(true);
-
-        // Enable automatic activity tracking for your app
-        tracker.enableAutoActivityTracking(true);
-
-        // Enable automatic activity tracking for your app
-        tracker.enableAutoActivityTracking(true);
+        // create the tracker with our tracker configuration
+        if (mTracker == null) {
+            Tracker mTracker = mAnalytics.newTracker(R.xml.analytics_tracker_config);
+        }
     }
 }

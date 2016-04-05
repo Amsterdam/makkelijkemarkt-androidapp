@@ -50,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        // crashlytics
-//        Fabric.with(this, new Crashlytics());
-
         // set the used layout
         setContentView(R.layout.main_activity);
 

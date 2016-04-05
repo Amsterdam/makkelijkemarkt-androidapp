@@ -20,7 +20,7 @@
     <!-- Optional permission for Google Analytics -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
+    <!-- Application -->
     <application
         android:name=".MakkelijkeMarktApplication"
         android:allowBackup="false"
@@ -28,15 +28,6 @@
         android:label="@string/app_title"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <meta-data
-            android:name="com.google.android.gms.analytics.globalConfigResource"
-            android:resource="@xml/analytics_global_config" />
-
 
         <!-- HOME - Home and Login activity -->
         <activity
@@ -155,8 +146,10 @@
             android:name=".api.MakkelijkeMarktApiService"
             android:exported="false" />
 
-
-
+        <!-- Google Analytics config -->
+        <meta-data
+            android:name="com.google.android.gms.analytics.globalConfigResource"
+            android:resource="@xml/analytics_global_config" />
 
         <!-- Enable background dispatching to improve delivery on non-Google Play devices -->
         <receiver
@@ -170,23 +163,6 @@
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
-
-        <!-- Enable Google Play Store Campaign reports -->
-        <receiver
-            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:enabled="true"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name="com.google.android.gms.analytics.CampaignTrackingService"
-            android:enabled="true" />
-
-
-
-
 
     </application>
 </manifest>
