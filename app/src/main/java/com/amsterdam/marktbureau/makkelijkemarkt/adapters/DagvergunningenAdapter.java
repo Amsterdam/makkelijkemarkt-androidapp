@@ -96,7 +96,7 @@ public class DagvergunningenAdapter extends CursorAdapter {
 
         // koopman foto
         Glide.with(context.getApplicationContext()).load(
-                cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
+                cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL)))
                 .error(R.drawable.no_koopman_image)
                 .into(viewHolder.koopmanFoto);
 

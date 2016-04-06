@@ -126,7 +126,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private int mKoopmanId = -1;
     private String mKoopmanVoorletters;
     private String mKoopmanAchternaam;
-    private String mKoopmanFotoMedium;
+    private String mKoopmanFoto;
     private int mSollicitatieId = -1;
     private int mSollicitatieNummer = -1;
     private String mNotitie;
@@ -340,7 +340,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mKoopmanId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID);
             mKoopmanVoorletters = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS);
             mKoopmanAchternaam = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM);
-            mKoopmanFotoMedium = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL);
+            mKoopmanFoto = savedInstanceState.getString(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL);
             mRegistratieAccountId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID);
             mRegistratieAccountNaam = savedInstanceState.getString(MakkelijkeMarktProvider.Account.COL_NAAM);
             mSollicitatieId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID);
@@ -388,7 +388,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID, mKoopmanId);
         outState.putString(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS, mKoopmanVoorletters);
         outState.putString(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM, mKoopmanAchternaam);
-        outState.putString(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL, mKoopmanFotoMedium);
+        outState.putString(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL, mKoopmanFoto);
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_ACCOUNT_ID, mRegistratieAccountId);
         outState.putString(MakkelijkeMarktProvider.Account.COL_NAAM, mRegistratieAccountNaam);
         outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_SOLLICITATIE_ID, mSollicitatieId);
@@ -1634,7 +1634,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mKoopmanId = data.getInt(data.getColumnIndex("koopman_koopman_id"));
             mKoopmanVoorletters = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS));
             mKoopmanAchternaam = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM));
-            mKoopmanFotoMedium = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL));
+            mKoopmanFoto = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL));
             mRegistratieAccountId = data.getInt(data.getColumnIndex("account_account_id"));
             mRegistratieAccountNaam = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Account.COL_NAAM));
             mSollicitatieId = data.getInt(data.getColumnIndex("sollicitatie_sollicitatie_id"));

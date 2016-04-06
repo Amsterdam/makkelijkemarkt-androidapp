@@ -380,7 +380,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
             // koopman photo
             Glide.with(getContext())
-                    .load(data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_MEDIUM_URL)))
+                    .load(data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL)))
                     .error(R.drawable.no_koopman_image)
                     .into(mKoopmanFotoImage);
 
