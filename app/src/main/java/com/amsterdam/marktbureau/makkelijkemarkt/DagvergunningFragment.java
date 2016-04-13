@@ -1353,8 +1353,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 String uid = data.getStringExtra(getString(R.string.scan_nfc_result_uid));
                 if (uid != null) {
 
-                    // lowercase the scanned uid
-                    uid = uid.toLowerCase();
+                    // uppercase the scanned uid
+                    uid = uid.toUpperCase();
+
+                    Utility.log(getContext(), LOG_TAG, "NFC UID: " + uid);
 
                     // find the koopman by querying for scanned nfc tag uid
                     Cursor koopman = getContext().getContentResolver().query(

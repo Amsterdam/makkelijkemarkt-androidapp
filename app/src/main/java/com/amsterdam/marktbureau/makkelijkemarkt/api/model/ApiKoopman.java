@@ -215,9 +215,9 @@ public class ApiKoopman {
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_STATUS, getStatus());
         koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_PERFECTVIEWNUMMER, getPerfectViewNummer());
 
-        // lowercase the nfc uid if we have one
+        // uppercase the nfc uid if we have one
         if (getPasUid() != null) {
-            koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_PAS_UID, getPasUid().toLowerCase());
+            koopmanValues.put(MakkelijkeMarktProvider.Koopman.COL_PAS_UID, getPasUid().toUpperCase());
         }
 
         // the list of sollicitaties is not added to the contentvalues object
