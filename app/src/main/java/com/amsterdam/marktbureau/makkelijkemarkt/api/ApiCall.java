@@ -5,6 +5,7 @@ package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -154,6 +155,23 @@ public class ApiCall {
                 }};
             mClientBuilder.addInterceptor(handleUnauthorizedInterceptor);
         }
+
+        // add header interceptor to create our custom x-serial-number header
+        Interceptor addDeviceSerialHeaderInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+
+                requestBuilder.addHeader(
+                        mContext.getString(R.string.makkelijkemarkt_api_x_serial_number_header_name),
+                        Build.SERIAL);
+
+                // build the request
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }};
+        mClientBuilder.addInterceptor(addDeviceSerialHeaderInterceptor);
 
         // add header interceptor to create our custom user-agent header
         Interceptor addUserAgentHeaderInterceptor = new Interceptor() {

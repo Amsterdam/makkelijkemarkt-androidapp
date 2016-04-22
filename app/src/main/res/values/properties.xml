@@ -38,6 +38,7 @@
     <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/1.1.0/</string>-->
 
     <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
+    <string name="makkelijkemarkt_api_x_serial_number_header_name" translatable="false">X-Serial-Number</string>
     <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
     <string name="makkelijkemarkt_api_authorization_header_name" translatable="false">Authorization</string>
     <string name="makkelijkemarkt_api_authorization_header_prefix" translatable="false">Bearer</string>

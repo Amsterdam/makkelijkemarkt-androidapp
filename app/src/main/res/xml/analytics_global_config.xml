@@ -2,7 +2,7 @@
 <resources>
 
     <!-- If true, hits are not send to Google Analytics, for use in development -->
-    <bool name="ga_dryRun">true</bool>
+    <bool name="ga_dryRun">false</bool>
 
     <!-- Sync interval in seconds when Google Play Services is not available -->
     <integer name="ga_dispatchPeriod">10</integer>
