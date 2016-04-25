@@ -71,6 +71,7 @@
     <string name="notice_scan_nfc_cancelled">NFC Scan geannuleerd</string>
     <string name="notice_select_koopman">Selecteer eerst een koopman</string>
     <string name="notice_select_product">Selecteer minimaal één product</string>
+    <string name="notice_wait_for_conceptfactuur">Even geduld aub, kosten dagvergunning worden berekend</string>
     <string name="notice_sollicitaties_empty">Geen sollicitaties gevonden voor geselecteerde markt</string>
     <string name="notice_sollicitaties_loading">Even geduld aub, sollicitaties voor geselecteerde markt worden geladen</string>
     <string name="notitie">Notitie</string>

@@ -140,6 +140,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private int mActiveAccountId = -1;
     private String mActiveAccountNaam;
     private String mDagToday;
+    private boolean mConceptFactuurDownloaded = false;
 
     // dagvergunning producten data
     private HashMap<String, Integer> mProducten = new HashMap<>();
@@ -788,7 +789,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 // show progress bar
                 mProgressbar.setVisibility(View.VISIBLE);
 
-                // TODO: disable 'opslaan' button until conceptfactuur has returned (saw in field test the toezichthouder did not wait for it)
+                // disable save function until we have a response from the api for a concept factuur
+                mConceptFactuurDownloaded = false;
 
                 // post the dagvergunning details to the api and retrieve a concept 'factuur'
                 ApiPostDagvergunningConcept postDagvergunningConcept = new ApiPostDagvergunningConcept(getContext());
@@ -803,6 +805,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         if (response.isSuccess() && response.body() != null) {
                             mOverzichtFragment.mProductenLinearLayout.setVisibility(View.VISIBLE);
                             mOverzichtFragment.mProductenEmptyTextView.setVisibility(View.GONE);
+
+                            // enable save function and give wizard next button background enabled color
+                            mConceptFactuurDownloaded = true;
+                            mWizardNextButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.accent));
 
                             // from the response, populate the product section of the overzicht fragment
                             View overzichtView = mOverzichtFragment.getView();
@@ -949,15 +955,20 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         // check if all required data is available, and show a toast if not
         if (mErkenningsnummer == null) {
 
-            // geen koopman geselecteerd: inform the user and select the koopman tab
+            // no koopman selected: inform the user and select the koopman tab
             switchTab(0);
             Utility.showToast(getContext(), mToast, getString(R.string.notice_select_koopman));
 
         } else if (!isProductSelected()) {
 
-            // geen product geselecteerd: inform the user and select the product tab
+            // no product selected: inform the user and select the product tab
             switchTab(1);
             Utility.showToast(getContext(), mToast, getString(R.string.notice_select_product));
+
+        } else if (!mConceptFactuurDownloaded) {
+
+            // concept factuur not yet loaded from the api
+            Utility.showToast(getContext(), mToast, getString(R.string.notice_wait_for_conceptfactuur));
 
         } else {
 
@@ -1463,6 +1474,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         int accentColor = ContextCompat.getColor(getContext(), R.color.accent);
         int whiteColor = ContextCompat.getColor(getContext(), android.R.color.white);
         int primaryDarkColor = ContextCompat.getColor(getContext(), R.color.primary_dark);
+        int primaryColor = ContextCompat.getColor(getContext(), R.color.primary);
         int redColor = ContextCompat.getColor(getContext(), R.color.dagvergunning_melding_background);
 
         // button icons
@@ -1483,7 +1495,11 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // koopman tab
             case 0:
+
+                // previous
                 if (mId == -1) {
+
+                    // new dagvergunning, so hide the delete button
                     mWizardPreviousButton.setVisibility(View.INVISIBLE);
                     mWizardPreviousButton.setBackgroundColor(whiteColor);
                     mWizardPreviousButton.setText("");
@@ -1493,6 +1509,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         mWizardPreviousButton.setCompoundDrawables(leftDrawable, null, null, null);
                     }
                 } else {
+
+                    // existing dagvergunning, so show the delete button
                     mWizardPreviousButton.setVisibility(View.VISIBLE);
                     mWizardPreviousButton.setBackgroundColor(redColor);
                     mWizardPreviousButton.setText(getString(R.string.delete));
@@ -1502,6 +1520,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                         mWizardPreviousButton.setCompoundDrawables(trashDrawable, null, null, null);
                     }
                 }
+
+                // next
                 mWizardNextButton.setVisibility(View.VISIBLE);
                 mWizardNextButton.setBackgroundColor(accentColor);
                 mWizardNextButton.setText(getString(R.string.product));
@@ -1513,6 +1533,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // product tab
             case 1:
+
+                // previous
                 mWizardPreviousButton.setVisibility(View.VISIBLE);
                 mWizardPreviousButton.setBackgroundColor(whiteColor);
                 mWizardPreviousButton.setText(getString(R.string.koopman));
@@ -1521,6 +1543,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     leftDrawable.setBounds(previousButtonLeftDrawable.getBounds());
                     mWizardPreviousButton.setCompoundDrawables(leftDrawable, null, null, null);
                 }
+
+                // next
                 mWizardNextButton.setVisibility(View.VISIBLE);
                 mWizardNextButton.setBackgroundColor(accentColor);
                 mWizardNextButton.setText(getString(R.string.overzicht));
@@ -1532,6 +1556,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
             // overzicht tab
             case 2:
+
+                // previous
                 mWizardPreviousButton.setVisibility(View.VISIBLE);
                 mWizardPreviousButton.setBackgroundColor(whiteColor);
                 mWizardPreviousButton.setText(getString(R.string.product));
@@ -1540,8 +1566,11 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     leftDrawable.setBounds(previousButtonLeftDrawable.getBounds());
                     mWizardPreviousButton.setCompoundDrawables(leftDrawable, null, null, null);
                 }
+
+                // next
                 mWizardNextButton.setVisibility(View.VISIBLE);
-                mWizardNextButton.setBackgroundColor(accentColor);
+                mWizardNextButton.setBackgroundColor(primaryColor);
+                mWizardNextButton.setTextColor(primaryDarkColor);
                 mWizardNextButton.setText(getString(R.string.save));
                 if (checkDrawable != null) {
                     checkDrawable.setBounds(nextButtonRightDrawable.getBounds());

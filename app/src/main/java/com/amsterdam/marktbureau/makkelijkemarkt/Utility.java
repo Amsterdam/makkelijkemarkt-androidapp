@@ -384,6 +384,7 @@ public class Utility {
     public static String getSerialNumber() {
         String serial = null;
 
+        // try to get the ril.serialnumber from the system properties (samsung devices only(?))
         try {
             Class<?> c = Class.forName("android.os.SystemProperties");
             Method get = c.getMethod("get", String.class, String.class);
@@ -392,6 +393,7 @@ public class Utility {
             Log.e(Utility.class.getSimpleName(), "Could not get ril.serialnumber from SystemProperties: " + e.getMessage());
         }
 
+        // if unknown use the build serial
         if (serial == null || serial.equals("unknown")) {
             serial = Build.SERIAL;
         }

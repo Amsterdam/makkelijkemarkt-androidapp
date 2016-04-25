@@ -60,6 +60,7 @@
     <string name="notice_autocomplete_minimum">Enter a query of at least 2 digits</string>
     <string name="notice_select_koopman">Select a merchant first</string>
     <string name="notice_select_product">Select a product first</string>
+    <string name="notice_wait_for_conceptfactuur">Please be patient, calculating invoice for permit</string>
     <string name="notice_dagvergunning_saving">Saving permit</string>
     <string name="notice_dagvergunning_save_failed">Failed to save the permit, please try again</string>
     <string name="notice_dagvergunning_save_success">Permit saved</string>
