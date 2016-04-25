@@ -24,6 +24,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -374,5 +375,27 @@ public class Utility {
         }
 
         return null;
+    }
+
+    /**
+     * Get the serial number of the device
+     * @return string serial number
+     */
+    public static String getSerialNumber() {
+        String serial = null;
+
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class, String.class);
+            serial = (String) get.invoke(c, "ril.serialnumber", "unknown");
+        } catch (Exception e) {
+            Log.e(Utility.class.getSimpleName(), "Could not get ril.serialnumber from SystemProperties: " + e.getMessage());
+        }
+
+        if (serial == null || serial.equals("unknown")) {
+            serial = Build.SERIAL;
+        }
+
+        return serial;
     }
 }
