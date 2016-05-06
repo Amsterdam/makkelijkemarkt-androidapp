@@ -95,11 +95,11 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 Headers headers = response.headers();
 
                 // get listsize header
-                if (headers.get("X-Api-ListSize") != null) {
+                if (headers.get(mContext.getString(R.string.makkelijkemarkt_api_x_listsize_header_name)) != null) {
                     try {
 
                         // if there is still more to fetch, increase the offset and enqueue again
-                        int totalListSize = Integer.valueOf(headers.get("X-Api-ListSize"));
+                        int totalListSize = Integer.valueOf(headers.get(mContext.getString(R.string.makkelijkemarkt_api_x_listsize_header_name)));
                         if (totalListSize > mListOffset + mListLength) {
                             mListOffset += mListLength;
 

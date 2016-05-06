@@ -11,7 +11,7 @@ android {
         applicationId "com.amsterdam.marktbureau.makkelijkemarkt"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 2016040414
+        versionCode 2016040415
         versionName "1.0.4"
     }
 
