@@ -51,7 +51,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="#80FFFFFF"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:paddingLeft="@dimen/large_margin"
         android:paddingStart="@dimen/large_margin"
         android:paddingRight="@dimen/small_margin"
