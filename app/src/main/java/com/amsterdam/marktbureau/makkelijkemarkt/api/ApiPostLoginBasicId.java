@@ -4,7 +4,6 @@
 package com.amsterdam.marktbureau.makkelijkemarkt.api;
 
 import android.content.Context;
-import android.provider.Settings;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
@@ -65,10 +64,10 @@ public class ApiPostLoginBasicId extends ApiCall {
             mPayload = new JsonObject();
         }
 
-        // add device id
-        String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        if (androidId != null && !androidId.equals("")) {
-            mPayload.addProperty(mContext.getString(R.string.makkelijkemarkt_api_login_payload_device_uuid_name), androidId);
+        // add device serialnumber
+        String deviceSerialNumber = Utility.getSerialNumber();
+        if (deviceSerialNumber != null && !deviceSerialNumber.equals("")) {
+            mPayload.addProperty(mContext.getString(R.string.makkelijkemarkt_api_login_payload_device_uuid_name), deviceSerialNumber);
         }
 
         // add client app

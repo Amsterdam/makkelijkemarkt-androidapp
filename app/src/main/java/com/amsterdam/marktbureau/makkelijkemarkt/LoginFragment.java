@@ -293,8 +293,15 @@ public class LoginFragment extends Fragment implements
             Intent intent = new Intent(getActivity(), MarktenActivity.class);
             startActivity(intent);
 
-        } else {
+        } else if (response.code() == 401) {
+
+            // wrong password
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_password_invalid));
+
+        } else if (response.code() == 423) {
+
+            // account locked
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_account_locked));
         }
     }
 

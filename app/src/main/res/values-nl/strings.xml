@@ -19,6 +19,7 @@
 
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
     <string name="notice_login_password_invalid">Wachtwoord ongeldig</string>
+    <string name="notice_login_account_locked">Teveel pogingen, neem contact op met de beheerder</string>
     <string name="notice_network_required">Internet verbinding vereist, controleer je netwerk instellingen</string>
     <string name="cancel">Annuleren</string>
     <string name="dagvergunning">Dagvergunning</string>

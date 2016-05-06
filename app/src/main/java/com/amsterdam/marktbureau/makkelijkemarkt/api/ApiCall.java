@@ -105,24 +105,6 @@ public class ApiCall {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
 
-        // add header interceptor to add the app key header
-        Interceptor addAppKeyHeaderInterceptor = new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request.Builder requestBuilder = chain.request().newBuilder();
-
-                // add appkey header
-                requestBuilder.addHeader(
-                        mContext.getString(R.string.makkelijkemarkt_api_app_key_header_name),
-                        mContext.getString(R.string.makkelijkemarkt_api_app_key));
-
-                // build the request
-                Request request = requestBuilder.build();
-
-                return chain.proceed(request);
-            }};
-        mClientBuilder.addInterceptor(addAppKeyHeaderInterceptor);
-
         // if we have an api-key
         if (apiKey != null) {
 
@@ -144,34 +126,25 @@ public class ApiCall {
                     return chain.proceed(request);
                 }};
             mClientBuilder.addInterceptor(addAuthorizationHeaderInterceptor);
-
-            // add an interceptor that will detect for a 401-Unauthorised response and send an event
-            // to be handled in the base activity
-            Interceptor handleUnauthorizedInterceptor = new Interceptor() {
-                @Override
-                public okhttp3.Response intercept(Chain chain) throws IOException {
-                    Request request = chain.request();
-                    Response response = chain.proceed(request);
-                    final int responseCode = response.code();
-
-                    // detect 401-Unauthorised http response
-                    if (responseCode == 401) {
-
-                        // get a reference to the main thread and post a runnable that will post our event
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.postAtFrontOfQueue(new Runnable() {
-                            @Override
-                            public void run() {
-                                EventBus.getDefault().post(new OnUnauthorizedEvent(
-                                        responseCode, mContext.getString(R.string.notice_api_unauthorised)));
-                            }
-                        });
-                    }
-
-                    return response;
-                }};
-            mClientBuilder.addInterceptor(handleUnauthorizedInterceptor);
         }
+
+        // add header interceptor to add the app key header
+        Interceptor addAppKeyHeaderInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+
+                // add appkey header
+                requestBuilder.addHeader(
+                        mContext.getString(R.string.makkelijkemarkt_api_app_key_header_name),
+                        mContext.getString(R.string.makkelijkemarkt_api_app_key));
+
+                // build the request
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }};
+        mClientBuilder.addInterceptor(addAppKeyHeaderInterceptor);
 
         // add header interceptor to create our custom user-agent header
         Interceptor addUserAgentHeaderInterceptor = new Interceptor() {
@@ -179,11 +152,12 @@ public class ApiCall {
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request.Builder requestBuilder = chain.request().newBuilder();
 
-                // replace User-Agent header
                 String appName = Utility.getAppName(mContext);
                 String appVersion = Utility.getAppVersion(mContext);
                 String httpUserAgent = okhttp3.internal.Version.userAgent();
                 String deviceSerialNumber = Utility.getSerialNumber();
+
+                // replace User-Agent header
                 if (appName != null && appVersion != null) {
                     requestBuilder.removeHeader(
                             mContext.getString(R.string.makkelijkemarkt_api_user_agent_header_name));
@@ -198,6 +172,33 @@ public class ApiCall {
                 return chain.proceed(request);
             }};
         mClientBuilder.addInterceptor(addUserAgentHeaderInterceptor);
+
+        // add an interceptor that will detect for an unauthorised response and send an event
+        // to be handled in the base activity
+        Interceptor handleUnauthorizedInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+                Response response = chain.proceed(request);
+
+                // detect un-successful http response
+                if (!response.isSuccessful()) {
+                    final int responseCode = response.code();
+
+                    // get a reference to the main thread and post a runnable that will post our event
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postAtFrontOfQueue(new Runnable() {
+                        @Override
+                        public void run() {
+                            EventBus.getDefault().post(new OnUnauthorizedEvent(
+                                    responseCode, mContext.getString(R.string.notice_api_unauthorised)));
+                        }
+                    });
+                }
+
+                return response;
+            }};
+        mClientBuilder.addInterceptor(handleUnauthorizedInterceptor);
 
         // build and attach okhttpclient to retrofit
         builder.client(mClientBuilder.build());
