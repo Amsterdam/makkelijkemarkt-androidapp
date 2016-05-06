@@ -105,6 +105,24 @@ public class ApiCall {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
 
+        // add header interceptor to add the app key header
+        Interceptor addAppKeyHeaderInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+
+                // add appkey header
+                requestBuilder.addHeader(
+                        mContext.getString(R.string.makkelijkemarkt_api_app_key_header_name),
+                        mContext.getString(R.string.makkelijkemarkt_api_app_key));
+
+                // build the request
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }};
+        mClientBuilder.addInterceptor(addAppKeyHeaderInterceptor);
+
         // if we have an api-key
         if (apiKey != null) {
 

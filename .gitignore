@@ -6,4 +6,5 @@
 .DS_Store
 /build
 /captures
+/app/src/main/res/values/secret.xml
 /app/src/main/res/xml/analytics_tracker_config.xml
