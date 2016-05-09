@@ -15,8 +15,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiCall;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     // bind layout elements
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.toolbar_title) TextView mToolbarTitle;
+
+    // common toast object
+    protected Toast mToast;
 
     /**
      * Set the activity layout and add a fragment to the container
@@ -202,5 +210,37 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         stopService(apiServiceIntent);
 
         super.onDestroy();
+    }
+
+    /**
+     * Handle unauthorised event received from the api call unauthorised interceptor
+     * @param event the received event
+     */
+    @Subscribe
+    public void onUnauthorizedEvent(ApiCall.OnUnauthorizedEvent event) {
+
+        // if we received an event with an error http code show an error toast
+        if (event.mCode == 403) {
+            mToast = Utility.showToast(this, mToast, event.mMessage);
+            Utility.logout(this, false);
+        }
+    }
+
+    /**
+     * On start of the activity register eventbus handlers
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop unregister eventbus handlers
+     */
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

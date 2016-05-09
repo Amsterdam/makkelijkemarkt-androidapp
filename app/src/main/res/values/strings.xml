@@ -50,10 +50,11 @@
     <string name="hint_scan_barcode">Scan the barcode of a merchant card</string>
 
     <string name="notice_login_enter_password">Please enter your password</string>
-    <string name="notice_login_password_invalid">Invalid password</string>
+    <string name="notice_login_password_invalid">Invalid account/password</string>
     <string name="notice_login_account_locked">Too many attempts, contact your system administrator</string>
     <string name="notice_login_failed_connect">Failed to connect to server, contact your system administrator</string>
     <string name="notice_api_unauthorised">Access denied, login again</string>
+    <string name="notice_api_forbidden">Access denied, contact your system administrator</string>
     <string name="notice_network_required">Network connectivity required, please check your internet connection</string>
     <string name="notice_koopman_verwijderd">Attention: Merchant has been deleted</string>
     <string name="notice_koopman_no_valid_sollicitatie">Attention: Selected merchant does not have an application for this market</string>

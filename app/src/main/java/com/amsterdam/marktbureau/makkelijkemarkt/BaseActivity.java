@@ -182,9 +182,8 @@ public class BaseActivity extends AppCompatActivity {
     @Subscribe
     public void onUnauthorizedEvent(ApiCall.OnUnauthorizedEvent event) {
 
-        // if we received an event with code 401 we need to logout the user because it means that
-        // the uuid token on the api has expired
-        if (event.mCode == 401) {
+        // if we received an event with an error http code show an error toast
+        if (event.mCode == 401 || event.mCode == 403) {
             mToast = Utility.showToast(this, mToast, event.mMessage);
             Utility.logout(this, false);
         }

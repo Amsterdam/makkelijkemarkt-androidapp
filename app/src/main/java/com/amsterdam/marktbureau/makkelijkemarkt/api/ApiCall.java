@@ -103,7 +103,7 @@ public class ApiCall {
 
         // get api-key from shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
+        final String apiKey = settings.getString(mContext.getString(R.string.sharedpreferences_key_uuid), null);
 
         // if we have an api-key
         if (apiKey != null) {
@@ -173,7 +173,7 @@ public class ApiCall {
             }};
         mClientBuilder.addInterceptor(addUserAgentHeaderInterceptor);
 
-        // add an interceptor that will detect for an unauthorised response and send an event
+        // add an interceptor that will detect for an unauthorised responses and send an event
         // to be handled in the base activity
         Interceptor handleUnauthorizedInterceptor = new Interceptor() {
             @Override
@@ -185,15 +185,35 @@ public class ApiCall {
                 if (!response.isSuccessful()) {
                     final int responseCode = response.code();
 
-                    // get a reference to the main thread and post a runnable that will post our event
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.postAtFrontOfQueue(new Runnable() {
-                        @Override
-                        public void run() {
-                            EventBus.getDefault().post(new OnUnauthorizedEvent(
-                                    responseCode, mContext.getString(R.string.notice_api_unauthorised)));
-                        }
-                    });
+                    Utility.log(mContext, LOG_TAG, "Intercepted: " + responseCode);
+
+                    // 403 Forbidden
+                    if (responseCode == 403) {
+
+                        // get a reference to the main thread and post a runnable that will post our event
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.postAtFrontOfQueue(new Runnable() {
+                            @Override
+                            public void run() {
+                                EventBus.getDefault().post(new OnUnauthorizedEvent(
+                                        responseCode, mContext.getString(R.string.notice_api_forbidden)));
+                            }
+                        });
+                    }
+
+                    // 401 Unauthorized (@todo: can still change this to only check for another http error code than 401)
+                    else if (responseCode == 401 && apiKey != null) {
+
+                        // get a reference to the main thread and post a runnable that will post our event
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.postAtFrontOfQueue(new Runnable() {
+                            @Override
+                            public void run() {
+                                EventBus.getDefault().post(new OnUnauthorizedEvent(
+                                        responseCode, mContext.getString(R.string.notice_api_unauthorised)));
+                            }
+                        });
+                    }
                 }
 
                 return response;

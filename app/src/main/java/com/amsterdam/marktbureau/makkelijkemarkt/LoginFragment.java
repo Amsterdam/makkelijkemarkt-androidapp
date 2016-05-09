@@ -295,7 +295,7 @@ public class LoginFragment extends Fragment implements
 
         } else if (response.code() == 401) {
 
-            // wrong password
+            // wrong account / password
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_login_password_invalid));
 
         } else if (response.code() == 423) {

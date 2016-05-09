@@ -297,7 +297,7 @@ public class Utility {
             });
         }
 
-        // clear all uuid and selected markt details from shared preferences
+        // clear uuid and all selected markt details from shared preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         settings.edit()
                 .remove(context.getString(R.string.sharedpreferences_key_uuid))

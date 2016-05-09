@@ -18,7 +18,7 @@
     <string name="contentdescription_search_ancienniteitnummer">Zoeken op anciënniteitnummer</string>
 
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
-    <string name="notice_login_password_invalid">Wachtwoord ongeldig</string>
+    <string name="notice_login_password_invalid">Account/wachtwoord ongeldig</string>
     <string name="notice_login_account_locked">Teveel pogingen, neem contact op met de beheerder</string>
     <string name="notice_network_required">Internet verbinding vereist, controleer je netwerk instellingen</string>
     <string name="cancel">Annuleren</string>
@@ -47,6 +47,7 @@
     <string name="length_meter">meter</string>
     <string name="markten">Markten</string>
     <string name="notice_api_unauthorised">Toegang geweigerd, log opnieuw in</string>
+    <string name="notice_api_forbidden">Toegang geweigerd, neem contact op met de beheerder</string>
     <string name="notice_autocomplete_minimum">Voer een nummer in met minimaal 2 cijfers</string>
     <string name="notice_dagvergunning_delete_confirm">Weet u zeker dat u deze dagvergunning wilt verwijderen?</string>
     <string name="notice_dagvergunning_delete_failed">Er is iets mis gegaan bij het verwijderen, probeer het nog een keer</string>
