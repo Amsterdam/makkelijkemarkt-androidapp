@@ -183,7 +183,7 @@ public class BaseActivity extends AppCompatActivity {
     public void onUnauthorizedEvent(ApiCall.OnUnauthorizedEvent event) {
 
         // if we received an event with an error http code show an error toast
-        if (event.mCode == 401 || event.mCode == 403) {
+        if (event.mCode == 403 || event.mCode == 412) {
             mToast = Utility.showToast(this, mToast, event.mMessage);
             Utility.logout(this, false);
         }

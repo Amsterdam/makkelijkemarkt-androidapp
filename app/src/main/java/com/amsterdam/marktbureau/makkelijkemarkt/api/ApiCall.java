@@ -185,9 +185,7 @@ public class ApiCall {
                 if (!response.isSuccessful()) {
                     final int responseCode = response.code();
 
-                    Utility.log(mContext, LOG_TAG, "Intercepted: " + responseCode);
-
-                    // 403 Forbidden
+                    // 403 Forbidden (invalid/missing app key)
                     if (responseCode == 403) {
 
                         // get a reference to the main thread and post a runnable that will post our event
@@ -201,8 +199,9 @@ public class ApiCall {
                         });
                     }
 
-                    // 401 Unauthorized (@todo: can still change this to only check for another http error code than 401)
-                    else if (responseCode == 401 && apiKey != null) {
+                    // 412 Precondition failed (invalid/missing authorisation token)
+                    else if (responseCode == 412) {
+//                    else if (responseCode == 412 || (responseCode == 401 && apiKey != null)) {
 
                         // get a reference to the main thread and post a runnable that will post our event
                         Handler handler = new Handler(Looper.getMainLooper());
