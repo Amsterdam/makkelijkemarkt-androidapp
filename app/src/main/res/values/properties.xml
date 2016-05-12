@@ -44,6 +44,9 @@
     <string name="makkelijkemarkt_api_x_listsize_header_name" translatable="false">X-Api-ListSize</string>
     <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
 
+    <string name="makkelijkemarkt_api_version_app_android_version_name" translatable="false">androidVersion</string>
+    <string name="makkelijkemarkt_api_version_app_android_build_name" translatable="false">androidBuild</string>
+
     <string name="makkelijkemarkt_api_login_payload_accound_id_name" translatable="false">accountId</string>
     <string name="makkelijkemarkt_api_login_payload_password_name" translatable="false">password</string>
     <string name="makkelijkemarkt_api_login_payload_device_uuid_name" translatable="false">deviceUuid</string>

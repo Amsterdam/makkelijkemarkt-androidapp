@@ -17,6 +17,10 @@
     <string name="contentdescription_search_erkenningsnummer">Zoeken op registernummer</string>
     <string name="contentdescription_search_ancienniteitnummer">Zoeken op anciënniteitnummer</string>
 
+    <string name="dialog_app_update_title">Makkelijke Markt App Update</string>
+    <string name="dialog_app_update_message">Er is een nieuwe versie van de Makkelijke Markt App beschikbaar.\n\n- Klik op \'PLAY STORE\' om de Play Store App te openen\n\n- Klik vervolgens op \'UPDATEN\' om de nieuwste versie van de Makkelijke Markt App te installeren</string>
+    <string name="dialog_app_update_button_label">Play Store</string>
+
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
     <string name="notice_login_password_invalid">Account/wachtwoord ongeldig</string>
     <string name="notice_login_account_locked">Teveel pogingen, neem contact op met de beheerder</string>

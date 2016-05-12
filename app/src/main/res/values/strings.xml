@@ -49,6 +49,10 @@
     <string name="hint_sollicitatienummer">Anciënniteit number</string>
     <string name="hint_scan_barcode">Scan the barcode of a merchant card</string>
 
+    <string name="dialog_app_update_title">Makkelijke Markt App Update</string>
+    <string name="dialog_app_update_message">There is an update available for the Makkelijke Markt App.\n\n- Click on \'PLAY STORE\' to launch the Play Store app\n\n- Then click op \'UPDATE\' to installe the latest version of the Makkelijke Markt App</string>
+    <string name="dialog_app_update_button_label">Play Store</string>
+
     <string name="notice_login_enter_password">Please enter your password</string>
     <string name="notice_login_password_invalid">Invalid account/password</string>
     <string name="notice_login_account_locked">Too many attempts, contact your system administrator</string>

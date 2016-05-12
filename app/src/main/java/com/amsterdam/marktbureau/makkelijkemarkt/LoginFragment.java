@@ -4,9 +4,12 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetVersion;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostLoginBasicId;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
@@ -98,6 +103,9 @@ public class LoginFragment extends Fragment implements
         ButterKnife.bind(this, mainView);
 
         if (savedInstanceState == null) {
+
+            // check if there is a newer build of the app available
+            checkForUpdate();
 
             // TODO: if there is no internet connection and accounts were never loaded: keep checking for an internet connection and try again
 
@@ -347,5 +355,72 @@ public class LoginFragment extends Fragment implements
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    /**
+     * Check if there is a newer build of the app available
+     */
+    private void checkForUpdate() {
+
+        // get the latest android build number from the api version call
+        ApiGetVersion getVersion = new ApiGetVersion(getContext());
+        getVersion.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response) {
+                if (response.isSuccess() && response.body() != null) {
+                    long versionCode = 0;
+                    long androidBuild = 0;
+
+                    // get androidBuild from api response
+                    try {
+                        JsonObject versionInfo = response.body().getAsJsonObject();
+                        if (versionInfo != null &&
+                                versionInfo.get(getString(R.string.makkelijkemarkt_api_version_app_android_build_name)) != null &&
+                                !versionInfo.get(getString(R.string.makkelijkemarkt_api_version_app_android_build_name)).isJsonNull()) {
+                            androidBuild = versionInfo.get(getString(R.string.makkelijkemarkt_api_version_app_android_build_name)).getAsLong();
+                        } else {
+                            Utility.log(getContext(), LOG_TAG, "androidBuild not found in VersionInfo");
+                        }
+                    } catch (IllegalStateException e) {
+                        Utility.log(getContext(), LOG_TAG, "VersionInfo not found: " + e.getMessage());
+                    }
+
+                    // get the versionCode of the currently installed app
+                    final String appPackageName = getContext().getPackageName();
+                    try {
+                        PackageInfo info = getContext().getPackageManager().getPackageInfo(appPackageName, 0);
+                        versionCode = info.versionCode;
+                    } catch (Exception e) {
+                        Utility.log(getContext(), LOG_TAG, "PackageInfo not found: " + e.getMessage());
+                    }
+
+                    // check if androidBuild is higher than current versionCode
+                    if (versionCode > 0 && androidBuild > 0 && androidBuild > versionCode) {
+
+                        // show a modal dialog with an app update notice that will open the play store app
+                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                        alert.setTitle(getString(R.string.dialog_app_update_title));
+                        alert.setMessage(getString(R.string.dialog_app_update_message));
+                        alert.setCancelable(false);
+                        alert.setPositiveButton(getString(R.string.dialog_app_update_button_label), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                // launch the play store app with the makkelijke markt app package name
+                                try {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                                } catch (android.content.ActivityNotFoundException anfe) {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                                }
+                            }
+                        });
+                        alert.show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                Utility.log(getContext(), LOG_TAG, "Failed to retrieve the version info");
+            }
+        });
     }
 }

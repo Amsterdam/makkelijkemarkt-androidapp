@@ -29,6 +29,13 @@ import retrofit2.http.Query;
 public interface MakkelijkeMarktApi {
 
     /**
+     * Get version details of the Api and Android app
+     * @return a gson object containing the version info
+     */
+    @GET("version/")
+    Call<JsonObject> getVersion();
+
+    /**
      * Get a list of accounts from the Api
      * @return a list of ApiAccount objects
      */
