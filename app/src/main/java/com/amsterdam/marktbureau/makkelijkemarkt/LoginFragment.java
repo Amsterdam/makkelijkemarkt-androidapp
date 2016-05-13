@@ -3,13 +3,12 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +56,9 @@ public class LoginFragment extends Fragment implements
 
     // use classname when logging
     private static final String LOG_TAG = LoginFragment.class.getSimpleName();
+
+    // create unique update dialog fragment instance tag
+    private static final String UPDATE_FRAGMENT_TAG = LOG_TAG + UpdateAvailableDialogFragment.class.getSimpleName() + "_TAG";
 
     // bind layout elements
     @Bind(R.id.account) Spinner mAccount;
@@ -398,22 +399,9 @@ public class LoginFragment extends Fragment implements
                     if (versionCode > 0 && androidBuild > 0 && androidBuild > versionCode) {
 
                         // show a modal dialog with an app update notice that will open the play store app
-                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                        alert.setTitle(getString(R.string.dialog_app_update_title));
-                        alert.setMessage(getString(R.string.dialog_app_update_message));
-                        alert.setCancelable(false);
-                        alert.setPositiveButton(getString(R.string.dialog_app_update_button_label), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                // launch the play store app with the makkelijke markt app package name
-                                try {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                                } catch (android.content.ActivityNotFoundException anfe) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                                }
-                            }
-                        });
-                        alert.show();
+                        DialogFragment updateFragment = UpdateAvailableDialogFragment.newInstance(appPackageName);
+                        updateFragment.setCancelable(false);
+                        updateFragment.show(getActivity().getFragmentManager(), UPDATE_FRAGMENT_TAG);
                     }
                 }
             }
