@@ -37,6 +37,9 @@ public class BaseActivity extends AppCompatActivity {
     // use classname when logging
     private static final String LOG_TAG = BaseActivity.class.getSimpleName();
 
+    // create unique update dialog fragment instance tag
+    private static final String UPDATE_FRAGMENT_TAG = LOG_TAG + UpdateAvailableDialogFragment.class.getSimpleName() + "_TAG";
+
     // bind layout elements
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.toolbar_title) TextView mTitleView;
@@ -120,6 +123,12 @@ public class BaseActivity extends AppCompatActivity {
         // log the user out
         if (id == R.id.action_logout) {
             Utility.logout(this, true);
+            return true;
+        }
+
+        // check if there is a newer build of the app available
+        if (id == R.id.action_check_update) {
+            Utility.checkForUpdate(this, UPDATE_FRAGMENT_TAG, false);
             return true;
         }
 

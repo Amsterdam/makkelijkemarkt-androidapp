@@ -10,6 +10,13 @@
         app:showAsAction="never"
         />
 
+    <!-- Check for update -->
+    <item
+        android:id="@+id/action_check_update"
+        android:title="@string/check_update"
+        app:showAsAction="never"
+        />
+
     <!-- About -->
     <item
         android:id="@+id/action_about"

@@ -3,6 +3,7 @@
 
     <string name="login">Inloggen</string>
     <string name="logout">Uitloggen</string>
+    <string name="check_update">App updaten</string>
     <string name="about">About</string>
 
     <string name="app_background_description">Markt foto</string>
@@ -20,6 +21,7 @@
     <string name="dialog_app_update_title">Update beschikbaar</string>
     <string name="dialog_app_update_message">Er is een nieuwe versie van de Makkelijke Markt App beschikbaar.\n\n- Klik op \'PLAY STORE\' om de Play Store App te openen\n\n- Klik vervolgens op \'UPDATEN\' om de nieuwste versie van de Makkelijke Markt App te installeren</string>
     <string name="dialog_app_update_button_label">Play Store</string>
+    <string name="dialog_app_update_not_available">Geen update beschikbaar, u beschikt al over de meest recente versie!</string>
 
     <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
     <string name="notice_login_password_invalid">Account/wachtwoord ongeldig</string>

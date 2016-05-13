@@ -5,6 +5,7 @@
     <string name="app_sub_title">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="check_update">Update App</string>
     <string name="about">About</string>
     <string name="markten">Markets</string>
     <string name="dagvergunningen">Permits</string>
@@ -50,8 +51,9 @@
     <string name="hint_scan_barcode">Scan the barcode of a merchant card</string>
 
     <string name="dialog_app_update_title">Update available</string>
-    <string name="dialog_app_update_message">There is an update available for the Makkelijke Markt App.\n\n- Click on \'PLAY STORE\' to launch the Play Store app\n\n- Then click op \'UPDATE\' to installe the latest version of the Makkelijke Markt App</string>
+    <string name="dialog_app_update_message">There is an update available for the Makkelijke Markt App.\n\n- Click on \'PLAY STORE\' to launch the Play Store app\n\n- Then click on \'UPDATE\' to install the latest version of the Makkelijke Markt App</string>
     <string name="dialog_app_update_button_label">Play Store</string>
+    <string name="dialog_app_update_not_available">No update available, you\'re already using the latest version!</string>
 
     <string name="notice_login_enter_password">Please enter your password</string>
     <string name="notice_login_password_invalid">Invalid account/password</string>

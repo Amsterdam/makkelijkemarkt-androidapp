@@ -4,6 +4,7 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +22,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetLogout;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetVersion;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
+import com.google.gson.JsonObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -399,5 +402,61 @@ public class Utility {
         }
 
         return serial;
+    }
+
+    /**
+     * Check if there is a newer build of the app available
+     */
+    public static void checkForUpdate(final Activity activity, final String fragmentTag, final boolean silent) {
+
+        // get the latest android build number from the api version call
+        ApiGetVersion getVersion = new ApiGetVersion(activity);
+        getVersion.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response) {
+                if (response.isSuccess() && response.body() != null) {
+                    long versionCode = 0;
+                    long androidBuild = 0;
+
+                    // get androidBuild from api response
+                    try {
+                        JsonObject versionInfo = response.body().getAsJsonObject();
+                        if (versionInfo != null &&
+                                versionInfo.get(activity.getString(R.string.makkelijkemarkt_api_version_app_android_build_name)) != null &&
+                                !versionInfo.get(activity.getString(R.string.makkelijkemarkt_api_version_app_android_build_name)).isJsonNull()) {
+                            androidBuild = versionInfo.get(activity.getString(R.string.makkelijkemarkt_api_version_app_android_build_name)).getAsLong();
+                        } else {
+                            Log.e(Utility.class.getSimpleName(), "androidBuild not found in VersionInfo");
+                        }
+                    } catch (IllegalStateException e) {
+                        Log.e(Utility.class.getSimpleName(), "VersionInfo not found: " + e.getMessage());
+                    }
+
+                    // get the versionCode of the currently installed app
+                    final String appPackageName = activity.getPackageName();
+                    try {
+                        PackageInfo info = activity.getPackageManager().getPackageInfo(appPackageName, 0);
+                        versionCode = info.versionCode;
+                    } catch (Exception e) {
+                        Log.e(Utility.class.getSimpleName(), "PackageInfo not found: " + e.getMessage());
+                    }
+
+                    // check if androidBuild is higher than current versionCode
+                    if (versionCode > 0 && androidBuild > 0 && androidBuild > versionCode) {
+
+                        // show a modal dialog with an app update notice that will open the play store app
+                        DialogFragment updateFragment = UpdateAvailableDialogFragment.newInstance(appPackageName);
+                        updateFragment.setCancelable(false);
+                        updateFragment.show(activity.getFragmentManager(), fragmentTag);
+                    } else if (!silent) {
+                        showToast(activity, new Toast(activity), activity.getString(R.string.dialog_app_update_not_available));
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e(Utility.class.getSimpleName(), "Failed to retrieve the version info");
+            }
+        });
     }
 }

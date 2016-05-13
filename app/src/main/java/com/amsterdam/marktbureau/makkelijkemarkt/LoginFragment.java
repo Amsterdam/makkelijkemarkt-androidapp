@@ -3,11 +3,9 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetAccounts;
-import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetVersion;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostLoginBasicId;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.MakkelijkeMarktApiService;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
@@ -106,7 +103,7 @@ public class LoginFragment extends Fragment implements
         if (savedInstanceState == null) {
 
             // check if there is a newer build of the app available
-            checkForUpdate();
+            Utility.checkForUpdate(getActivity(), UPDATE_FRAGMENT_TAG, true);
 
             // TODO: if there is no internet connection and accounts were never loaded: keep checking for an internet connection and try again
 
@@ -315,8 +312,8 @@ public class LoginFragment extends Fragment implements
     }
 
     /**
-     *
-     * @param t
+     * On failure of the Api login pos request
+     * @param t error
      */
     @Override
     public void onFailure(Throwable t) {
@@ -356,59 +353,5 @@ public class LoginFragment extends Fragment implements
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    /**
-     * Check if there is a newer build of the app available
-     */
-    private void checkForUpdate() {
-
-        // get the latest android build number from the api version call
-        ApiGetVersion getVersion = new ApiGetVersion(getContext());
-        getVersion.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Response<JsonObject> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    long versionCode = 0;
-                    long androidBuild = 0;
-
-                    // get androidBuild from api response
-                    try {
-                        JsonObject versionInfo = response.body().getAsJsonObject();
-                        if (versionInfo != null &&
-                                versionInfo.get(getString(R.string.makkelijkemarkt_api_version_app_android_build_name)) != null &&
-                                !versionInfo.get(getString(R.string.makkelijkemarkt_api_version_app_android_build_name)).isJsonNull()) {
-                            androidBuild = versionInfo.get(getString(R.string.makkelijkemarkt_api_version_app_android_build_name)).getAsLong();
-                        } else {
-                            Utility.log(getContext(), LOG_TAG, "androidBuild not found in VersionInfo");
-                        }
-                    } catch (IllegalStateException e) {
-                        Utility.log(getContext(), LOG_TAG, "VersionInfo not found: " + e.getMessage());
-                    }
-
-                    // get the versionCode of the currently installed app
-                    final String appPackageName = getContext().getPackageName();
-                    try {
-                        PackageInfo info = getContext().getPackageManager().getPackageInfo(appPackageName, 0);
-                        versionCode = info.versionCode;
-                    } catch (Exception e) {
-                        Utility.log(getContext(), LOG_TAG, "PackageInfo not found: " + e.getMessage());
-                    }
-
-                    // check if androidBuild is higher than current versionCode
-                    if (versionCode > 0 && androidBuild > 0 && androidBuild > versionCode) {
-
-                        // show a modal dialog with an app update notice that will open the play store app
-                        DialogFragment updateFragment = UpdateAvailableDialogFragment.newInstance(appPackageName);
-                        updateFragment.setCancelable(false);
-                        updateFragment.show(getActivity().getFragmentManager(), UPDATE_FRAGMENT_TAG);
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Throwable t) {
-                Utility.log(getContext(), LOG_TAG, "Failed to retrieve the version info");
-            }
-        });
     }
 }

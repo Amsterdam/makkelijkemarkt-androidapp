@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     // use classname when logging
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    // create unique update dialog fragment instance tag
+    private static final String UPDATE_FRAGMENT_TAG = LOG_TAG + UpdateAvailableDialogFragment.class.getSimpleName() + "_TAG";
+
     // the main and login fragments
     private MainFragment mMainFragment;
     private LoginFragment mLoginFragment;
@@ -155,6 +158,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         // open the about activity
         if (id == R.id.action_about) {
             startActivity(new Intent(this, AboutPublicActivity.class));
+            return true;
+        }
+
+        // check if there is a newer build of the app available
+        if (id == R.id.action_check_update) {
+            Utility.checkForUpdate(this, UPDATE_FRAGMENT_TAG, false);
             return true;
         }
 
