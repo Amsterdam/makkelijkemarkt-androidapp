@@ -41,6 +41,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public static final String mTableAccount = "account";
     public static final String mTableMarkt = "markt";
     public static final String mTableKoopman = "koopman";
+    public static final String mTableVervanger = "vervanger";
     public static final String mTableDagvergunning = "dagvergunning";
     public static final String mTableNotitie = "notitie";
     public static final String mTableSollicitatie = "sollicitatie";
@@ -49,6 +50,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     public static Uri mUriAccount = mBaseUri.buildUpon().appendPath(mTableAccount).build();
     public static Uri mUriMarkt = mBaseUri.buildUpon().appendPath(mTableMarkt).build();
     public static Uri mUriKoopman = mBaseUri.buildUpon().appendPath(mTableKoopman).build();
+    public static Uri mUriVervanger = mBaseUri.buildUpon().appendPath(mTableVervanger).build();
     public static Uri mUriDagvergunning = mBaseUri.buildUpon().appendPath(mTableDagvergunning).build();
     public static Uri mUriNotitie = mBaseUri.buildUpon().appendPath(mTableNotitie).build();
     public static Uri mUriSollicitatie = mBaseUri.buildUpon().appendPath(mTableSollicitatie).build();
@@ -78,7 +80,7 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
      */
     @Override
     protected int getSchemaVersion() {
-        return 1;
+        return 2;
     }
 
     /**
@@ -178,6 +180,25 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     }
 
     /**
+     * /vervanger - Vervanger table columns definition
+     */
+    @Table(value = mTableVervanger, since = 2)
+    public class Vervanger {
+
+        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
+        public static final String COL_ID = "_id";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_KOOPMAN_ID = "koopman_id";
+
+        @Column(Column.FieldType.INTEGER)
+        public static final String COL_VERVANGER_ID = "vervanger_id";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_PAS_UID = "pas_uid";
+    }
+
+    /**
      * /sollicitatie - Sollicitatie table columns definition
      */
     @Table(mTableSollicitatie)
@@ -257,6 +278,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_SOLLICITATIE_ID = "sollicitatie_id";
+
+        @Column(value = Column.FieldType.INTEGER, since = 2)
+        public static final String COL_VERVANGER_ID = "vervanger_id";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_REGISTRATIE_ACCOUNT_ID = "registratie_account_id";

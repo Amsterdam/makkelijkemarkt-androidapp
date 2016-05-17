@@ -51,6 +51,7 @@ public class ApiDagvergunning {
     private ApiAccount registratieAccount;
     private ApiMarkt markt;
     private ApiKoopman koopman;
+    private ApiKoopman vervanger;
     private ApiSollicitatie sollicitatie;
 
     /**
@@ -476,6 +477,20 @@ public class ApiDagvergunning {
     /**
      * @return
      */
+    public ApiKoopman getVervanger() {
+        return vervanger;
+    }
+
+    /**
+     * @param vervanger
+     */
+    public void setVervanger(ApiKoopman vervanger) {
+        this.vervanger = vervanger;
+    }
+
+    /**
+     * @return
+     */
     public ApiAccount getRegistratieAccount() {
         return registratieAccount;
     }
@@ -568,6 +583,10 @@ public class ApiDagvergunning {
 
         if (getKoopman() != null) {
             dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_KOOPMAN_ID, getKoopman().getId());
+        }
+
+        if (getVervanger() != null) {
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ID, getVervanger().getId());
         }
 
         if (getSollicitatie() != null) {

@@ -5,7 +5,7 @@
     <string name="app_sub_title">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
-    <string name="check_update">Update App</string>
+    <string name="check_update">Check for updates&#8230;</string>
     <string name="about">About</string>
     <string name="markten">Markets</string>
     <string name="dagvergunningen">Permits</string>
@@ -82,7 +82,9 @@
     <string name="notice_producten_not_selected">No product selected</string>
     <string name="notice_scan_nfc_cancelled">NFC scan cancelled</string>
     <string name="notice_sollicitaties_loading">Please be patient, applicants for selected market are being loaded</string>
+    <string name="notice_vervangers_loading">Please be patient, replacement merchants are being loaded</string>
     <string name="notice_sollicitaties_empty">No applicants found for selected market</string>
+    <string name="notice_koopmannen_empty">No merchants found for selected status</string>
     <string name="notice_dagvergunningen_empty">No permits created on selected market for today</string>
     <string name="notice_markten_empty">Loading markets…</string>
     <string name="notice_notities_empty">No notes created on selected market for today</string>
@@ -95,6 +97,7 @@
     <string name="error_markets_fetch_failed">Something went wrong while fetching the markets</string>
     <string name="error_accounts_fetch_failed">Something went wrong while fetching the accounts</string>
     <string name="error_sollicitaties_fetch_failed">Something went wrong while fetching the applicants</string>
+    <string name="error_vervangers_fetch_failed">Something went wrong while fetching the replacement merchants</string>
     <string name="error_koopman_fetch_failed">Something went wrong while fetching the merchant</string>
     <string name="error_notities_fetch_failed">Something went wrong while fetching the notes</string>
     <string name="error_notitie_update_failed">Something went wrong while fetching the note</string>

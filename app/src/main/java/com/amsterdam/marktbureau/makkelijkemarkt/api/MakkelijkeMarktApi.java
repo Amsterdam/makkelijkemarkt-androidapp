@@ -106,6 +106,16 @@ public interface MakkelijkeMarktApi {
     Call<JsonObject> postDagvergunningConcept(@Body JsonObject dagvergunning);
 
     /**
+     * Get a list of koopmannen for a given status from the Api
+     * @param status the status of the koopman
+     * @param listOffset the offset of from which position we want to query the total list
+     * @param listLength the length of the response list
+     * @return a list of ApiKoopman objects
+     */
+    @GET("koopman/")
+    Call<List<ApiKoopman>> getKoopmannen(@Query("status") String status, @Query("listOffset") String listOffset, @Query("listLength") String listLength);
+
+    /**
      * Get a koopman object, including sollicitaties, from the api
      * @param erkenningsnummer the erkenningsnummer as a path segment parameter
      * @return an ApiKoopman object

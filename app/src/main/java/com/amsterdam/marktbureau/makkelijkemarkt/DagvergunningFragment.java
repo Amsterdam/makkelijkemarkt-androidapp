@@ -39,6 +39,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiDeleteDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopmanByErkenningsnummer;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopmanByPasUid;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetSollicitaties;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiGetKoopmannen;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunning;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPostDagvergunningConcept;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.ApiPutDagvergunning;
@@ -152,6 +153,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     // progress dialog for during retrieving sollicitaties
     private ProgressDialog mGetSollicitatiesProcessDialog;
 
+    // progress dialog for during retrieving vervangers
+    private ProgressDialog mGetVervangersProcessDialog;
+
     // common toast object
     private Toast mToast;
 
@@ -208,6 +212,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mGetSollicitatiesProcessDialog.setIndeterminateDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progressbar_circle));
         mGetSollicitatiesProcessDialog.setMessage(getString(R.string.notice_sollicitaties_loading) + "...");
         mGetSollicitatiesProcessDialog.setCancelable(false);
+
+        // create progress dialog for loading the vervangers
+        mGetVervangersProcessDialog = new ProgressDialog(getContext());
+        mGetVervangersProcessDialog.setIndeterminate(true);
+        mGetVervangersProcessDialog.setIndeterminateDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progressbar_circle));
+        mGetVervangersProcessDialog.setMessage(getString(R.string.notice_vervangers_loading) + "...");
+        mGetVervangersProcessDialog.setCancelable(false);
 
         // create new viewpager fragments or restore them from saved state
         if (savedInstanceState == null) {
@@ -1702,6 +1713,36 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     }
 
     /**
+     * Download koopmannen with status = 3 (Vervanger) from the Api and log in shared preferences
+     */
+    private void getVervangers() {
+
+        // get koopmannen with status = 3 (vervanger)
+        final int koopmanStatusVervanger = 3;
+
+        // get settings from the shared preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        // check time in hours since last fetched the vervangers
+        long diffInHours = getResources().getInteger(R.integer.makkelijkemarkt_api_vervangers_fetch_interval_hours);
+        if (settings.contains(getContext().getString(R.string.sharedpreferences_key_koopmannen_last_fetched) + koopmanStatusVervanger)) {
+            long lastFetchTimestamp = settings.getLong(getContext().getString(R.string.sharedpreferences_key_koopmannen_last_fetched) + koopmanStatusVervanger, 0);
+            long differenceMs  = new Date().getTime() - lastFetchTimestamp;
+            diffInHours = TimeUnit.MILLISECONDS.toHours(differenceMs);
+        }
+
+        // if last vervangers fetched more than 12 hours ago, fetch them again
+        if (diffInHours >= getResources().getInteger(R.integer.makkelijkemarkt_api_vervangers_fetch_interval_hours)) {
+
+            // show progress dialog
+            mGetVervangersProcessDialog.show();
+            ApiGetKoopmannen getKoopmannen = new ApiGetKoopmannen(getContext());
+            getKoopmannen.setStatus(koopmanStatusVervanger);
+            getKoopmannen.enqueue();
+        }
+    }
+
+    /**
      * Handle response event from api get koopman request onresponse method to update our ui
      * @param event the received event
      */
@@ -1728,6 +1769,24 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         mGetSollicitatiesProcessDialog.dismiss();
         if (event.mSollicitatiesCount == -1) {
             mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_sollicitaties_fetch_failed) + ": " + event.mMessage);
+        } else {
+
+            // download vervangers
+            getVervangers();
+        }
+    }
+
+    /**
+     * Handle response event from api get koopmannen request completed to update our ui
+     * @param event the received event
+     */
+    @Subscribe
+    public void onGetKoopmannenCompletedEvent(ApiGetKoopmannen.OnCompletedEvent event) {
+
+        // hide progress dialog
+        mGetVervangersProcessDialog.dismiss();
+        if (event.mKoopmannenCount == -1) {
+            mToast = Utility.showToast(getContext(), mToast, getString(R.string.error_vervangers_fetch_failed) + ": " + event.mMessage);
         }
     }
 
