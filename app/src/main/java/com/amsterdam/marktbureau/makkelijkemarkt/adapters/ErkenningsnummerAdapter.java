@@ -137,10 +137,14 @@ public class ErkenningsnummerAdapter extends CursorAdapter implements Filterable
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_FOTO_URL,
                         MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS
                 },
-                MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID + " = ? AND " +
-                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " LIKE ? ",
+                "(" + MakkelijkeMarktProvider.mTableSollicitatie + "." + MakkelijkeMarktProvider.Sollicitatie.COL_MARKT_ID + " = ? AND " +
+                        MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " LIKE ? ) OR " +
+                "(" + MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS + " = ? AND " +
+                        MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER + " LIKE ? )",
                 new String[] {
                         String.valueOf(mMarktId),
+                        "%" + erkenningsnummer + "%",
+                        "Vervanger",
                         "%" + erkenningsnummer + "%"
                 },
                 MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS + " ASC, " +

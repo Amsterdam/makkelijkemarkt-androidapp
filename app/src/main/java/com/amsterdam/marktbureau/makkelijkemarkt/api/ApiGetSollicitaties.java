@@ -133,7 +133,7 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 // contentprovider bulkinsert method
                 ContentValues[] sollicitatieValues = new ContentValues[response.body().size()];
                 ContentValues[] koopmanValues = new ContentValues[response.body().size()];
-                ArrayList<ContentValues> vervangerList = new ArrayList<ContentValues>();
+                ArrayList<ContentValues> vervangerList = new ArrayList<>();
                 for (int i = 0; i < response.body().size(); i++) {
                     ApiSollicitatie sollicitatie = response.body().get(i);
 

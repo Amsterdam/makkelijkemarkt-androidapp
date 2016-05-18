@@ -497,8 +497,11 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             // hide progressbar
             ((Callback) getActivity()).setProgressbarVisibility(View.GONE);
 
-            // if a koopman is found, and it is not a vervanger, select it, otherwise show an error
-            if (event.mKoopman != null && !event.mKoopman.getStatus().equals("Vervanger")) {
+            // select the found koopman, or show an error if nothing found
+            if (event.mKoopman != null) {
+
+                // FIXME: 18/05/16 if status=vervanger, show koopman selection dialog
+
                 selectKoopman(event.mKoopman.getId(), KOOPMAN_SELECTION_METHOD_HANDMATIG);
             } else {
                 mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_koopman_not_found));
