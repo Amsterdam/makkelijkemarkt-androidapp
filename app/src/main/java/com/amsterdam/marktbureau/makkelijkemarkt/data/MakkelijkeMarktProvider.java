@@ -185,17 +185,14 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     @Table(value = mTableVervanger, since = 2)
     public class Vervanger {
 
-        @Column(value = Column.FieldType.INTEGER, primaryKey = true)
-        public static final String COL_ID = "_id";
+        @Column(value = Column.FieldType.TEXT, primaryKey = true)
+        public static final String COL_PAS_UID = "pas_uid";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KOOPMAN_ID = "koopman_id";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_VERVANGER_ID = "vervanger_id";
-
-        @Column(Column.FieldType.TEXT)
-        public static final String COL_PAS_UID = "pas_uid";
     }
 
     /**

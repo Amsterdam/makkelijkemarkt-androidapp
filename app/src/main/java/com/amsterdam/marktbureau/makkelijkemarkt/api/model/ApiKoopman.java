@@ -28,6 +28,7 @@ public class ApiKoopman {
     private int perfectViewNummer;
     private String pasUid;
     private List<ApiSollicitatie> sollicitaties = new ArrayList<>();
+    private List<ApiVervanger> vervangers = new ArrayList<>();
 
     /**
      * @return
@@ -198,6 +199,20 @@ public class ApiKoopman {
     }
 
     /**
+     * @return
+     */
+    public List<ApiVervanger> getVervangers() {
+        return vervangers;
+    }
+
+    /**
+     * @param vervangers
+     */
+    public void setVervangers(List<ApiVervanger> vervangers) {
+        this.vervangers = vervangers;
+    }
+
+    /**
      * Convert object to type contentvalues
      * @return contentvalues object containing the objects name value pairs
      */
@@ -221,6 +236,7 @@ public class ApiKoopman {
         }
 
         // the list of sollicitaties is not added to the contentvalues object
+        // the list of vervangers is not added to the contentvalues object
 
         return koopmanValues;
     }

@@ -12,10 +12,12 @@ import com.amsterdam.marktbureau.makkelijkemarkt.R;
 import com.amsterdam.marktbureau.makkelijkemarkt.Utility;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiKoopman;
 import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiSollicitatie;
+import com.amsterdam.marktbureau.makkelijkemarkt.api.model.ApiVervanger;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -131,22 +133,46 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                 // contentprovider bulkinsert method
                 ContentValues[] sollicitatieValues = new ContentValues[response.body().size()];
                 ContentValues[] koopmanValues = new ContentValues[response.body().size()];
+                ArrayList<ContentValues> vervangerList = new ArrayList<ContentValues>();
                 for (int i = 0; i < response.body().size(); i++) {
                     ApiSollicitatie sollicitatie = response.body().get(i);
+
+                    // get koopman
                     ApiKoopman koopman = sollicitatie.getKoopman();
                     koopmanValues[i] = koopman.toContentValues();
+
+                    // get sollicitatie
                     sollicitatie.setKoopmanId(koopman.getId());
                     sollicitatieValues[i] = sollicitatie.toContentValues();
+
+                    // get vervangers
+                    if (koopman.getVervangers() != null && koopman.getVervangers().size() > 0) {
+                        for (int j = 0; j < koopman.getVervangers().size(); j++) {
+                            ApiVervanger vervanger = koopman.getVervangers().get(j);
+                            if (!vervanger.getPasUid().equals("") && vervanger.getVervangerId() != 0) {
+                                vervanger.setKoopmanId(koopman.getId());
+                                vervangerList.add(vervanger.toContentValues());
+                            }
+                        }
+                    }
                 }
 
                 // insert downloaded sollicitaties into db
                 if (sollicitatieValues.length > 0) {
-                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie, sollicitatieValues);
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriSollicitatie,
+                            sollicitatieValues);
                 }
 
                 // insert downloaded koopmannen into db
                 if (koopmanValues.length > 0) {
-                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriKoopman, koopmanValues);
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriKoopman,
+                            koopmanValues);
+                }
+
+                // insert downloaded vervangers into db
+                if (vervangerList.size() > 0) {
+                    mContext.getContentResolver().bulkInsert(MakkelijkeMarktProvider.mUriVervanger,
+                            vervangerList.toArray(new ContentValues[vervangerList.size()]));
                 }
             } else {
 
