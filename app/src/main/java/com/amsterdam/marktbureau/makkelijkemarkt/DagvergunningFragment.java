@@ -1368,7 +1368,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 }
             }
         } else if (requestCode == NFC_SCAN_REQUEST_CODE) {
-            // from the nfc scan activity
+            // from the nfc scan activity:
 
             if (resultCode == Activity.RESULT_OK) {
 

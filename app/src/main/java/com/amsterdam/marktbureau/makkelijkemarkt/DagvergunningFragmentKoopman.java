@@ -4,6 +4,7 @@
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -61,9 +62,16 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     // unique id for the koopman loader
     private static final int KOOPMAN_LOADER = 5;
 
+    // koopman selection methods
     public static final String KOOPMAN_SELECTION_METHOD_HANDMATIG = "handmatig";
     public static final String KOOPMAN_SELECTION_METHOD_SCAN_BARCODE = "scan-barcode";
     public static final String KOOPMAN_SELECTION_METHOD_SCAN_NFC = "scan-nfc";
+
+    // intent bundle extra koopmanid name
+    public static final String VERVANGER_INTENT_EXTRA_VERVANGER_ID = "koopmanId";
+
+    // unique id to recognize the callback when receiving the result from the vervanger dialog
+    private static final int VERVANGER_DIALOG_REQUEST_CODE = 0x00006666;
 
     // bind layout elements
     @Bind(R.id.erkenningsnummer_layout) RelativeLayout mErkenningsnummerLayout;
@@ -304,9 +312,38 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
      * @param koopmanId id of the koopman
      */
     public void setKoopman(int koopmanId, int dagvergunningId) {
-        mKoopmanId = koopmanId;
-        mDagvergunningId = dagvergunningId;
-        getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
+
+        // load selected koopman to get the status
+        Cursor koopman = getContext().getContentResolver().query(
+                MakkelijkeMarktProvider.mUriKoopman,
+                null,
+                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? AND " +
+                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_STATUS + " = ? ",
+                new String[] {
+                        String.valueOf(koopmanId),
+                        "Vervanger"
+                },
+                null);
+        if (koopman != null) {
+
+            // check if koopman is a vervanger
+            if (koopman.getCount() == 1 && koopman.moveToFirst()) {
+
+                // if so, open dialogfragment containing a list of koopmannen that vervanger kan work for
+                Intent intent = new Intent(getActivity(), VervangerDialogActivity.class);
+                intent.putExtra(VERVANGER_INTENT_EXTRA_VERVANGER_ID, koopmanId);
+                startActivityForResult(intent, VERVANGER_DIALOG_REQUEST_CODE);
+
+            } else {
+
+                // else, set the koopman
+                mKoopmanId = koopmanId;
+                mDagvergunningId = dagvergunningId;
+                getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
+            }
+
+            koopman.close();
+        }
     }
 
     /**
@@ -499,9 +536,6 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
             // select the found koopman, or show an error if nothing found
             if (event.mKoopman != null) {
-
-                // FIXME: 18/05/16 if status=vervanger, show koopman selection dialog
-
                 selectKoopman(event.mKoopman.getId(), KOOPMAN_SELECTION_METHOD_HANDMATIG);
             } else {
                 mToast = Utility.showToast(getContext(), mToast, getString(R.string.notice_koopman_not_found));

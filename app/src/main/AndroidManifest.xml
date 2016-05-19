@@ -75,6 +75,17 @@
                 android:value=".DagvergunningenActivity" />
         </activity>
 
+        <!-- VERVANGER DIALOG Activity -->
+        <activity
+            android:name=".VervangerDialogActivity"
+            android:theme="@style/AppDialogTheme"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DagvergunningActivity"
+                />
+        </activity>
+
         <!-- NOTITIES Activity-->
         <activity
             android:name=".NotitiesActivity"
