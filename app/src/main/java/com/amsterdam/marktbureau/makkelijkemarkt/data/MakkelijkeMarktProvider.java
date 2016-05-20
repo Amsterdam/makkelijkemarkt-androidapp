@@ -64,6 +64,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
             mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbyerkenningsnummer").build();
     public static Uri mUriKoopmanJoinedGroupBySollicitatienummer =
             mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedgroupbysollicitatienummer").build();
+    public static Uri mUriVervangerJoined =
+            mBaseUri.buildUpon().appendPath(mTableKoopman + "joinedvervanger").build();
 
     /**
      * Get the content provider authority name
@@ -547,6 +549,12 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
             cursor = queryKoopmanJoined(uri, projection, selection, selectionArgs, sortOrder, Sollicitatie.COL_SOLLICITATIE_NUMMER);
             notificationUri = MakkelijkeMarktProvider.mUriKoopman;
 
+        } else if (uri.getPath().equals(mUriVervangerJoined.getPath())) {
+
+            // query the vervanger table joined with the koopman table
+            cursor = queryVervangerJoined(uri, projection, selection, selectionArgs, sortOrder, null);
+            notificationUri = MakkelijkeMarktProvider.mUriKoopman;
+
         } else {
 
             // call the default query method of the super class
@@ -674,6 +682,44 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
 
         // and run the query with the given arguments
         return koopmanJoinedQueryBuilder.query(mDatabase,
+                projection,
+                selection,
+                selectionArgs,
+                groupBy,
+                null,
+                sortOrder);
+    }
+
+    /**
+     * Query the vervanger table joined with the koopman table
+     * @return a cursor containing the koopman resultset
+     */
+    private Cursor queryVervangerJoined(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, String groupBy) {
+        SQLiteQueryBuilder vervangerJoinedQueryBuilder = new SQLiteQueryBuilder();
+
+        String tables = mTableKoopman +
+                " LEFT JOIN " + mTableVervanger + " ON (" +
+                mTableKoopman + "." + Koopman.COL_ID + " = " +
+                mTableVervanger + "." + Vervanger.COL_KOOPMAN_ID + ")";
+        vervangerJoinedQueryBuilder.setTables(tables);
+
+        // create a projection map that will rename the ambiguous columns
+        HashMap<String, String> columnMap = new HashMap<>();
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ID, "_id"));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ERKENNINGSNUMMER, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_STATUS, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_VOORLETTERS, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_ACHTERNAAM, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_URL, null));
+        columnMap.putAll(createProjectionMap(mTableKoopman, Koopman.COL_FOTO_MEDIUM_URL, null));
+        columnMap.putAll(createProjectionMap(mTableVervanger, Vervanger.COL_VERVANGER_ID, null));
+        columnMap.putAll(createProjectionMap(mTableVervanger, Vervanger.COL_PAS_UID, "vervanger_pas_uid"));
+        vervangerJoinedQueryBuilder.setProjectionMap(columnMap);
+
+        Utility.log(getContext(), LOG_TAG, vervangerJoinedQueryBuilder.buildQuery(projection, selection, selectionArgs, groupBy, null, sortOrder, null));
+
+        // and run the query with the given arguments
+        return vervangerJoinedQueryBuilder.query(mDatabase,
                 projection,
                 selection,
                 selectionArgs,

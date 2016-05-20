@@ -3,6 +3,7 @@
  */
 package com.amsterdam.marktbureau.makkelijkemarkt;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -68,10 +69,13 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     public static final String KOOPMAN_SELECTION_METHOD_SCAN_NFC = "scan-nfc";
 
     // intent bundle extra koopmanid name
-    public static final String VERVANGER_INTENT_EXTRA_VERVANGER_ID = "koopmanId";
+    public static final String VERVANGER_INTENT_EXTRA_VERVANGER_ID = "vervangerId";
+
+    // intent bundle extra koopmanid name
+    public static final String VERVANGER_RETURN_INTENT_EXTRA_KOOPMAN_ID = "koopmanId";
 
     // unique id to recognize the callback when receiving the result from the vervanger dialog
-    private static final int VERVANGER_DIALOG_REQUEST_CODE = 0x00006666;
+    public static final int VERVANGER_DIALOG_REQUEST_CODE = 0x00006666;
 
     // bind layout elements
     @Bind(R.id.erkenningsnummer_layout) RelativeLayout mErkenningsnummerLayout;
@@ -326,6 +330,8 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 null);
         if (koopman != null) {
 
+            Utility.log(getContext(), LOG_TAG, "# koopman with status=Vervanger found: " + koopman.getCount());
+
             // check if koopman is a vervanger
             if (koopman.getCount() == 1 && koopman.moveToFirst()) {
 
@@ -343,6 +349,30 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             }
 
             koopman.close();
+        }
+    }
+
+    /**
+     * Catch the selected koopman of vervanger from dialogactivity result
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // check for the vervanger dialog request code
+        if (requestCode == VERVANGER_DIALOG_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                // get the id of the selected koopman from the intent
+                int koopmanId = data.getIntExtra(VERVANGER_RETURN_INTENT_EXTRA_KOOPMAN_ID, 0);
+                if (koopmanId != 0) {
+
+                    // select the koopman
+                    selectKoopman(koopmanId, mKoopmanSelectionMethod);
+                }
+            }
         }
     }
 

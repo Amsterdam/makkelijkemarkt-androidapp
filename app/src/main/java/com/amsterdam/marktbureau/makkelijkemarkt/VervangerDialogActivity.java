@@ -21,6 +21,7 @@ import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 /**
  *
@@ -42,8 +43,8 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
 
     // bind layout elements
     @Bind(R.id.vervanger_voorletters_achternaam) TextView mVervangerVoorlettersAchternaamText;
-    @Bind(R.id.dialog_cancel) Button mCancelButton;
     @Bind(R.id.listview_koopmannen) ListView mKoopmannenListView;
+    @Bind(R.id.dialog_cancel) Button mCancelButton;
 
     /**
      *
@@ -69,12 +70,9 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
         }
 
 
-        // joined query maken om koopman(nen) te zoeken bij geselecteerde vervanger
+        // FIXME: 20/05/16 why does it sometimes not find the koopman(nen) for selected vervanger?
         // loader icon tonen tijdens het laden van de koopman(nen)
         // dialog netjes opmaken
-        // onclick on a listitem in the dialog close it and call selectKoopman with selected koopman id and empty selectionMethod
-        // in dagvergunningfragmentkoopman: in onactivityresult de geselecteerde koopman uitlezen
-        // in dagvergunningfragmentkoopman: modify selectKoopman so that when empty selectionMethod was given to not set the membervar (because it was already set before that vervanger dialog)
 
 
 
@@ -99,13 +97,38 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
         finish();
     }
 
+    /**
+     * On click on a listitem in the koopmannen listview get the koopmanid and give it back as a result
+     * @param position the position of the clicked item in the listview
+     */
+    @OnItemClick(R.id.listview_koopmannen)
+    public void onKoopmanClick(int position) {
+
+        // get the koopman id from the adapter based on the selected item position
+        Cursor selectedKoopman = (Cursor) mKoopmannenAdapter.getItem(position);
+        int koopmanId = selectedKoopman.getInt(selectedKoopman.getColumnIndex(
+                MakkelijkeMarktProvider.Koopman.COL_ID));
+
+        // add the koopman to the result intent and exit the activity
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(DagvergunningFragmentKoopman.VERVANGER_RETURN_INTENT_EXTRA_KOOPMAN_ID, koopmanId);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    /**
+     * Load the koopman(nen) that the selected vervanger can work for
+     * @param id
+     * @param args
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         CursorLoader loader = new CursorLoader(this);
-        loader.setUri(MakkelijkeMarktProvider.mUriKoopman);
+        loader.setUri(MakkelijkeMarktProvider.mUriVervangerJoined);
         loader.setSelection(
-                MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? "
+                MakkelijkeMarktProvider.mTableVervanger + "." + MakkelijkeMarktProvider.Vervanger.COL_VERVANGER_ID + " = ? "
         );
         loader.setSelectionArgs(new String[] {
                 String.valueOf(mVervangerId)
@@ -114,11 +137,25 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
         return loader;
     }
 
+    /**
+     * Bind the loaded data
+     * @param loader
+     * @param data
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        if (data != null) {
+            Utility.log(getApplicationContext(), LOG_TAG, "# koopmannen for vervanger: " + data.getCount());
+        }
+
         mKoopmannenAdapter.swapCursor(data);
     }
 
+    /**
+     * Clear the data
+     * @param loader
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mKoopmannenAdapter.swapCursor(null);
