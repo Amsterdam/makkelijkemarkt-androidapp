@@ -137,6 +137,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
     private double mRegistratieGeolocatieLatitude = -1;
     private double mRegistratieGeolocatieLongitude = -1;
 
+    // vervanger id & erkenningsnummer
+    public int mVervangerId = -1;
+    public String mVervangerErkenningsnummer;
+
     // environment data
     private int mActiveAccountId = -1;
     private String mActiveAccountNaam;
@@ -575,6 +579,10 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                 // get koopman id and update local member var
                 mKoopmanId = mKoopmanFragment.mKoopmanId;
+
+                // get vervanger id & erkenningsnummer and update local vasr
+                mVervangerId = mKoopmanFragment.mVervangerId;
+                mVervangerErkenningsnummer = mKoopmanFragment.mVervangerErkenningsnummer;
             }
         }
     }
@@ -1135,6 +1143,11 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             geolocation.add(mRegistratieGeolocatieLatitude);
             geolocation.add(mRegistratieGeolocatieLongitude);
             dagvergunningPayload.add(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie), geolocation);
+        }
+
+        // if set, add vervanger erkenningsnummer
+        if (mVervangerErkenningsnummer != null) {
+            dagvergunningPayload.addProperty(getString(R.string.makkelijkemarkt_api_dagvergunning_payload_vervanger_erkenningsnummer), mVervangerErkenningsnummer);
         }
 
         return dagvergunningPayload;

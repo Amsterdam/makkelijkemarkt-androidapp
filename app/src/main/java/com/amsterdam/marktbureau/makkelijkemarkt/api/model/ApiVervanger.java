@@ -13,22 +13,23 @@ import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
  */
 public class ApiVervanger {
 
-    private String pas_uid;
+    private String id;
     private int koopman_id;
     private int vervanger_id;
+    private String pas_uid;
 
     /**
      * @return
      */
-    public String getPasUid() {
-        return pas_uid;
+    public String getId() {
+        return id;
     }
 
     /**
-     * @param pasUid
+     * @param id
      */
-    public void setPasUid(String pasUid) {
-        this.pas_uid = pasUid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -60,19 +61,34 @@ public class ApiVervanger {
     }
 
     /**
+     * @return
+     */
+    public String getPasUid() {
+        return pas_uid;
+    }
+
+    /**
+     * @param pasUid
+     */
+    public void setPasUid(String pasUid) {
+        this.pas_uid = pasUid;
+    }
+
+    /**
      * Convert object to type contentvalues
      * @return contentvalues object containing the objects name value pairs
      */
     public ContentValues toContentValues() {
         ContentValues vervangerValues = new ContentValues();
 
+        vervangerValues.put(MakkelijkeMarktProvider.Vervanger.COL_ID, getId());
+        vervangerValues.put(MakkelijkeMarktProvider.Vervanger.COL_KOOPMAN_ID, getKoopmanId());
+        vervangerValues.put(MakkelijkeMarktProvider.Vervanger.COL_VERVANGER_ID, getVervangerId());
+
         // uppercase the nfc uid if we have one
         if (getPasUid() != null) {
             vervangerValues.put(MakkelijkeMarktProvider.Vervanger.COL_PAS_UID, getPasUid().toUpperCase());
         }
-
-        vervangerValues.put(MakkelijkeMarktProvider.Vervanger.COL_KOOPMAN_ID, getKoopmanId());
-        vervangerValues.put(MakkelijkeMarktProvider.Vervanger.COL_VERVANGER_ID, getVervangerId());
 
         return vervangerValues;
     }

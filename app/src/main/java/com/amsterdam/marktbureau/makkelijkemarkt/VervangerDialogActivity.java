@@ -13,7 +13,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.VervangerKoopmannenAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
@@ -42,7 +41,6 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
     private int mVervangerId = -1;
 
     // bind layout elements
-    @Bind(R.id.vervanger_voorletters_achternaam) TextView mVervangerVoorlettersAchternaamText;
     @Bind(R.id.listview_koopmannen) ListView mKoopmannenListView;
     @Bind(R.id.dialog_cancel) Button mCancelButton;
 
@@ -68,13 +66,6 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
                 mVervangerId = vervangerId;
             }
         }
-
-
-        // FIXME: 20/05/16 why does it sometimes not find the koopman(nen) for selected vervanger?
-        // loader icon tonen tijdens het laden van de koopman(nen)
-        // dialog netjes opmaken
-
-
 
         // create an adapter for the koopmannen listview
         mKoopmannenAdapter = new VervangerKoopmannenAdapter(this);
@@ -144,11 +135,6 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        if (data != null) {
-            Utility.log(getApplicationContext(), LOG_TAG, "# koopmannen for vervanger: " + data.getCount());
-        }
-
         mKoopmannenAdapter.swapCursor(data);
     }
 

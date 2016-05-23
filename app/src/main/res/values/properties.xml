@@ -57,6 +57,7 @@
     <string name="makkelijkemarkt_api_dagvergunning_payload_markt_id" translatable="false">marktId</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_dag" translatable="false">dag</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer" translatable="false">erkenningsnummer</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_vervanger_erkenningsnummer" translatable="false">vervangerErkenningsnummer</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer_invoer_methode" translatable="false">erkenningsnummerInvoerMethode</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_aanwezig" translatable="false">aanwezig</string>
     <string name="makkelijkemarkt_api_dagvergunning_payload_notitie" translatable="false">notitie</string>

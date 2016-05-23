@@ -38,7 +38,7 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
     // call parameters
     private int mMarktId = -1;
     private int mListOffset = 0;
-    private int mListLength = 500;
+    private int mListLength = 1000;
 
     /**
      * Call the superclass constructor to set the context
@@ -149,10 +149,9 @@ public class ApiGetSollicitaties extends ApiCall implements Callback<List<ApiSol
                     if (koopman.getVervangers() != null && koopman.getVervangers().size() > 0) {
                         for (int j = 0; j < koopman.getVervangers().size(); j++) {
                             ApiVervanger vervanger = koopman.getVervangers().get(j);
-                            if (!vervanger.getPasUid().equals("") && vervanger.getVervangerId() != 0) {
-                                vervanger.setKoopmanId(koopman.getId());
-                                vervangerList.add(vervanger.toContentValues());
-                            }
+                            vervanger.setId(koopman.getId() + "-" + vervanger.getVervangerId());
+                            vervanger.setKoopmanId(koopman.getId());
+                            vervangerList.add(vervanger.toContentValues());
                         }
                     }
                 }

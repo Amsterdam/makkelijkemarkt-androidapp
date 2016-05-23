@@ -187,14 +187,19 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
     @Table(value = mTableVervanger, since = 2)
     public class Vervanger {
 
+        // combined unique id column made from: koopman_id + "-" + vervanger_id (eg. "2515-8559")
+        //  because a combined primary key seems impossible in simpleprovider
         @Column(value = Column.FieldType.TEXT, primaryKey = true)
-        public static final String COL_PAS_UID = "pas_uid";
+        public static final String COL_ID = "_id";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_KOOPMAN_ID = "koopman_id";
 
         @Column(Column.FieldType.INTEGER)
         public static final String COL_VERVANGER_ID = "vervanger_id";
+
+        @Column(Column.FieldType.TEXT)
+        public static final String COL_PAS_UID = "pas_uid";
     }
 
     /**

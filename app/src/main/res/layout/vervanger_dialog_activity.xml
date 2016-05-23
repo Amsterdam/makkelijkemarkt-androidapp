@@ -11,9 +11,12 @@
         android:id="@+id/vervanger_voorletters_achternaam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/large_margin"
-        android:gravity="center"
-        android:text="@string/app_title"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/large_margin"
+        android:textSize="@dimen/textsize_content_medium"
+        android:textColor="@color/primary_text"
+        android:text="@string/label_select_replaced_koopman"
         />
 
     <!-- Koopmannen list -->
@@ -22,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@+id/vervanger_voorletters_achternaam"
+        android:layout_margin="@dimen/small_margin"
         />
 
     <!-- Cancel button -->

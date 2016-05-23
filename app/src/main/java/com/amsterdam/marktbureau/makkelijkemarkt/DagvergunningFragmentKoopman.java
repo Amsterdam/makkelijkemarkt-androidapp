@@ -100,11 +100,13 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     // existing dagvergunning id
     private int mDagvergunningId = -1;
 
-    // koopman id
+    // koopman id & erkenningsnummer
     public int mKoopmanId = -1;
-
-    // koopman erkenningsnummer
     public String mErkenningsnummer;
+
+    // vervanger id & erkenningsnummer
+    public int mVervangerId = -1;
+    public String mVervangerErkenningsnummer;
 
     // keep track of how we selected the koopman
     public String mKoopmanSelectionMethod;
@@ -330,10 +332,14 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 null);
         if (koopman != null) {
 
-            Utility.log(getContext(), LOG_TAG, "# koopman with status=Vervanger found: " + koopman.getCount());
-
             // check if koopman is a vervanger
             if (koopman.getCount() == 1 && koopman.moveToFirst()) {
+
+                // todo: vervanger info clearen bij selecteren andere koopman
+
+                // set the vervanger id and erkenningsnummer
+                mVervangerId = koopmanId;
+                mVervangerErkenningsnummer = koopman.getString(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
 
                 // if so, open dialogfragment containing a list of koopmannen that vervanger kan work for
                 Intent intent = new Intent(getActivity(), VervangerDialogActivity.class);
@@ -371,6 +377,17 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
                     // select the koopman
                     selectKoopman(koopmanId, mKoopmanSelectionMethod);
+
+
+                    // geselecteerde vervanger opslaan, en meegeven bij opslaan dagvergunning
+                    // vervanger info clearen bij selecteren andere koopman
+                    // apidagvergunning aanpassen: id + erkenningsnummer uitlezen en opslaan in db
+                    // dagvergunning tabel uitbreiden met vervanger erkenningsnummer
+                    // bij wijzigen bestaande vergunning ook vervanger laden en opnieuw meenemen bij opslaan
+                    // onrotate ook de vervanger opslaan en herladen
+                    // vervanger tonen in koopmanfragment...
+
+
                 }
             }
         }
