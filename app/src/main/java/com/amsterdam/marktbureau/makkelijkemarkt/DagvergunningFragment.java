@@ -364,6 +364,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mNotitie = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE);
             mProducten = (HashMap<String, Integer>) savedInstanceState.getSerializable(STATE_BUNDLE_KEY_PRODUCTS);
             mProductenVast = (HashMap<String, Integer>) savedInstanceState.getSerializable(STATE_BUNDLE_KEY_PRODUCTS_VAST);
+            mVervangerId = savedInstanceState.getInt(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ID);
+            mVervangerErkenningsnummer = savedInstanceState.getString(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ERKENNINGSNUMMER);
 
             // select tab of viewpager from saved fragment state (if it's different)
             if (mViewPager.getCurrentItem() != mCurrentTab) {
@@ -412,6 +414,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
         outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE, mNotitie);
         outState.putSerializable(STATE_BUNDLE_KEY_PRODUCTS, mProducten);
         outState.putSerializable(STATE_BUNDLE_KEY_PRODUCTS_VAST, mProductenVast);
+        outState.putInt(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ID, mVervangerId);
+        outState.putString(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ERKENNINGSNUMMER, mVervangerErkenningsnummer);
 
         // save viewpager state
         outState.putInt(CURRENT_TAB, mCurrentTab);
@@ -481,6 +485,17 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             // set the koopman details
             if (mKoopmanId > 0) {
                 mKoopmanFragment.setKoopman(mKoopmanId, mId);
+            }
+
+            // set the vervanger details and toggle aanwezig spinner
+            if (mVervangerId > 0) {
+                mKoopmanFragment.mVervangerId = mVervangerId;
+                mKoopmanFragment.mVervangerErkenningsnummer = mVervangerErkenningsnummer;
+                mKoopmanFragment.mAanwezigSpinner.setVisibility(View.GONE);
+                mKoopmanFragment.setVervanger();
+            } else {
+                mKoopmanFragment.mAanwezigSpinner.setVisibility(View.VISIBLE);
+                mKoopmanFragment.mVervangerDetail.setVisibility(View.GONE);
             }
 
             // dagvergunning registratie tijd
@@ -1363,13 +1378,13 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // set the koopman
                     if (koopman != null && koopman.moveToFirst()) {
-                        mKoopmanFragment.setKoopman(
+                        mKoopmanFragment.selectKoopman(
                                 koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)),
-                                mId);
+                                DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_BARCODE
+                        );
+                        mKoopmanFragment.mDagvergunningId = mId;
                         mKoopmanFragment.mErkenningsnummerEditText.setText(barcode);
                         mKoopmanFragment.mErkenningsnummerEditText.dismissDropDown();
-                        mKoopmanFragment.mKoopmanSelectionMethod =
-                                DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_BARCODE;
                     } else {
                         mToast = Utility.showToast(getActivity(), mToast, getString(R.string.notice_koopman_not_found));
                     }
@@ -1406,14 +1421,14 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // set the koopman
                     if (koopman != null && koopman.moveToFirst()) {
-                        mKoopmanFragment.setKoopman(
+                        mKoopmanFragment.selectKoopman(
                                 koopman.getInt(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ID)),
-                                mId);
+                                DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC
+                        );
+                        mKoopmanFragment.mDagvergunningId = mId;
                         mKoopmanFragment.mErkenningsnummerEditText.setText(
                                 koopman.getString(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER)));
                         mKoopmanFragment.mErkenningsnummerEditText.dismissDropDown();
-                        mKoopmanFragment.mKoopmanSelectionMethod =
-                                DagvergunningFragmentKoopman.KOOPMAN_SELECTION_METHOD_SCAN_NFC;
                     } else {
 
                         // show the progressbar
@@ -1695,6 +1710,8 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
             mSollicitatieId = data.getInt(data.getColumnIndex("sollicitatie_sollicitatie_id"));
             mSollicitatieNummer = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Sollicitatie.COL_SOLLICITATIE_NUMMER));
             mNotitie = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_NOTITIE));
+            mVervangerId = data.getInt(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ID));
+            mVervangerErkenningsnummer = data.getString(data.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ERKENNINGSNUMMER));
 
             String[] productParams = getResources().getStringArray(R.array.array_product_param);
             for (String product : productParams) {

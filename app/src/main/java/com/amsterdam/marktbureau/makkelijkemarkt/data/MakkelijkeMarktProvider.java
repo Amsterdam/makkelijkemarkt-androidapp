@@ -286,6 +286,9 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         @Column(value = Column.FieldType.INTEGER, since = 2)
         public static final String COL_VERVANGER_ID = "vervanger_id";
 
+        @Column(value = Column.FieldType.TEXT, since = 2)
+        public static final String COL_VERVANGER_ERKENNINGSNUMMER = "vervanger_erkenningsnummer";
+
         @Column(Column.FieldType.INTEGER)
         public static final String COL_REGISTRATIE_ACCOUNT_ID = "registratie_account_id";
 
@@ -609,6 +612,8 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_DOORGEHAALD, "dagvergunning_doorgehaald"));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_AANWEZIG, null));
         columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_NOTITIE, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_VERVANGER_ID, null));
+        columnMap.putAll(createProjectionMap(mTableDagvergunning, Dagvergunning.COL_VERVANGER_ERKENNINGSNUMMER, null));
 
         // producten en producten vast
         if (getContext() != null) {
@@ -720,8 +725,6 @@ public class MakkelijkeMarktProvider extends AbstractProvider {
         columnMap.putAll(createProjectionMap(mTableVervanger, Vervanger.COL_VERVANGER_ID, null));
         columnMap.putAll(createProjectionMap(mTableVervanger, Vervanger.COL_PAS_UID, "vervanger_pas_uid"));
         vervangerJoinedQueryBuilder.setProjectionMap(columnMap);
-
-        Utility.log(getContext(), LOG_TAG, vervangerJoinedQueryBuilder.buildQuery(projection, selection, selectionArgs, groupBy, null, sortOrder, null));
 
         // and run the query with the given arguments
         return vervangerJoinedQueryBuilder.query(mDatabase,

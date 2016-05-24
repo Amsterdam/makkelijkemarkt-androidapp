@@ -142,7 +142,7 @@
 
         </LinearLayout>
 
-        <!-- Koopman detail, aanwezig -->
+        <!-- Koopman detail, aanwezig, vervanger -->
         <LinearLayout
             android:id="@+id/koopman_detail"
             android:layout_width="match_parent"
@@ -173,6 +173,16 @@
                 android:layout_height="@dimen/components_height"
                 android:paddingLeft="@dimen/margin"
                 android:paddingRight="@dimen/margin"
+                />
+
+            <!-- Vervanger -->
+            <include
+                layout="@layout/dagvergunning_vervanger_item"
+                android:id="@+id/vervanger_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
                 />
 
             <View

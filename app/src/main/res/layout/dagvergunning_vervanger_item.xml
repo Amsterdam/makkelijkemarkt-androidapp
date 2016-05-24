@@ -1,0 +1,90 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dagvergunning_vervanger_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/margin"
+    >
+
+    <!-- Vervanger foto -->
+    <ImageView
+        android:id="@+id/vervanger_foto"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="100dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/no_koopman_image"
+        android:contentDescription="@string/contentdescription_koopman_photo"
+        />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="7"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin"
+        android:paddingStart="@dimen/margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/vervanger_titel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/mini_margin"
+            android:singleLine="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/textsize_content_small"
+            android:text="@string/label_replacement"
+            />
+
+        <!-- Vervanger naam -->
+        <TextView
+            android:id="@+id/vervanger_voorletters_achternaam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vervanger_titel"
+            android:layout_marginBottom="@dimen/mini_margin"
+            android:singleLine="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/textsize_title_small"
+            android:textStyle="bold"
+            />
+
+        <!-- Koopman erkenningsnummer -->
+        <RelativeLayout
+            android:id="@+id/vervanger_erkenningsnummer_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vervanger_voorletters_achternaam"
+            >
+
+            <!-- Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/primary_text"
+                android:textStyle="bold"
+                android:text="@string/label_erkenningsnummer"
+                />
+
+            <TextView
+                android:id="@+id/vervanger_erkenningsnummer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/mini_margin"
+                android:textColor="@color/primary_text"
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

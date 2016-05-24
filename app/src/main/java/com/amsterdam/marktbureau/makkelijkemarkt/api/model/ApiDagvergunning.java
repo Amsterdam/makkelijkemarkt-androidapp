@@ -587,6 +587,7 @@ public class ApiDagvergunning {
 
         if (getVervanger() != null) {
             dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ID, getVervanger().getId());
+            dagvergunningValues.put(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ERKENNINGSNUMMER, getVervanger().getErkenningsnummer());
         }
 
         if (getSollicitatie() != null) {

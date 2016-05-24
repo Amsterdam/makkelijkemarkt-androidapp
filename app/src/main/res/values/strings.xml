@@ -47,6 +47,7 @@
     <string name="label_barcode_scannen">Scan Barcode</string>
     <string name="label_nfc_scannen">Scan NFC</string>
     <string name="label_select_replaced_koopman">Select merchant</string>
+    <string name="label_replacement">Replacement present:</string>
     <string name="hint_erkenningsnummer">Registry number</string>
     <string name="hint_sollicitatienummer">Anciënniteit number</string>
     <string name="hint_scan_barcode">Scan the barcode of a merchant card</string>

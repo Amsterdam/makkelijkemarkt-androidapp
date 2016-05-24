@@ -86,6 +86,7 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     @Bind(R.id.scan_barcode_button) Button mScanBarcodeButton;
     @Bind(R.id.scan_nfctag_button) Button mScanNfcTagButton;
     @Bind(R.id.koopman_detail) LinearLayout mKoopmanDetail;
+    @Bind(R.id.vervanger_detail) LinearLayout mVervangerDetail;
 
     // bind dagvergunning list item layout include elements
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
@@ -96,9 +97,12 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
     @Bind(R.id.dagvergunning_totale_lente) TextView mTotaleLengte;
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig_spinner) Spinner mAanwezigSpinner;
+    @Bind(R.id.vervanger_foto) ImageView mVervangerFotoImage;
+    @Bind(R.id.vervanger_voorletters_achternaam) TextView mVervangerVoorlettersAchternaamText;
+    @Bind(R.id.vervanger_erkenningsnummer) TextView mVervangerErkenningsnummerText;
 
     // existing dagvergunning id
-    private int mDagvergunningId = -1;
+    public int mDagvergunningId = -1;
 
     // koopman id & erkenningsnummer
     public int mKoopmanId = -1;
@@ -296,6 +300,8 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
      * @param selectionMethod the method in which the koopman was selected
      */
     public void selectKoopman(int koopmanId, String selectionMethod) {
+        mVervangerId = -1;
+        mVervangerErkenningsnummer = null;
         mKoopmanId = koopmanId;
         mKoopmanSelectionMethod = selectionMethod;
 
@@ -335,8 +341,6 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
             // check if koopman is a vervanger
             if (koopman.getCount() == 1 && koopman.moveToFirst()) {
 
-                // todo: vervanger info clearen bij selecteren andere koopman
-
                 // set the vervanger id and erkenningsnummer
                 mVervangerId = koopmanId;
                 mVervangerErkenningsnummer = koopman.getString(koopman.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER));
@@ -350,11 +354,70 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
 
                 // else, set the koopman
                 mKoopmanId = koopmanId;
-                mDagvergunningId = dagvergunningId;
-                getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
-            }
+                if (dagvergunningId != -1) {
+                    mDagvergunningId = dagvergunningId;
+                }
 
+                // load the koopman using the loader
+                getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
+
+                // load the vervanger and toggle the aanwezig spinner if set
+                if (mVervangerId > 0) {
+                    mAanwezigSpinner.setVisibility(View.GONE);
+                    setVervanger();
+                } else {
+                    mAanwezigSpinner.setVisibility(View.VISIBLE);
+                    mVervangerDetail.setVisibility(View.GONE);
+                }
+            }
             koopman.close();
+        }
+    }
+
+    /**
+     * Load a vervanger and populate the details
+     */
+    public void setVervanger() {
+        if (mVervangerId > 0) {
+
+            // load the vervanger from the database
+            Cursor vervanger = getContext().getContentResolver().query(
+                    MakkelijkeMarktProvider.mUriKoopman,
+                    new String[] {
+                            MakkelijkeMarktProvider.Koopman.COL_FOTO_URL,
+                            MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS,
+                            MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM
+                    },
+                    MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? ",
+                    new String[] {
+                            String.valueOf(mVervangerId),
+                    },
+                    null);
+
+            // populate the vervanger layout item
+            if (vervanger != null) {
+                if (vervanger.moveToFirst()) {
+
+                    // show the details layout
+                    mVervangerDetail.setVisibility(View.VISIBLE);
+
+                    // vervanger photo
+                    Glide.with(getContext())
+                            .load(vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL)))
+                            .error(R.drawable.no_koopman_image)
+                            .into(mVervangerFotoImage);
+
+                    // vervanger naam
+                    String naam = vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS)) + " " +
+                            vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM));
+                    mVervangerVoorlettersAchternaamText.setText(naam);
+
+                    // vervanger erkenningsnummer
+                    mVervangerErkenningsnummerText.setText(mVervangerErkenningsnummer);
+                }
+
+                vervanger.close();
+            }
         }
     }
 
@@ -375,9 +438,21 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                 int koopmanId = data.getIntExtra(VERVANGER_RETURN_INTENT_EXTRA_KOOPMAN_ID, 0);
                 if (koopmanId != 0) {
 
-                    // select the koopman
-                    selectKoopman(koopmanId, mKoopmanSelectionMethod);
+                    // set the koopman that was selected in the dialog
+                    setKoopman(koopmanId, -1);
 
+                    // reset the default amount of products before loading the koopman
+                    String[] productParams = getResources().getStringArray(R.array.array_product_param);
+                    for (String product : productParams) {
+                        mProducten.put(product, -1);
+                    }
+
+                    // inform the dagvergunningfragment that the koopman has changed, get the new values,
+                    // and populate our layout with the new koopman
+                    ((Callback) getActivity()).onKoopmanFragmentUpdated();
+
+                    // update aanwezig status to vervanger_met_toestemming
+                    setAanwezig(getString(R.string.item_vervanger_met_toestemming));
 
                     // geselecteerde vervanger opslaan, en meegeven bij opslaan dagvergunning
                     // vervanger info clearen bij selecteren andere koopman
@@ -385,10 +460,19 @@ public class DagvergunningFragmentKoopman extends Fragment implements LoaderMana
                     // dagvergunning tabel uitbreiden met vervanger erkenningsnummer
                     // bij wijzigen bestaande vergunning ook vervanger laden en opnieuw meenemen bij opslaan
                     // onrotate ook de vervanger opslaan en herladen
-                    // vervanger tonen in koopmanfragment...
-
+                    // vervanger tonen in koopmanfragment, ipv aanwezig dropdown (dropdown hiden)
+                    // todo: vervanger tonen in overzichtfragment (local vars toevoegen gelijk aan koopmanfragment)
+                    // todo: testen met barcode scan
+                    // todo: testen met nfc
+                    // todo: testen met test api
 
                 }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+
+                // clear the selection by restarting the activity
+                Intent intent = getActivity().getIntent();
+                getActivity().finish();
+                startActivity(intent);
             }
         }
     }
