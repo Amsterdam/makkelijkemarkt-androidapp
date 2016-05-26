@@ -814,6 +814,20 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                     }
                     mOverzichtFragment.mAanwezigText.setText(aanwezigTitle);
                 }
+
+                // vervanger
+                if (mVervangerId > 0) {
+
+                    // hide the aanwezig status and populate and show the vervanger details
+                    mOverzichtFragment.mAanwezigText.setVisibility(View.GONE);
+                    mOverzichtFragment.mVervangerDetail.setVisibility(View.VISIBLE);
+                    mOverzichtFragment.setVervanger(mVervangerId);
+                } else {
+
+                    // show the aanwezig status and hide the vervanger details
+                    mOverzichtFragment.mAanwezigText.setVisibility(View.VISIBLE);
+                    mOverzichtFragment.mVervangerDetail.setVisibility(View.GONE);
+                }
             } else {
                 mOverzichtFragment.mKoopmanEmptyTextView.setVisibility(View.VISIBLE);
                 mOverzichtFragment.mKoopmanLinearLayout.setVisibility(View.GONE);

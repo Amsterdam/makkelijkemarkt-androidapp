@@ -54,6 +54,17 @@
                 android:textColor="@color/primary_text"
                 android:textStyle="bold"
                 />
+
+            <!-- Vervanger aanwezig -->
+            <include
+                layout="@layout/dagvergunning_vervanger_item"
+                android:id="@+id/vervanger_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

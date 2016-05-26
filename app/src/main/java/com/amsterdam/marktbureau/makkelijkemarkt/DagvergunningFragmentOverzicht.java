@@ -40,6 +40,11 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
 
     // bind layout elements
     @Bind(R.id.koopman) LinearLayout mKoopmanLinearLayout;
+    @Bind(R.id.koopman_empty) TextView mKoopmanEmptyTextView;
+    @Bind(R.id.producten) LinearLayout mProductenLinearLayout;
+    @Bind(R.id.producten_empty) TextView mProductenEmptyTextView;
+    @Bind(R.id.vervanger_detail) LinearLayout mVervangerDetail;
+
     @Bind(R.id.koopman_foto) ImageView mKoopmanFotoImage;
     @Bind(R.id.koopman_voorletters_achternaam) TextView mKoopmanVoorlettersAchternaamText;
     @Bind(R.id.dagvergunning_registratie_datumtijd) TextView mRegistratieDatumtijdText;
@@ -48,9 +53,10 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
     @Bind(R.id.dagvergunning_totale_lente) TextView mTotaleLengte;
     @Bind(R.id.account_naam) TextView mAccountNaam;
     @Bind(R.id.aanwezig) TextView mAanwezigText;
-    @Bind(R.id.koopman_empty) TextView mKoopmanEmptyTextView;
-    @Bind(R.id.producten) LinearLayout mProductenLinearLayout;
-    @Bind(R.id.producten_empty) TextView mProductenEmptyTextView;
+
+    @Bind(R.id.vervanger_foto) ImageView mVervangerFotoImage;
+    @Bind(R.id.vervanger_voorletters_achternaam) TextView mVervangerVoorlettersAchternaamText;
+    @Bind(R.id.vervanger_erkenningsnummer) TextView mVervangerErkenningsnummerText;
 
     // koopman id
     private int mKoopmanId = -1;
@@ -107,6 +113,55 @@ public class DagvergunningFragmentOverzicht extends Fragment implements LoaderMa
         getLoaderManager().restartLoader(KOOPMAN_LOADER, null, this);
     }
 
+    /**
+     * Load a vervanger and populate the details
+     * @param vervangerId koopman id of the vervanger
+     */
+    public void setVervanger(int vervangerId) {
+        if (vervangerId > 0) {
+
+            // load the vervanger from the database
+            Cursor vervanger = getContext().getContentResolver().query(
+                    MakkelijkeMarktProvider.mUriKoopman,
+                    new String[] {
+                            MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER,
+                            MakkelijkeMarktProvider.Koopman.COL_FOTO_URL,
+                            MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS,
+                            MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM
+                    },
+                    MakkelijkeMarktProvider.mTableKoopman + "." + MakkelijkeMarktProvider.Koopman.COL_ID + " = ? ",
+                    new String[] {
+                            String.valueOf(vervangerId),
+                    },
+                    null);
+
+            // populate the vervanger layout item
+            if (vervanger != null) {
+                if (vervanger.moveToFirst()) {
+
+                    // show the details layout
+                    mVervangerDetail.setVisibility(View.VISIBLE);
+
+                    // vervanger photo
+                    Glide.with(getContext())
+                            .load(vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_FOTO_URL)))
+                            .error(R.drawable.no_koopman_image)
+                            .into(mVervangerFotoImage);
+
+                    // vervanger naam
+                    String naam = vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_VOORLETTERS)) + " " +
+                            vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM));
+                    mVervangerVoorlettersAchternaamText.setText(naam);
+
+                    // vervanger erkenningsnummer
+                    mVervangerErkenningsnummerText.setText(
+                            vervanger.getString(vervanger.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ERKENNINGSNUMMER)));
+                }
+
+                vervanger.close();
+            }
+        }
+    }
 
     /**
      * Create the cursor loader that will load the koopman from the database

@@ -11,8 +11,8 @@
         android:id="@+id/koopman_foto"
         android:layout_width="0dp"
         android:layout_weight="2"
-        android:layout_height="100dp"
-        android:scaleType="fitStart"
+        android:layout_height="75dp"
+        android:scaleType="fitXY"
         android:src="@drawable/no_koopman_image"
         android:contentDescription="@string/contentdescription_koopman_photo"
         />
