@@ -85,6 +85,7 @@
     <string name="notice_wait_for_conceptfactuur">Even geduld aub, kosten dagvergunning worden berekend</string>
     <string name="notice_sollicitaties_empty">Geen sollicitaties gevonden voor geselecteerde markt</string>
     <string name="notice_koopmannen_empty">Geen koopmannen gevonden voor geselecteerde status</string>
+    <string name="notice_vervanger_koopmannen_empty">Er zijn geen koopmannen die de geselecteerde vervanger op deze markt mag vervangen</string>
     <string name="notice_sollicitaties_loading">Even geduld aub, sollicitaties voor geselecteerde markt worden geladen</string>
     <string name="notice_vervangers_loading">Even geduld aub, vervangers worden geladen</string>
     <string name="notitie">Notitie</string>

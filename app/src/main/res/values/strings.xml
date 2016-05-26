@@ -88,6 +88,7 @@
     <string name="notice_sollicitaties_empty">No applicants found for selected market</string>
     <string name="notice_koopmannen_empty">No merchants found for selected status</string>
     <string name="notice_dagvergunningen_empty">No permits created on selected market for today</string>
+    <string name="notice_vervanger_koopmannen_empty">No merchants available that can be replaced on this market</string>
     <string name="notice_markten_empty">Loading markets…</string>
     <string name="notice_notities_empty">No notes created on selected market for today</string>
     <string name="notice_notitie_enter_text">Please enter a comment</string>

@@ -31,7 +31,8 @@
     <string name="sollicitatie_status_vpl" translatable="false">vpl</string>
     <string name="sollicitatie_status_vkk" translatable="false">vkk</string>
 
-    <string name="item_vervanger_met_toestemming" translatable="false">vervanger_met_toestemming</string>
+    <string name="item_vervanger_met_toestemming_aanwezig" translatable="false">vervanger_met_toestemming</string>
+    <string name="item_zelf_aanwezig" translatable="false">zelf</string>
 
     <string name="koopman_status_verwijderd" translatable="false">Verwijderd</string>
 

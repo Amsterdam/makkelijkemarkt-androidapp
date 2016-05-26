@@ -482,20 +482,20 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 Utility.collapseView(mKoopmanFragment.mScanbuttonsLayout, false);
             }
 
-            // set the koopman details
-            if (mKoopmanId > 0) {
-                mKoopmanFragment.setKoopman(mKoopmanId, mId);
-            }
-
             // set the vervanger details and toggle aanwezig spinner
             if (mVervangerId > 0) {
                 mKoopmanFragment.mVervangerId = mVervangerId;
                 mKoopmanFragment.mVervangerErkenningsnummer = mVervangerErkenningsnummer;
-                mKoopmanFragment.mAanwezigSpinner.setVisibility(View.GONE);
-                mKoopmanFragment.setVervanger();
+                mKoopmanAanwezig = getString(R.string.item_vervanger_met_toestemming_aanwezig);
+                mKoopmanFragment.mAanwezigSelectedValue = mKoopmanAanwezig;
             } else {
-                mKoopmanFragment.mAanwezigSpinner.setVisibility(View.VISIBLE);
-                mKoopmanFragment.mVervangerDetail.setVisibility(View.GONE);
+                mKoopmanFragment.mVervangerId = -1;
+                mKoopmanFragment.mVervangerErkenningsnummer = null;
+            }
+
+            // set the koopman details
+            if (mKoopmanId > 0) {
+                mKoopmanFragment.setKoopman(mKoopmanId, mId);
             }
 
             // dagvergunning registratie tijd
@@ -574,7 +574,9 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // reset aanwezig status and spinner
                     mKoopmanAanwezig = null;
+                    mKoopmanFragment.mAanwezigSpinner.setVisibility(View.VISIBLE);
                     mKoopmanFragment.mAanwezigSpinner.setSelection(0);
+                    mKoopmanFragment.mAanwezigSelectedValue = getString(R.string.item_zelf_aanwezig);
 
                     // if we are not editing an existing dagvergunning, get vaste producten from koopman
                     if (mId == -1) {
@@ -595,7 +597,7 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
                 // get koopman id and update local member var
                 mKoopmanId = mKoopmanFragment.mKoopmanId;
 
-                // get vervanger id & erkenningsnummer and update local vasr
+                // get vervanger id & erkenningsnummer and update local vars
                 mVervangerId = mKoopmanFragment.mVervangerId;
                 mVervangerErkenningsnummer = mKoopmanFragment.mVervangerErkenningsnummer;
             }
@@ -1405,8 +1407,6 @@ public class DagvergunningFragment extends Fragment implements LoaderManager.Loa
 
                     // uppercase the scanned uid
                     uid = uid.toUpperCase();
-
-                    Utility.log(getContext(), LOG_TAG, "NFC UID: " + uid);
 
                     // find the koopman by querying for scanned nfc tag uid
                     Cursor koopman = getContext().getContentResolver().query(

@@ -23,9 +23,22 @@
     <ListView
         android:id="@+id/listview_koopmannen"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:layout_below="@+id/vervanger_voorletters_achternaam"
         android:layout_margin="@dimen/small_margin"
+        android:paddingBottom="@dimen/margin"
+        />
+
+    <!-- Empty listview -->
+    <TextView
+        android:id="@+id/listview_empty"
+        android:layout_below="@+id/listview_koopmannen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:paddingBottom="@dimen/large_margin"
+        android:visibility="gone"
+        android:text="@string/notice_vervanger_koopmannen_empty"
         />
 
     <!-- Cancel button -->
@@ -33,7 +46,7 @@
         android:id="@+id/dialog_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listview_koopmannen"
+        android:layout_below="@+id/listview_empty"
         android:layout_marginTop="@dimen/large_margin"
         android:layout_marginRight="@dimen/small_margin"
         android:layout_marginEnd="@dimen/small_margin"

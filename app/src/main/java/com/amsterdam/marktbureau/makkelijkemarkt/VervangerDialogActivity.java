@@ -11,8 +11,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.amsterdam.marktbureau.makkelijkemarkt.adapters.VervangerKoopmannenAdapter;
 import com.amsterdam.marktbureau.makkelijkemarkt.data.MakkelijkeMarktProvider;
@@ -42,6 +44,7 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
 
     // bind layout elements
     @Bind(R.id.listview_koopmannen) ListView mKoopmannenListView;
+    @Bind(R.id.listview_empty) TextView mListViewEmptyTextView;
     @Bind(R.id.dialog_cancel) Button mCancelButton;
 
     /**
@@ -135,6 +138,11 @@ public class VervangerDialogActivity extends FragmentActivity implements LoaderM
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        // show the empty notice if there are no koopmannen that selected vervanger can replace on current market
+        mListViewEmptyTextView.setVisibility(data.getCount() == 0 ? View.VISIBLE : View.GONE);
+        mKoopmannenListView.setVisibility(data.getCount() == 0 ? View.GONE : View.VISIBLE);
+
         mKoopmannenAdapter.swapCursor(data);
     }
 
