@@ -53,6 +53,7 @@
     <string name="label_sollicitatienummer">Anciënniteitsnummer</string>
     <string name="label_select_replaced_koopman">Selecteer koopman</string>
     <string name="label_replacement">Vervanger aanwezig:</string>
+    <string name="label_vervanger_present">Vervanger aanwezig!</string>
     <string name="length_meter">meter</string>
     <string name="markten">Markten</string>
     <string name="notice_api_unauthorised">Toegang geweigerd, log opnieuw in</string>

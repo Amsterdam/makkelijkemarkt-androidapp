@@ -16,6 +16,7 @@
     <dimen name="textsize_title_medium">26sp</dimen>
     <dimen name="textsize_title_large">32sp</dimen>
 
+    <dimen name="textsize_content_mini">12sp</dimen>
     <dimen name="textsize_content_small">16sp</dimen>
     <dimen name="textsize_content_medium">20sp</dimen>
     <dimen name="textsize_content_large">24sp</dimen>

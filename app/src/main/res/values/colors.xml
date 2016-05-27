@@ -20,5 +20,6 @@
 
     <color name="dagvergunning_melding_background">#700000</color>
     <color name="edittext_hint">#cccccc</color>
+    <color name="accent_dark">#cb9800</color>
 
 </resources>

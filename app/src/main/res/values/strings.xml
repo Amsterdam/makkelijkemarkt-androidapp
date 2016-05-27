@@ -85,6 +85,7 @@
     <string name="notice_scan_nfc_cancelled">NFC scan cancelled</string>
     <string name="notice_sollicitaties_loading">Please be patient, applicants for selected market are being loaded</string>
     <string name="notice_vervangers_loading">Please be patient, replacement merchants are being loaded</string>
+    <string name="label_vervanger_present">Replacement present!</string>
     <string name="notice_sollicitaties_empty">No applicants found for selected market</string>
     <string name="notice_koopmannen_empty">No merchants found for selected status</string>
     <string name="notice_dagvergunningen_empty">No permits created on selected market for today</string>

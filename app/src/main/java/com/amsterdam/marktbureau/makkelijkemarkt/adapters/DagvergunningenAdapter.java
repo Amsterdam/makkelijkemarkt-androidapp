@@ -113,6 +113,15 @@ public class DagvergunningenAdapter extends CursorAdapter {
         String koopmanAchternaam = cursor.getString(cursor.getColumnIndex(MakkelijkeMarktProvider.Koopman.COL_ACHTERNAAM));
         viewHolder.koopmanVoorlettersAchternaamText.setText(koopmanVoorletters + " " + koopmanAchternaam);
 
+        // vervanger aanwezig
+        String vervangerErkenningsnummer = cursor.getString(
+                cursor.getColumnIndex(MakkelijkeMarktProvider.Dagvergunning.COL_VERVANGER_ERKENNINGSNUMMER));
+        if (vervangerErkenningsnummer != null) {
+            viewHolder.vervangerAanwezigText.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.vervangerAanwezigText.setVisibility(View.GONE);
+        }
+
         // registratietijd
         String registratieDatumtijd = cursor.getString(cursor.getColumnIndex(
                 MakkelijkeMarktProvider.Dagvergunning.COL_REGISTRATIE_DATUMTIJD));
@@ -183,6 +192,7 @@ public class DagvergunningenAdapter extends CursorAdapter {
         @Bind(R.id.koopman_status) TextView koopmanStatusText;
         @Bind(R.id.koopman_naam_tijd) RelativeLayout koopmanNaamTijd;
         @Bind(R.id.koopman_voorletters_achternaam) TextView koopmanVoorlettersAchternaamText;
+        @Bind(R.id.vervanger_aanwezig) TextView vervangerAanwezigText;
         @Bind(R.id.dagvergunning_registratie_datumtijd) TextView dagvergunningRegistratieDatumtijdText;
         @Bind(R.id.erkenningsnummer) TextView erkenningsnummerText;
         @Bind(R.id.sollicitatie_nummer_status) RelativeLayout sollicitatieNummerStatus;

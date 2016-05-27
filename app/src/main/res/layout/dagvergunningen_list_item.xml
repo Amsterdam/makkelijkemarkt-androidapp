@@ -73,6 +73,21 @@
                 android:textStyle="bold"
                 />
 
+            <!-- Vervanger aanwezig -->
+            <TextView
+                android:id="@+id/vervanger_aanwezig"
+                android:layout_width="wrap_content"
+                android:maxWidth="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/koopman_voorletters_achternaam"
+                android:paddingTop="0dp"
+                android:singleLine="true"
+                android:textColor="@color/accent_dark"
+                android:textSize="@dimen/textsize_content_mini"
+                android:textStyle="bold"
+                android:text="@string/label_vervanger_present"
+                />
+
             <!-- Dagvergunning registratie tijd -->
             <TextView
                 android:id="@+id/dagvergunning_registratie_datumtijd"
