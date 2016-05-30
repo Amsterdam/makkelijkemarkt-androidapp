@@ -148,6 +148,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="@dimen/small_margin"
             android:visibility="invisible"
             >
 
@@ -156,7 +157,7 @@
                 layout="@layout/dagvergunning_koopman_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginLeft="@dimen/micro_margin"
                 android:layout_marginRight="@dimen/margin"
                 />
 
@@ -181,7 +182,7 @@
                 android:id="@+id/vervanger_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginLeft="@dimen/micro_margin"
                 android:layout_marginRight="@dimen/margin"
                 />
 
