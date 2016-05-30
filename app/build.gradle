@@ -27,9 +27,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Android support libs
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:design:23.4.0'
 
     // ButterKnife for view dependency injection
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -45,8 +45,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     // Google Play Services
-    compile 'com.google.android.gms:play-services-location:8.4.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
+    compile 'com.google.android.gms:play-services-location:9.0.1'
+    compile 'com.google.android.gms:play-services-analytics:9.0.1'
 
     // ZXing Android Embedded
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
