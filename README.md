@@ -75,7 +75,8 @@ Follow these configuration steps to setup the project:
 
 
 
-###Release notes - v1.0.6
+###Release notes - v1.1.0
+- Vervanger detectie en Koopman selectie
 - App updaten optie toegevoegd aan het actions menu
 - Check for App update
 - Detectie voor 'Locked account'
