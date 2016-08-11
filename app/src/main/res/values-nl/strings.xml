@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="login">Inloggen</string>
+    <string name="logout">Uitloggen</string>
+    <string name="check_update">Check for updates&#8230;</string>
+    <string name="about">About</string>
+
+    <string name="app_background_description">Markt foto</string>
+
+    <string name="app_sub_title">De app om dagelijks de invulling van de Amsterdamse markten in kaart te brengen.</string>
+
+    <string name="app_login_title">Welkom bij de Makkelijke Markt</string>
+    <string name="app_login_description">Selecteer een account om verder te gaan</string>
+
+    <string name="contentdescription_koopman_photo">Koopman foto</string>
+    <string name="contentdescription_scan_nfc_logo">NFC scannen logo</string>
+    <string name="contentdescription_search_erkenningsnummer">Zoeken op registernummer</string>
+    <string name="contentdescription_search_ancienniteitnummer">Zoeken op anciënniteitnummer</string>
+
+    <string name="dialog_app_update_title">Update beschikbaar</string>
+    <string name="dialog_app_update_message">Er is een nieuwe versie van de Makkelijke Markt App beschikbaar.\n\n- Klik op \'PLAY STORE\' om de Play Store App te openen\n\n- Klik vervolgens op \'UPDATEN\' om de nieuwste versie van de Makkelijke Markt App te installeren</string>
+    <string name="dialog_app_update_button_label">Play Store</string>
+    <string name="dialog_app_update_not_available">Geen update beschikbaar, u beschikt al over de meest recente versie!</string>
+
+    <string name="notice_login_enter_password">Voer een geldig wachtwoord in</string>
+    <string name="notice_login_password_invalid">Account/wachtwoord ongeldig</string>
+    <string name="notice_login_account_locked">Teveel pogingen, neem contact op met de beheerder</string>
+    <string name="notice_network_required">Internet verbinding vereist, controleer je netwerk instellingen</string>
+    <string name="cancel">Annuleren</string>
+    <string name="dagvergunning">Dagvergunning</string>
+    <string name="dagvergunning_add">Nieuwe dagvergunning</string>
+    <string name="dagvergunning_edit">Dagvergunning wijzigen</string>
+    <string name="dagvergunningen">Dagvergunningen</string>
+    <string name="delete">Verwijderen</string>
+    <string name="drawer_close">Menu sluiten</string>
+    <string name="drawer_open">Menu openen</string>
+    <string name="error_accounts_fetch_failed">Er is iets mis gegaan bij het ophalen van de accounts</string>
+    <string name="error_dagvergunningen_fetch_failed">Er is iets mis gegaan bij het ophalen van de dagvergunningen</string>
+    <string name="error_koopman_fetch_failed">Er is iets mis gegaan bij het ophalen van de koopman</string>
+    <string name="error_notitie_update_failed">Er is iets mis gegaan bij het opslaan van de notitie</string>
+    <string name="error_notities_fetch_failed">Er is iets mis gegaan bij het ophalen van de notities</string>
+    <string name="error_sollicitaties_fetch_failed">Er is iets mis gegaan bij het ophalen van de sollicitaties</string>
+    <string name="error_vervangers_fetch_failed">Er is iets mis gegaan bij het ophalen van de vervangers</string>
+    <string name="hint_erkenningsnummer">Registernummer</string>
+    <string name="hint_scan_barcode">Scan de barcode van een markt koopman pas</string>
+    <string name="hint_sollicitatienummer">Anciënniteitsnummer</string>
+    <string name="koopman">Koopman</string>
+    <string name="label_barcode_scannen">Barcode Scannen</string>
+    <string name="label_erkenningsnummer">Registernummer</string>
+    <string name="label_nfc_scannen">NFC Scannen</string>
+    <string name="label_notitie">Notitie</string>
+    <string name="label_sollicitatienummer">Anciënniteitsnummer</string>
+    <string name="label_select_replaced_koopman">Selecteer koopman</string>
+    <string name="label_replacement">Vervanger aanwezig:</string>
+    <string name="label_vervanger_present">Vervanger aanwezig!</string>
+    <string name="length_meter">meter</string>
+    <string name="markten">Markten</string>
+    <string name="notice_api_unauthorised">Toegang geweigerd, log opnieuw in</string>
+    <string name="notice_api_forbidden">Toegang geweigerd, neem contact op met de beheerder</string>
+    <string name="notice_autocomplete_minimum">Voer een nummer in met minimaal 2 cijfers</string>
+    <string name="notice_dagvergunning_delete_confirm">Weet u zeker dat u deze dagvergunning wilt verwijderen?</string>
+    <string name="notice_dagvergunning_delete_failed">Er is iets mis gegaan bij het verwijderen, probeer het nog een keer</string>
+    <string name="notice_dagvergunning_delete_success">Dagvergunning verwijderd</string>
+    <string name="notice_dagvergunning_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
+    <string name="notice_dagvergunning_save_success">Dagvergunning opgeslagen</string>
+    <string name="notice_dagvergunning_saving">Dagvergunning wordt opgelsagen</string>
+    <string name="notice_dagvergunningen_empty">Voor geselecteerde markt vandaag nog geen dagvergunningen aangemaakt</string>
+    <string name="notice_koopman_multiple_dagvergunningen">Let op: Koopman heeft vandaag al een vergunning ontvangen op deze markt!</string>
+    <string name="notice_koopman_no_valid_sollicitatie">Let op: Koopman heeft geen sollicitatie op deze markt!</string>
+    <string name="notice_koopman_not_found">Koopman niet gevonden</string>
+    <string name="notice_koopman_not_selected">Geen koopman geselecteerd</string>
+    <string name="notice_koopman_verwijderd">Let op: Koopman verwijderd!</string>
+    <string name="notice_login_failed_connect">Geen verbinding met de server, neem contact op met de beheerder of probeer het nog een keer</string>
+    <string name="notice_markten_empty">Markten worden geladen&#8230;</string>
+    <string name="notice_notitie_enter_text">Voer eerst een bericht in</string>
+    <string name="notice_notitie_save_failed">Er is iets mis gegaan bij het opslaan, probeer het nog een keer</string>
+    <string name="notice_notitie_save_success">Notitie opgeslagen</string>
+    <string name="notice_notitie_saving">Notitie wordt opgelsagen</string>
+    <string name="notice_notities_empty">Voor geselecteerde markt vandaag nog geen notities aangemaakt</string>
+    <string name="notice_producten_not_selected">Geen producten geselecteerd</string>
+    <string name="notice_scan_barcode_cancelled">Barcode Scan geannuleerd</string>
+    <string name="notice_scan_nfc_cancelled">NFC Scan geannuleerd</string>
+    <string name="notice_select_koopman">Selecteer eerst een koopman</string>
+    <string name="notice_select_product">Selecteer minimaal één product</string>
+    <string name="notice_wait_for_conceptfactuur">Even geduld aub, kosten dagvergunning worden berekend</string>
+    <string name="notice_sollicitaties_empty">Geen sollicitaties gevonden voor geselecteerde markt</string>
+    <string name="notice_koopmannen_empty">Geen koopmannen gevonden voor geselecteerde status</string>
+    <string name="notice_vervanger_koopmannen_empty">Er zijn geen koopmannen die de geselecteerde vervanger op deze markt mag vervangen</string>
+    <string name="notice_sollicitaties_loading">Even geduld aub, sollicitaties voor geselecteerde markt worden geladen</string>
+    <string name="notice_vervangers_loading">Even geduld aub, vervangers worden geladen</string>
+    <string name="notice_dagvergunning_device_location_refused">Sta toegang tot de locatie toe voor dit toestel, dit is vereist voor het goed functioneren van de Makkelijke Markt app</string>
+    <string name="title_dagvergunning_app_location_refused">Locatie toestemming&#8230;</string>
+    <string name="notice_dagvergunning_app_location_refused">Voor een correcte registratie van de dagvergunningen is het vereist om toestemming te geven voor toegang tot de locatie van dit apparaat.\n\nNa het sluiten van deze melding zal om toestemming gevraagd worden.\n\nBevestig deze toestemming door voor TOESTAAN te kiezen.</string>
+    <string name="notice_dagvergunning_app_location_refused_ok">SLUITEN</string>
+
+    <string name="notitie">Notitie</string>
+    <string name="notitie_add">Nieuwe Notitie</string>
+    <string name="notitie_edit">Notitie wijzigen</string>
+    <string name="notities">Notities</string>
+    <string name="overzicht">Overzicht</string>
+    <string name="product">Producten</string>
+    <string name="save">Opslaan</string>
+    <string name="scan_nfc_text">Houdt een markt koopman pas tegen de achterkant van het toestel</string>
+    <string name="notice_koopman_not_found_on_selected_markt">Geen koopman gevonden met een sollicitatie op de geselecteerde markt! Voer het complete Registernummer in om de sollicitaties op alle markten te doorzoeken</string>
+    <string name="error_markets_fetch_failed">Er is iets mis gegaan bij het ophalen van de markten</string>
+    <string name="drawer_permit_count_label">Uitgegeven</string>
+    <string name="drawer_permit_count_label_none">Uitgegeven: Geen</string>
+
+</resources>

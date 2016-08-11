@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="date_format_datumtijd" translatable="false">"yyyy-MM-dd HH:mm:ss"</string>
+    <string name="date_format_datum_dag" translatable="false">cccc, d LLLL yyyy</string>
+    <string name="date_format_dag" translatable="false">yyyy-MM-dd</string>
+    <string name="date_format_tijd" translatable="false">HH:mm</string>
+
+    <string name="log_tag_package" translatable="false">MakkelijkeMarkt</string>
+    <string name="log_tag_separator" translatable="false">=============================></string>
+
+    <integer name="erkenningsnummer_maxlength">10</integer>
+    <integer name="sollicitatienummer_maxlength">5</integer>
+
+    <string name="sharedpreferences_key_uuid" translatable="false">uuid</string>
+    <string name="sharedpreferences_key_account_id" translatable="false">accountId</string>
+    <string name="sharedpreferences_key_account_naam" translatable="false">accountNaam</string>
+    <string name="sharedpreferences_key_markt_id" translatable="false">marktId</string>
+    <string name="sharedpreferences_key_markt_naam" translatable="false">marktNaam</string>
+    <string name="sharedpreferences_key_markt_producten" translatable="false">marktProducten</string>
+    <string name="sharedpreferences_key_date_today" translatable="false">dateToday</string>
+
+    <string name="sharedpreferences_key_app_activity_timestamp" translatable="false">app-activity-timestamp</string>
+    <string name="sharedpreferences_key_accounts_last_fetched" translatable="false">accounts-fetched</string>
+    <string name="sharedpreferences_key_markten_last_fetched" translatable="false">markten-fetched</string>
+    <string name="sharedpreferences_key_sollicitaties_last_fetched" translatable="false">sollicitaties-fetched-for-markt-</string>
+    <string name="sharedpreferences_key_koopmannen_last_fetched" translatable="false">koopmannen-fetched-for-status-</string>
+
+    <string name="sollicitatie_status_soll" translatable="false">soll</string>
+    <string name="sollicitatie_status_lot" translatable="false">lot</string>
+    <string name="sollicitatie_status_vpl" translatable="false">vpl</string>
+    <string name="sollicitatie_status_vkk" translatable="false">vkk</string>
+
+    <string name="item_vervanger_met_toestemming_aanwezig" translatable="false">vervanger_met_toestemming</string>
+    <string name="item_zelf_aanwezig" translatable="false">zelf</string>
+
+    <string name="koopman_status_verwijderd" translatable="false">Verwijderd</string>
+
+    <string name="makkelijkemarkt_api_base_url" translatable="false">https://makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">https://test-makkelijkemarkt-api.datalabamsterdam.nl/api/1.1.0/</string>-->
+    <!--<string name="makkelijkemarkt_api_base_url" translatable="false">http://api.mm.dev.dotcml.net/api/1.1.0/</string>-->
+
+    <string name="makkelijkemarkt_api_uuid_name" translatable="false">uuid</string>
+    <string name="makkelijkemarkt_api_app_key_header_name" translatable="false">MmAppKey</string>
+    <string name="makkelijkemarkt_api_authorization_header_name" translatable="false">Authorization</string>
+    <string name="makkelijkemarkt_api_authorization_header_prefix" translatable="false">Bearer</string>
+    <string name="makkelijkemarkt_api_x_serial_number_header_name" translatable="false">X-Serial-Number</string>
+    <string name="makkelijkemarkt_api_x_listsize_header_name" translatable="false">X-Api-ListSize</string>
+    <string name="makkelijkemarkt_api_user_agent_header_name" translatable="false">User-Agent</string>
+
+    <string name="makkelijkemarkt_api_version_app_android_version_name" translatable="false">androidVersion</string>
+    <string name="makkelijkemarkt_api_version_app_android_build_name" translatable="false">androidBuild</string>
+
+    <string name="makkelijkemarkt_api_login_payload_accound_id_name" translatable="false">accountId</string>
+    <string name="makkelijkemarkt_api_login_payload_password_name" translatable="false">password</string>
+    <string name="makkelijkemarkt_api_login_payload_device_uuid_name" translatable="false">deviceUuid</string>
+    <string name="makkelijkemarkt_api_login_payload_client_app_name" translatable="false">clientApp</string>
+    <string name="makkelijkemarkt_api_login_payload_client_version_name" translatable="false">clientVersion</string>
+
+    <string name="makkelijkemarkt_api_dagvergunning_payload_markt_id" translatable="false">marktId</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_dag" translatable="false">dag</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer" translatable="false">erkenningsnummer</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_vervanger_erkenningsnummer" translatable="false">vervangerErkenningsnummer</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_erkenningsnummer_invoer_methode" translatable="false">erkenningsnummerInvoerMethode</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_aanwezig" translatable="false">aanwezig</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_notitie" translatable="false">notitie</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_datumtijd" translatable="false">registratieDatumtijd</string>
+    <string name="makkelijkemarkt_api_dagvergunning_payload_registratie_geolocatie" translatable="false">registratieGeolocatie</string>
+
+    <string name="makkelijkemarkt_api_dagvergunning_concept_producten" translatable="false">producten</string>
+
+    <string name="makkelijkemarkt_api_notitie_payload_markt_id" translatable="false">marktId</string>
+    <string name="makkelijkemarkt_api_notitie_payload_dag" translatable="false">dag</string>
+    <string name="makkelijkemarkt_api_notitie_payload_bericht" translatable="false">bericht</string>
+    <string name="makkelijkemarkt_api_notitie_payload_afgevinkt" translatable="false">afgevinkt</string>
+
+    <integer name="makkelijkemarkt_api_accounts_fetch_interval_hours">12</integer>
+    <integer name="makkelijkemarkt_api_markten_fetch_interval_hours">12</integer>
+    <integer name="makkelijkemarkt_api_sollicitaties_fetch_interval_hours">12</integer>
+    <integer name="makkelijkemarkt_api_vervangers_fetch_interval_hours">12</integer>
+
+    <integer name="app_inactivity_logout_timeout_minutes">60</integer>
+
+    <integer name="makkelijkemarkt_api_service_getdagvergunningen_interval_seconds">32</integer>
+    <integer name="makkelijkemarkt_api_service_getnotities_interval_seconds">300</integer>
+    <integer name="makkelijkemarkt_api_service_getsollicitaties_startdelay_seconds">1</integer>
+    <integer name="makkelijkemarkt_api_service_getsollicitaties_interval_seconds">21</integer>
+    <integer name="makkelijkemarkt_api_service_appactivitycheck_interval_seconds">13</integer>
+
+</resources>

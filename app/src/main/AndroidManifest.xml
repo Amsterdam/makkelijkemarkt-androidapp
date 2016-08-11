@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.amsterdam.marktbureau.makkelijkemarkt">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Camera permissions (for barcode scanning) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <!-- NFC permissions -->
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+
+    <!-- Optional permission for Google Analytics -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Bluetooth for Payleven cardreader -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Application -->
+    <application
+        android:name=".MakkelijkeMarktApplication"
+        android:allowBackup="false"
+        android:icon="@drawable/mm_orange"
+        android:label="@string/app_title"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- HOME - Home and Login activity -->
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_title"
+            android:theme="@style/HomeTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- MARKTEN Activity -->
+        <activity
+            android:name=".MarktenActivity"
+            android:label="@string/markten"
+            android:theme="@style/MarktenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- DAGVERGUNNINGEN Activity-->
+        <activity
+            android:name=".DagvergunningenActivity"
+            android:label="@string/dagvergunningen"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MarktenActivity" />
+        </activity>
+
+        <!-- DAGVERGUNNING Activity-->
+        <activity
+            android:name=".DagvergunningActivity"
+            android:label="@string/dagvergunning"
+            android:theme="@style/MainTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DagvergunningenActivity" />
+        </activity>
+
+        <!-- VERVANGER DIALOG Activity -->
+        <activity
+            android:name=".VervangerDialogActivity"
+            android:theme="@style/AppDialogTheme"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DagvergunningActivity"
+                />
+        </activity>
+
+        <!-- NOTITIES Activity-->
+        <activity
+            android:name=".NotitiesActivity"
+            android:label="@string/notities"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MarktenActivity" />
+        </activity>
+
+        <!-- NOTITIE Activity-->
+        <activity
+            android:name=".NotitieActivity"
+            android:label="@string/notitie"
+            android:theme="@style/MainTheme">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NotitiesActivity" />
+        </activity>
+
+        <!-- BARCODE SCAN Activity -->
+        <activity
+            android:name=".ScanBarcodeActivity"
+            android:theme="@style/zxing_CaptureTheme"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            >
+        </activity>
+
+        <!-- NFCTAG SCAN Activity -->
+        <activity
+            android:name=".ScanNfcActivity"
+            android:theme="@style/AppDialogTheme"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DagvergunningActivity"
+                />
+        </activity>
+
+        <!-- ABOUT Public Activity -->
+        <activity
+            android:name=".AboutPublicActivity"
+            android:label="@string/about"
+            android:theme="@style/AboutTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- ABOUT Private Activity -->
+        <activity
+            android:name=".AboutPrivateActivity"
+            android:label="@string/about"
+            android:theme="@style/AboutTheme">
+        </activity>
+
+        <!-- MakkelijkeMarkt Provider -->
+        <provider
+            android:name=".data.MakkelijkeMarktProvider"
+            android:authorities="com.amsterdam.marktbureau.makkelijkemarkt.data"
+            android:exported="false" />
+
+        <!-- MakkelijkeMarkt Api Service -->
+        <service
+            android:name=".api.MakkelijkeMarktApiService"
+            android:exported="false" />
+
+        <!-- Google Analytics config -->
+        <meta-data
+            android:name="com.google.android.gms.analytics.globalConfigResource"
+            android:resource="@xml/analytics_global_config" />
+
+        <!-- Enable background dispatching to improve delivery on non-Google Play devices -->
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!-- Payleven communication service  -->
+        <!--service
+            android:name="de.payleven.payment.PaylevenCommunicationService"
+            android:exported="false"
+            android:process=":payleven" /-->
+
+        <!-- Receiver for bluetooth communication with the Payleven cardreader -->
+        <!--receiver android:name="com.adyen.adyenpos.receiver.BluetoothState">
+            <intent-filter>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
+                <action android:name="android.bluetooth.device.action.UUID"/>
+            </intent-filter>
+        </receiver-->
+
+        <!-- Payleven cardreader service -->
+        <!--service android:name="com.adyen.adyenpos.service.TerminalConnectIntentService" /-->
+
+    </application>
+</manifest>

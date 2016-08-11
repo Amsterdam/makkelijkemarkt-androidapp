@@ -1,0 +1,113 @@
+<resources>
+
+    <string name="app_title" translatable="false">Makkelijke Markt</string>
+    <string name="app_background_description">Market photo</string>
+    <string name="app_sub_title">The app to manage the permits of the Amsterdam Markets on a daily basis.</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="check_update">Check for updates&#8230;</string>
+    <string name="about">About</string>
+    <string name="markten">Markets</string>
+    <string name="dagvergunningen">Permits</string>
+    <string name="dagvergunning">Permit</string>
+    <string name="dagvergunning_add">New permit</string>
+    <string name="dagvergunning_edit">Edit permit</string>
+    <string name="koopman">Merchant</string>
+    <string name="product">Products</string>
+    <string name="overzicht">Overview</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="notities">Notes</string>
+    <string name="notitie">Note</string>
+    <string name="notitie_add">New note</string>
+    <string name="notitie_edit">Edit note</string>
+
+    <string name="contentdescription_app_logo" translatable="false">Makkelijke Markt logo</string>
+    <string name="contentdescription_koopman_photo">Merchant photo</string>
+    <string name="contentdescription_scan_nfc_logo">NFC scanning logo</string>
+    <string name="contentdescription_search_erkenningsnummer">Find by registry number</string>
+    <string name="contentdescription_search_ancienniteitnummer">Find by anciënniteit number</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_permit_count_label">Permits</string>
+    <string name="drawer_permit_count_label_none">Permits: None</string>
+
+    <string name="app_login_title">Welcome to the Makkelijke Markt</string>
+    <string name="app_login_description">Select an account to continue</string>
+
+    <string name="scan_nfc_text">Place a NFC card near the back of the device</string>
+    <string name="scan_nfc_result_uid" translatable="false">nfctag-uid</string>
+
+    <string name="length_meter">meter</string>
+    <string name="label_erkenningsnummer">Registry number</string>
+    <string name="label_sollicitatienummer">Anciënniteit number</string>
+    <string name="label_notitie">Note</string>
+    <string name="label_barcode_scannen">Scan Barcode</string>
+    <string name="label_nfc_scannen">Scan NFC</string>
+    <string name="label_select_replaced_koopman">Select merchant</string>
+    <string name="label_replacement">Replacement present:</string>
+    <string name="hint_erkenningsnummer">Registry number</string>
+    <string name="hint_sollicitatienummer">Anciënniteit number</string>
+    <string name="hint_scan_barcode">Scan the barcode of a merchant card</string>
+
+    <string name="dialog_app_update_title">Update available</string>
+    <string name="dialog_app_update_message">There is an update available for the Makkelijke Markt App.\n\n- Click on \'PLAY STORE\' to launch the Play Store app\n\n- Then click on \'UPDATE\' to install the latest version of the Makkelijke Markt App</string>
+    <string name="dialog_app_update_button_label">Play Store</string>
+    <string name="dialog_app_update_not_available">No update available, you\'re already using the latest version!</string>
+
+    <string name="notice_login_enter_password">Please enter your password</string>
+    <string name="notice_login_password_invalid">Invalid account/password</string>
+    <string name="notice_login_account_locked">Too many attempts, contact your system administrator</string>
+    <string name="notice_login_failed_connect">Failed to connect to server, contact your system administrator</string>
+    <string name="notice_api_unauthorised">Access denied, login again</string>
+    <string name="notice_api_forbidden">Access denied, contact your system administrator</string>
+    <string name="notice_network_required">Network connectivity required, please check your internet connection</string>
+    <string name="notice_koopman_verwijderd">Attention: Merchant has been deleted</string>
+    <string name="notice_koopman_no_valid_sollicitatie">Attention: Selected merchant does not have an application for this market</string>
+    <string name="notice_koopman_multiple_dagvergunningen">Attention: Selected merchant today already has a permit on this market</string>
+    <string name="notice_autocomplete_minimum">Enter a query of at least 2 digits</string>
+    <string name="notice_select_koopman">Select a merchant first</string>
+    <string name="notice_select_product">Select a product first</string>
+    <string name="notice_wait_for_conceptfactuur">Please be patient, calculating invoice for permit</string>
+    <string name="notice_dagvergunning_saving">Saving permit</string>
+    <string name="notice_dagvergunning_save_failed">Failed to save the permit, please try again</string>
+    <string name="notice_dagvergunning_save_success">Permit saved</string>
+    <string name="notice_dagvergunning_delete_confirm">Are you sure you want to delete this permit?</string>
+    <string name="notice_dagvergunning_delete_success">Permit deleted</string>
+    <string name="notice_dagvergunning_delete_failed">Failed to delete the permit, please try again</string>
+    <string name="notice_scan_barcode_cancelled">Barcode scan cancelled</string>
+    <string name="notice_koopman_not_found">Merchant not found</string>
+    <string name="notice_koopman_not_found_on_selected_markt">No merchant found with an application on selected market! Please enter the complete Registry number to search in all markets</string>
+    <string name="notice_koopman_not_selected">Merchant not selected</string>
+    <string name="notice_producten_not_selected">No product selected</string>
+    <string name="notice_scan_nfc_cancelled">NFC scan cancelled</string>
+    <string name="notice_sollicitaties_loading">Please be patient, applicants for selected market are being loaded</string>
+    <string name="notice_vervangers_loading">Please be patient, replacement merchants are being loaded</string>
+    <string name="label_vervanger_present">Replacement present!</string>
+    <string name="notice_sollicitaties_empty">No applicants found for selected market</string>
+    <string name="notice_koopmannen_empty">No merchants found for selected status</string>
+    <string name="notice_dagvergunningen_empty">No permits created on selected market for today</string>
+    <string name="notice_vervanger_koopmannen_empty">No merchants available that can be replaced on this market</string>
+    <string name="notice_markten_empty">Loading markets…</string>
+    <string name="notice_notities_empty">No notes created on selected market for today</string>
+    <string name="notice_notitie_enter_text">Please enter a comment</string>
+    <string name="notice_notitie_saving">Saving note</string>
+    <string name="notice_notitie_save_failed">Failed saving, please try again</string>
+    <string name="notice_notitie_save_success">Note saved</string>
+    <string name="notice_dagvergunning_device_location_refused">Please accept the device location setting, it is required for a correct functioning Makkelijke Markt</string>
+    <string name="title_dagvergunning_app_location_refused">Location permission&#8230;</string>
+    <string name="notice_dagvergunning_app_location_refused">Voor een correcte registratie van de dagvergunningen is het vereist om toestemming te geven voor toegang tot de locatie van dit apparaat.\n\nNa het sluiten van deze melding zal om toestemming gevraagd worden.\n\nBevestig deze toestemming door voor TOESTAAN te kiezen.</string>
+    <string name="notice_dagvergunning_app_location_refused_ok">CLOSE</string>
+
+    <string name="error_dagvergunningen_fetch_failed">Something went wrong while fetching the permits</string>
+    <string name="error_markets_fetch_failed">Something went wrong while fetching the markets</string>
+    <string name="error_accounts_fetch_failed">Something went wrong while fetching the accounts</string>
+    <string name="error_sollicitaties_fetch_failed">Something went wrong while fetching the applicants</string>
+    <string name="error_vervangers_fetch_failed">Something went wrong while fetching the replacement merchants</string>
+    <string name="error_koopman_fetch_failed">Something went wrong while fetching the merchant</string>
+    <string name="error_notities_fetch_failed">Something went wrong while fetching the notes</string>
+    <string name="error_notitie_update_failed">Something went wrong while fetching the note</string>
+
+</resources>

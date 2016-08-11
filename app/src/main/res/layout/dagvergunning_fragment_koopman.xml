@@ -1,0 +1,196 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="@dimen/toolbar_height"
+    tools:context=".DagvergunningActivity"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="40dp"
+        >
+
+        <!-- Search erkenningsnummer -->
+        <RelativeLayout
+            android:id="@+id/erkenningsnummer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/search_erkenningsnummer"
+                android:layout_toLeftOf="@+id/search_erkenningsnummer_button"
+                android:layout_toStartOf="@+id/search_erkenningsnummer_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:paddingTop="@dimen/mini_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:inputType="numberDecimal"
+                android:textSize="@dimen/textsize_title_small"
+                android:maxLength="@integer/erkenningsnummer_maxlength"
+                android:maxLines="1"
+                android:completionThreshold="2"
+                android:hint="@string/hint_erkenningsnummer"
+                android:textColorHint="@color/edittext_hint"
+                android:imeOptions="actionDone"
+                android:background="@drawable/border_bottom"
+                />
+
+            <ImageButton
+                android:id="@+id/search_erkenningsnummer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                style="?android:attr/buttonBarButtonStyle"
+                android:src="@drawable/ic_action_search"
+                android:contentDescription="@string/contentdescription_search_erkenningsnummer"
+                />
+
+        </RelativeLayout>
+
+
+        <!-- Search sollicitatienummer -->
+        <RelativeLayout
+            android:id="@+id/sollicitatienummer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/search_sollicitatienummer"
+                android:layout_toLeftOf="@+id/search_sollicitatienummer_button"
+                android:layout_toStartOf="@+id/search_sollicitatienummer_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:paddingTop="@dimen/mini_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:inputType="numberDecimal"
+                android:textSize="@dimen/textsize_title_small"
+                android:maxLength="@integer/sollicitatienummer_maxlength"
+                android:maxLines="1"
+                android:completionThreshold="2"
+                android:hint="@string/hint_sollicitatienummer"
+                android:textColorHint="@color/edittext_hint"
+                android:imeOptions="actionDone"
+                android:background="@drawable/border_bottom"
+                />
+
+            <ImageButton
+                android:id="@+id/search_sollicitatienummer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                style="?android:attr/buttonBarButtonStyle"
+                android:src="@drawable/ic_action_search"
+                android:contentDescription="@string/contentdescription_search_ancienniteitnummer"
+                />
+
+        </RelativeLayout>
+
+        <!-- Scan buttons -->
+        <LinearLayout
+            android:id="@+id/scanbuttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            >
+
+            <Button
+                android:id="@+id/scan_barcode_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:gravity="center"
+                android:elevation="4dp"
+                android:background="@drawable/button"
+                android:text="@string/label_barcode_scannen"
+                />
+
+            <Button
+                android:id="@+id/scan_nfctag_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                android:gravity="center"
+                android:background="@drawable/button"
+                android:text="@string/label_nfc_scannen"
+                />
+
+        </LinearLayout>
+
+        <!-- Koopman detail, aanwezig, vervanger -->
+        <LinearLayout
+            android:id="@+id/koopman_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/small_margin"
+            android:visibility="invisible"
+            >
+
+            <!-- Koopman -->
+            <include
+                layout="@layout/dagvergunning_koopman_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/micro_margin"
+                android:layout_marginRight="@dimen/margin"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/primary_light"
+                />
+
+            <!-- Aanwezig -->
+            <Spinner
+                android:id="@+id/aanwezig_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/components_height"
+                android:paddingLeft="@dimen/margin"
+                android:paddingRight="@dimen/margin"
+                />
+
+            <!-- Vervanger -->
+            <include
+                layout="@layout/dagvergunning_vervanger_item"
+                android:id="@+id/vervanger_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/micro_margin"
+                android:layout_marginRight="@dimen/margin"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/primary_light"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

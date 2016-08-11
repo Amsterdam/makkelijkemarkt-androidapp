@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".NotitiesActivity"
+    >
+
+    <!-- Notities list -->
+    <ListView
+        android:id="@+id/listview_notities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <!-- Empty listview -->
+    <TextView
+        android:id="@+id/listview_empty"
+        android:layout_below="@+id/listview_notities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="@dimen/large_margin"
+        android:paddingEnd="@dimen/large_margin"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:text="@string/notice_notities_empty"
+        />
+
+    <!-- Progressbar -->
+    <ProgressBar
+        android:id="@+id/progressbar_notities"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/progressbar_circle"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyle"
+        />
+
+    <!-- Fab add notitie -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_notitie"
+        android:src="@drawable/ic_add_white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/large_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:layout_marginBottom="@dimen/large_margin"
+        app:fabSize="normal"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        />
+
+</RelativeLayout>

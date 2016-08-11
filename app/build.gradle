@@ -1,0 +1,70 @@
+
+apply plugin: 'com.android.application'
+
+android {
+
+    // http://developer.android.com/tools/revisions/build-tools.html
+    compileSdkVersion 24
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.amsterdam.marktbureau.makkelijkemarkt"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 2016060122
+        versionName "1.1.1"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+//repositories {
+//    maven {
+//        url 'https://download.payleven.de/maven'
+//    }
+//}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Android support libs
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+
+    // ButterKnife for view dependency injection
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    // SimpleProvider for easy ContentProvider implementation using annotations
+    compile 'com.github.triplet.simpleprovider:simpleprovider:1.1.0'
+
+    // Retrofit 2 HTTP Client library
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+
+    // Glide for image loading and caching
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // Google Play Services
+    compile 'com.google.android.gms:play-services-location:9.4.0'
+    compile 'com.google.android.gms:play-services-analytics:9.4.0'
+
+    // ZXing Android Embedded
+    compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    compile 'com.google.zxing:core:3.2.1'
+
+    // EventBus handle events between components
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+//    // Payleven
+//    compile 'de.payleven.payment:mpos:1.2.1@jar'
+//    compile 'de.payleven:psp-library:1.2.0@aar'
+//    compile 'de.payleven:psp-library-core:1.2.0'
+////    compile 'com.google.code.gson:gson:2.4'
+//    compile 'com.squareup.okhttp:okhttp:2.7.5'
+}

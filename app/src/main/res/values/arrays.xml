@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Aanwezig keys and titles -->
+    <string-array name="array_aanwezig_key" translatable="false">
+        <item>zelf</item>
+        <item>partner</item>
+        <item>vervanger_met_toestemming</item>
+        <item>vervanger_zonder_toestemming</item>
+        <item>vervanger_met_ontheffing</item>
+    </string-array>
+    <string-array name="array_aanwezig_title">
+        <item>Merchant present</item>
+        <item>Partner present</item>
+        <item>Authorized replacement present</item>
+        <item>Unauthorized replacement present</item>
+        <item>Replacement with exemption present</item>
+    </string-array>
+
+    <!--Product keys, titles, db column, and payload param names -->
+    <string-array name="array_product_key" translatable="false">
+        <item>3mKramen</item>
+        <item>4mKramen</item>
+        <item>extraMeters</item>
+        <item>elektra</item>
+        <item>afvaleiland</item>
+        <item>krachtstroom</item>
+        <item>reiniging</item>
+        <item>eenmaligElektra</item>
+    </string-array>
+    <string-array name="array_product_param" translatable="false">
+        <item>aantal3MeterKramen</item>
+        <item>aantal4MeterKramen</item>
+        <item>extraMeters</item>
+        <item>aantalElektra</item>
+        <item>afvaleiland</item>
+        <item>krachtstroom</item>
+        <item>reiniging</item>
+        <item>eenmaligElektra</item>
+    </string-array>
+    <string-array name="array_product_type" translatable="false">
+        <item>integer</item>
+        <item>integer</item>
+        <item>integer</item>
+        <item>integer</item>
+        <item>integer</item>
+        <item>boolean</item>
+        <item>boolean</item>
+        <item>boolean</item>
+    </string-array>
+    <string-array name="array_product_title">
+        <item>3m stalls</item>
+        <item>4m stalls</item>
+        <item>Extra meters</item>
+        <item>Electra</item>
+        <item>Garbage bins</item>
+        <item>Three-fase power</item>
+        <item>Cleaning</item>
+        <item>Power one-off</item>
+    </string-array>
+
+</resources>

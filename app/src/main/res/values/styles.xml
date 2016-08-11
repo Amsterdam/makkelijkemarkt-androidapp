@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Common app theme-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <!-- Toolbar theme -->
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <!-- Home theme: for the Home- and Login screen only -->
+    <style name="HomeTheme" parent="AppTheme">
+    </style>
+
+    <!-- Markten theme: for the Markten screen only -->
+    <style name="MarktenTheme" parent="AppTheme">
+    </style>
+
+    <!-- Main theme: for the main screens of the application -->
+    <style name="MainTheme" parent="AppTheme">
+    </style>
+
+    <!-- About activity theme -->
+    <style name="AboutTheme" parent="AppTheme">
+    </style>
+
+    <!-- App dialog theme (nfc scanactivity) -->
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- Checkbox -->
+    <style name="MMCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/primary</item>
+        <item name="colorControlActivated">@color/accent</item>
+    </style>
+
+</resources>

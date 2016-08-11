@@ -1,0 +1,69 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- shadow -->
+    <item>
+        <shape android:shape="oval">
+            <size
+                android:height="44dp"
+                android:width="44dp"
+                />
+            <gradient
+                android:type="radial"
+                android:gradientRadius="24dp"
+                android:startColor="@android:color/black"
+                android:endColor="@android:color/transparent"
+                />
+        </shape>
+    </item>
+
+    <!-- background -->
+    <item
+        android:top="2px"
+        android:right="4px"
+        android:bottom="8px"
+        android:left="4px"
+        >
+        <shape android:shape="oval">
+            <size
+                android:height="44dp"
+                android:width="44dp"
+                />
+            <solid android:color="#ffffff"/>
+        </shape>
+    </item>
+
+    <!-- spinner -->
+    <item
+        android:top="2px"
+        android:right="4px"
+        android:bottom="8px"
+        android:left="4px"
+        >
+        <rotate
+            android:fromDegrees="0"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="1440"
+            >
+            <shape
+                android:innerRadiusRatio="4"
+                android:shape="ring"
+                android:thicknessRatio="7"
+                android:useLevel="false"
+                >
+                <size
+                    android:height="30dp"
+                    android:width="30dp"
+                    />
+                <gradient
+                    android:type="sweep"
+                    android:angle="0"
+                    android:endColor="@color/accent"
+                    android:startColor="@android:color/white"
+                    android:useLevel="false"
+                    />
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

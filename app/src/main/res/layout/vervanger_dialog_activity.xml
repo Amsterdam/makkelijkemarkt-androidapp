@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/large_margin"
+    >
+
+    <!-- Vervanger naam -->
+    <TextView
+        android:id="@+id/vervanger_voorletters_achternaam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/large_margin"
+        android:textSize="@dimen/textsize_content_medium"
+        android:textColor="@color/primary_text"
+        android:text="@string/label_select_replaced_koopman"
+        />
+
+    <!-- Koopmannen list -->
+    <ListView
+        android:id="@+id/listview_koopmannen"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_below="@+id/vervanger_voorletters_achternaam"
+        android:layout_margin="@dimen/small_margin"
+        android:paddingBottom="@dimen/margin"
+        />
+
+    <!-- Empty listview -->
+    <TextView
+        android:id="@+id/listview_empty"
+        android:layout_below="@+id/listview_koopmannen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:paddingBottom="@dimen/large_margin"
+        android:visibility="gone"
+        android:text="@string/notice_vervanger_koopmannen_empty"
+        />
+
+    <!-- Cancel button -->
+    <Button
+        android:id="@+id/dialog_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listview_empty"
+        android:layout_marginTop="@dimen/large_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:gravity="center"
+        android:background="@drawable/button"
+        android:elevation="4dp"
+        android:textSize="@dimen/textsize_content_medium"
+        android:text="@string/cancel"
+        />
+
+</RelativeLayout>

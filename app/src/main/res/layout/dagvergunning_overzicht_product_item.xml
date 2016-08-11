@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <!-- aantal -->
+    <TextView
+        android:id="@+id/product_aantal"
+        android:textColor="@color/primary_text"
+        />
+
+    <!-- naam -->
+    <TextView
+        android:id="@+id/product_naam"
+        android:maxWidth="140dp"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:textColor="@color/primary_text"
+        android:textStyle="bold"
+        />
+
+    <!-- btw % -->
+    <TextView
+        android:id="@+id/btw_percentage"
+        android:gravity="end"
+        android:textColor="@color/primary_text"
+        />
+
+    <!-- btw totaal -->
+    <TextView
+        android:id="@+id/btw_totaal"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:gravity="end"
+        android:textColor="@color/primary_text"
+        />
+
+    <!-- bedrag totaal -->
+    <TextView
+        android:id="@+id/bedrag_totaal"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:gravity="end"
+        android:textColor="@color/primary_text"
+        android:textStyle="bold"
+        />
+
+</TableRow>

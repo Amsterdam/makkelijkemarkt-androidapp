@@ -1,0 +1,28 @@
+<resources>
+
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="drawer_width">240dp</dimen>
+
+    <dimen name="micro_margin">1dp</dimen>
+    <dimen name="mini_margin">2dp</dimen>
+    <dimen name="small_margin">4dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="large_margin">16dp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="textsize_title_small">20sp</dimen>
+    <dimen name="textsize_title_medium">26sp</dimen>
+    <dimen name="textsize_title_large">32sp</dimen>
+
+    <dimen name="textsize_content_mini">12sp</dimen>
+    <dimen name="textsize_content_small">16sp</dimen>
+    <dimen name="textsize_content_medium">20sp</dimen>
+    <dimen name="textsize_content_large">24sp</dimen>
+
+    <dimen name="components_height">44dp</dimen>
+    <dimen name="components_vertical_margin">26dp</dimen>
+    <dimen name="button_label_margin">32dp</dimen>
+
+</resources>

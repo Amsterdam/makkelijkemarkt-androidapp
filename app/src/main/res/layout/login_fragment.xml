@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginFragment"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/components_vertical_margin"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/textsize_title_small"
+        android:textColor="@android:color/white"
+        android:text="@string/app_login_title"
+        />
+
+    <TextView
+        android:id="@+id/sub_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/components_vertical_margin"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/textsize_content_small"
+        android:textColor="@android:color/white"
+        android:text="@string/app_login_description"
+        />
+
+    <!-- Account -->
+    <Spinner
+        android:id="@+id/account"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/components_height"
+        android:layout_below="@+id/sub_title"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:paddingTop="@dimen/small_margin"
+        android:background="#80FFFFFF"
+        android:textSize="@dimen/textsize_title_large"
+        />
+
+    <!-- Password -->
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/components_height"
+        android:layout_below="@+id/account"
+        android:layout_marginTop="@dimen/components_vertical_margin"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="#80FFFFFF"
+        android:inputType="textPassword"
+        android:paddingLeft="@dimen/large_margin"
+        android:paddingStart="@dimen/large_margin"
+        android:paddingRight="@dimen/small_margin"
+        android:paddingEnd="@dimen/small_margin"
+        android:textSize="@dimen/textsize_title_large"
+        android:ems="10"
+        />
+
+    <!-- Inloggen -->
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/components_height"
+        android:layout_below="@+id/password"
+        android:layout_marginTop="@dimen/components_vertical_margin"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@drawable/button"
+        android:textSize="@dimen/textsize_title_small"
+        android:textColor="@color/primary_text"
+        android:text="@string/login"
+        />
+
+    <!-- Progressbar -->
+    <ProgressBar
+        android:id="@+id/progressbar_accounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/components_vertical_margin"
+        android:layout_centerHorizontal="true"
+        android:indeterminateDrawable="@drawable/progressbar_circle"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyle"
+        />
+
+</RelativeLayout>

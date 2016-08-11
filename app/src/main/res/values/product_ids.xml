@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- view ids for dynamic creation of the products in the dagvergunning product fragment -->
+    <item name="product_3mKramen" type="id"/>
+    <item name="product_4mKramen" type="id"/>
+    <item name="product_extraMeters" type="id"/>
+    <item name="product_elektra" type="id"/>
+    <item name="product_afvaleiland" type="id"/>
+    <item name="product_krachtstroom" type="id"/>
+    <item name="product_reiniging" type="id"/>
+    <item name="product_eenmaligElektra" type="id"/>
+
+</resources>

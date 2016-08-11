@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotitieActivity"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            android:paddingEnd="@dimen/margin"
+            android:paddingBottom="40dp"
+            android:paddingLeft="@dimen/margin"
+            android:paddingStart="@dimen/margin"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
+            >
+
+            <!-- Notitie -->
+            <EditText
+                android:id="@+id/notitie_bericht"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingRight="@dimen/margin"
+                android:paddingEnd="@dimen/margin"
+                android:paddingLeft="@dimen/margin"
+                android:paddingStart="@dimen/margin"
+                android:gravity="top"
+                android:textSize="@dimen/textsize_content_medium"
+                android:textColor="@color/primary_text"
+                android:textColorHint="@color/edittext_hint"
+                android:hint="@string/label_notitie"
+                android:background="@drawable/border_full_rounded"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Navigation buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:elevation="40dp"
+        >
+
+        <Button
+            android:id="@+id/notitie_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/textsize_content_small"
+            android:textColor="@color/primary_dark"
+            android:background="@android:color/white"
+            android:text="@string/cancel"
+            />
+
+        <Button
+            android:id="@+id/notitie_save"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
+            android:paddingRight="@dimen/button_label_margin"
+            android:paddingEnd="@dimen/button_label_margin"
+            android:gravity="end|center_vertical"
+            android:textSize="@dimen/textsize_content_small"
+            android:textColor="@color/primary_dark"
+            android:background="@color/accent"
+            android:drawableRight="@drawable/check_primary_dark"
+            android:drawableEnd="@drawable/check_primary_dark"
+            android:text="@string/save"
+            />
+
+    </LinearLayout>
+</RelativeLayout>
