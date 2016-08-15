@@ -6,6 +6,8 @@ De Makkelijke Markt app is een digitale kassa-app of "bonnenboekje", waarmee de 
 
 Het marktbureau kan via een beheerinterface de actuele situatie direct inzien, waardoor telefonische vragen van kooplieden beter kunnen worden beantwoord. Ook kan er stuurinformatie worden gegenereerd. Tot slot maakt het centrale financiële controle eenvoudiger.
 
+Meer informatie: [https://www.amsterdam.nl/ondernemen/markt-straathandel/](https://www.amsterdam.nl/ondernemen/markt-straathandel/)
+
 
 |Home|Markten|Dagvergunningen|Drawer Menu|
 |---|---|---|---|
@@ -94,7 +96,7 @@ Follow these configuration steps to setup the project:
 
 
 
-###Release notes - v1.1.0
+###Release notes 
 - Vervanger detectie en Koopman selectie
 - App updaten optie toegevoegd aan het actions menu
 - Check for App update
@@ -114,8 +116,28 @@ Android 4.1 Jelly Bean or later (API level 16)
 
 ###Documentation
 
-Open the auto-generated [JavaDoc](doc/javadoc/index.html) documention.
+Open the auto-generated [JavaDoc](./doc/javadoc/index.html) documention.
 
 
 ###App diagram
-![app diagram](../../downloads/MMAndroidAppDiagram.png "App diagram")
+![app diagram](./doc/MMAndroidAppDiagram.png?raw=true "App diagram")
+
+
+###Waarom is deze code gedeeld
+Deze software is in opdracht van het Marktbureau ontwikkelt voor de Gemeente Amsterdam. Veel van deze software wordt vervolgens als open source gepubliceerd zodat andere gemeentes, organisaties en burgers de software als basis en inspiratie kunnen gebruiken om zelf vergelijkbare software te ontwikkelen. De Gemeente Amsterdam vindt het belangrijk dat software die met publiek geld wordt ontwikkeld ook publiek beschikbaar is.
+
+###Wat mag ik met deze code
+De Gemeente Amsterdam heeft deze code gepubliceerd onder de Mozilla Public License v2. Een kopie van de volledige licentie tekst is opgenomen in het bestand LICENSE.
+
+### Open Source
+Dit project maakt gebruik van diverse Open Source software componenten, waaronder: 
+
+- Android Support Library package - [Revision 23.2.1 (March 2016)](https://developer.android.com/tools/support-library/index.html)
+- Butter Knife - [Copyright © 2013 Jake Wharton](https://jakewharton.github.io/butterknife/)
+- Simpleprovider 1.1.0 - [Copyright © 2014 Christian Becker, Björn Hurling](https://triple-t.github.io/simpleprovider/)
+- Retrofit 2.0.0-beta3 - [Copyright © 2013 Square, Inc.](https://square.github.io/retrofit/)
+- Google Gson - [Copyright © 2008 Google Inc.](https://github.com/google/gson)
+- Glide 3.7.0 - [Copyright © 2014 Google, Inc.](https://github.com/bumptech/glide/blob/master/LICENSE)
+- Google Play Services 8.4.0 - [Android Open Source Project Copyright © 2005-2008](https://developers.google.com/android/guides/overview#the_google_play_services_client_library), [Android Open Source Project Licensed under the Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- ZXing Android Embedded - [ZXing Android Embedded: Apache License 2.0](https://github.com/journeyapps/zxing-android-embedded), [ZXing: Copyright © 2014 ZXing authors](https://github.com/zxing/zxing)
+- EventBus 3.0.0 - [Copyright © 2012-2016 Markus Junginger, greenrobot](https://github.com/greenrobot/EventBus)
